@@ -1,0 +1,52 @@
+# Railway single-service image: React + nginx + Node API
+FROM --platform=$BUILDPLATFORM node:22-alpine AS frontend-build
+
+WORKDIR /app
+
+RUN apk add --no-cache git
+
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm ci 2>/dev/null || npm install
+
+COPY frontend/ ./
+RUN npm run build
+
+# Bundle exercise media into the image.
+RUN git clone --depth 1 https://github.com/hasaneyldrm/exercises-dataset /tmp/ds \
+ && mkdir -p /media/img /media/gif \
+ && cp /tmp/ds/images/*.jpg /media/img/ \
+ && cp /tmp/ds/videos/*.gif /media/gif/
+
+
+FROM node:22-alpine AS api-deps
+
+WORKDIR /app/api
+
+COPY api/package.json api/package-lock.json ./
+RUN npm ci --omit=dev
+
+
+FROM node:22-alpine
+
+RUN apk add --no-cache nginx gettext
+
+WORKDIR /app
+
+COPY --from=frontend-build /app/dist /usr/share/nginx/html
+COPY --from=frontend-build /media/img /usr/share/nginx/html/img
+COPY --from=frontend-build /media/gif /usr/share/nginx/html/gif
+
+COPY --from=api-deps /app/api/node_modules /app/api/node_modules
+
+COPY api/package.json api/server.js /app/api/
+
+COPY web/nginx.railway.conf /etc/nginx/http.d/default.conf.template
+
+COPY railway-entrypoint.sh /usr/local/bin/railway-entrypoint.sh
+
+RUN chmod +x /usr/local/bin/railway-entrypoint.sh \
+ && mkdir -p /run/nginx /var/log/nginx /var/cache/nginx
+
+EXPOSE 8080
+
+ENTRYPOINT ["/usr/local/bin/railway-entrypoint.sh"]
