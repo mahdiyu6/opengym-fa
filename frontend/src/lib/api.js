@@ -18,21 +18,11 @@ const b64uToBuf = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '
 function toCreationOptions(o) {
   o.challenge = b64uToBuf(o.challenge)
   o.user.id = b64uToBuf(o.user.id)
-
-  // Always bind WebAuthn to the actual hostname being used.
-  o.rp = Object.assign({}, o.rp, {
-    id: window.location.hostname
-  })
-
   ;(o.excludeCredentials || []).forEach(c => { c.id = b64uToBuf(c.id) })
   return o
 }
 function toRequestOptions(o) {
   o.challenge = b64uToBuf(o.challenge)
-
-  // Always bind WebAuthn to the actual hostname being used.
-  o.rpId = window.location.hostname
-
   ;(o.allowCredentials || []).forEach(c => { c.id = b64uToBuf(c.id) })
   return o
 }
