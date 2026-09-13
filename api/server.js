@@ -237,7 +237,26 @@ function readBody(req) {
   });
 }
 const b64uToBuf = s => Buffer.from(s, 'base64url');
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16);
+  const hash = crypto.scryptSync(password, salt, 64);
+  return {
+    salt: salt.toString('base64url'),
+    hash: hash.toString('base64url')
+  };
+}
 
+function verifyPassword(password, stored) {
+  try {
+    const salt = Buffer.from(stored.salt, 'base64url');
+    const expected = Buffer.from(stored.hash, 'base64url');
+    const actual = crypto.scryptSync(password, salt, expected.length);
+
+    return crypto.timingSafeEqual(actual, expected);
+  } catch {
+    return false;
+  }
+}
 /* ---------- live presence (in-memory) ---------- */
 // Clients heartbeat /api/activity while a workout is on screen; the admin dashboard reads who's
 // live. Purely ephemeral — never persisted. Expires shortly after the last ping.
@@ -264,6 +283,106 @@ const routes = {
     json(res, 200, { user: { id: user.id, name: user.name, admin: isAdmin(user) } });
   },
 
+   'POST /api/password/register': async (req, res) => {
+    const body = await readBody(req);
+
+    const name = String(body.name || '').trim().slice(0, 40);
+    const password = String(body.password || '');
+
+    if (!name) return json(res, 400, { error: 'name required' });
+    if (password.length < 8)
+      return json(res, 400, { error: 'password must be at least 8 characters' });
+
+    const code = String(body.code || '').trim().toUpperCase();
+
+    if (INVITE_ONLY && !db.invites.some(i => i.code === code && !i.usedBy && !i.revoked))
+      return json(res, 403, { error: 'a valid invite code is required' });
+
+    const duplicate = db.users.find(
+      u => u.password && String(u.name).toLowerCase() === name.toLowerCase()
+    );
+
+    if (duplicate)
+      return json(res, 409, { error: 'a password profile with this name already exists' });
+
+    const uid = crypto.randomBytes(12).toString('base64url');
+    const created = new Date().toISOString();
+    const passwordData = hashPassword(password);
+
+    const user = {
+      id: uid,
+      name,
+      created,
+      password: passwordData
+    };
+
+    let invite = null;
+
+    if (INVITE_ONLY) {
+      invite = db.invites.find(i => i.code === code && !i.usedBy && !i.revoked);
+      if (!invite)
+        return json(res, 403, { error: 'invite code is no longer valid' });
+
+      user.invitedBy = invite.code;
+      invite.usedBy = user.id;
+      invite.usedAt = created;
+    }
+
+    db.users.push(user);
+    saveDb();
+
+    json(
+      res,
+      200,
+      {
+        user: {
+          id: user.id,
+          name: user.name,
+          admin: isAdmin(user)
+        }
+      },
+      { 'Set-Cookie': sessionCookie(user) }
+    );
+  },
+
+  'POST /api/password/login': async (req, res) => {
+    const body = await readBody(req);
+
+    const name = String(body.name || '').trim();
+    const password = String(body.password || '');
+
+    if (!name || !password)
+      return json(res, 400, { error: 'name and password are required' });
+
+    const matches = db.users.filter(
+      u => u.password && String(u.name).toLowerCase() === name.toLowerCase()
+    );
+
+    if (matches.length > 1)
+      return json(res, 409, { error: 'more than one password profile has this name' });
+
+    const user = matches[0];
+
+    if (!user || !verifyPassword(password, user.password))
+      return json(res, 401, { error: 'incorrect name or password' });
+
+    if (user.disabled)
+      return json(res, 403, { error: 'this account has been disabled' });
+
+    json(
+      res,
+      200,
+      {
+        user: {
+          id: user.id,
+          name: user.name,
+          admin: isAdmin(user)
+        }
+      },
+      { 'Set-Cookie': sessionCookie(user) }
+    );
+  },
+   
   'POST /api/register/options': async (req, res) => {
     const body = await readBody(req);
     const name = String(body.name || '').trim().slice(0, 40);
