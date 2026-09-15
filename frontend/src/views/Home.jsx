@@ -73,7 +73,9 @@ const todayOvr = S.dayPlan[todayISO()] !== undefined
       
   }
   const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6)
-  const wkLabel = weekOffset === 0 ? t('This week') : `${monday.getDate()} ${monday.toLocaleDateString(dateLocale(), { month: 'short' })} – ${sunday.getDate()} ${sunday.toLocaleDateString(dateLocale(), { month: 'short' })}`
+  const wkLabel = weekOffset === 0
+  ? t('This week')
+  : `${displayDayNumber(monday)} ${displayMonth(monday)} – ${displayDayNumber(sunday)} ${displayMonth(sunday)}`
 
   const wThisWeek = S.workouts.filter(w => weekKey(w.d) === weekKey(todayISO())).length
   const plannedPerWeek = Object.keys(S.week).filter(k => S.week[k]).length
