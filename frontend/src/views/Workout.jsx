@@ -25,7 +25,12 @@ const todayOvr = S.dayPlan[todayISO()] !== undefined
 const todayIds = todayRoutines.map(r => r.id)
 const others = S.routines.filter(r => !todayIds.includes(r.id))
   return <div className="narrow">
-    <div className="hdr"><div><h1>{t('Start workout')}</h1><div className="sub">{t(DAYN[new Date().getDay()])} — {todayR ? t('today is {0}', todayR.name) : t('rest day, but no one’s stopping you')}</div></div></div>
+    <div className="hdr"><div><h1>{t('Start workout')}</h1><div className="sub">
+  {t(DAYN[new Date().getDay()])} —
+  {todayRoutines.length
+    ? t('today is {0}', todayRoutines.map(r => r.name).join(' + '))
+    : t('rest day, but no one’s stopping you')}
+</div></div></div>
     {todayR && <div className="card" style={{ borderColor: 'var(--acc)' }}>
       <h2 className="accent">{t("Today's plan")}{todayOvr ? ' · ' + t('rescheduled') : ''}</h2>
       <div className="row between" style={{ marginBottom: 12 }}>
