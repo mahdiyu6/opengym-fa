@@ -18,6 +18,26 @@ export default function Home() {
   const [weekOffset, setWeekOffset] = useState(0)
 
   const today = new Date()
+  const calendar = S.calendar || 'gregorian'
+
+const displayLocale = calendar === 'jalali'
+  ? 'fa-IR-u-ca-persian'
+  : dateLocale()
+
+const displayDayName = date =>
+  date.toLocaleDateString(displayLocale, {
+    weekday: 'short'
+  })
+
+const displayDayNumber = date =>
+  date.toLocaleDateString(displayLocale, {
+    day: 'numeric'
+  })
+
+const displayMonth = date =>
+  date.toLocaleDateString(displayLocale, {
+    month: 'short'
+  })
 const routines = effectiveRoutines(S, todayISO())
 const routine = routines[0] || null
 const todayOvr = S.dayPlan[todayISO()] !== undefined
