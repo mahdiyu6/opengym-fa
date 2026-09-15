@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
-import { effectiveRoutine } from '../lib/history.js'
+import { effectiveRoutineIds } from '../lib/history.js'
 import { todayISO } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
 import Icon from './Icon.jsx'
@@ -16,12 +16,17 @@ export default function TabBar({ onStart }) {
   const on = k => cur === k || (cur === 'history' && k === 'stats') || (cur === 'settings' && k === 'home')
 
   const startWorkout = () => {
-    if (!S.active) {
-      const r = effectiveRoutine(S, todayISO())
-      if (r && r.ex.length) { onStart(r.id); return }
+  if (!S.active) {
+    const ids = effectiveRoutineIds(S, todayISO())
+
+    if (ids.length) {
+      onStart(ids)
+      return
     }
-    nav('/workout')
   }
+
+  nav('/workout')
+}
   const Tab = ({ k, icon, to, label }) => (
     <button className={on(k) ? 'on' : ''} onClick={() => nav(to)}>
       <Icon name={icon} /><span>{label}</span>
