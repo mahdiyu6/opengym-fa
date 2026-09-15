@@ -108,6 +108,27 @@ export default function Settings() {
           subtitle: INSTR_LANGS.includes(k) ? null : t("Exercise instructions aren't available in this language yet — they stay in English."),
         }))}
       />
+      <SelectRow
+  icon="calendar"
+  iconTint="var(--orange)"
+  title={t('Calendar')}
+  value={S.calendar || 'gregorian'}
+  onChange={v =>
+    update(s => {
+      s.calendar = v
+    })
+  }
+  options={[
+    {
+      value: 'gregorian',
+      label: t('Gregorian')
+    },
+    {
+      value: 'jalali',
+      label: t('Persian / Shamsi')
+    }
+  ]}
+/>
       <Row icon="scale" iconTint="var(--teal)" title={t('Weight unit')}>
         <Segmented className="seg-inline"
           options={[{ value: 'kg', label: 'kg' }, { value: 'lb', label: 'lb' }]}
