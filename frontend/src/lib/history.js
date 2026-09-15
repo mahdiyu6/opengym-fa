@@ -158,17 +158,16 @@ export function bestWeightFor(S, exId) {
   }))
   return best
 }
-export function effectiveRoutineId(S, iso) {
+export function effectiveRoutineIds(S, iso) {
   const ov = S.dayPlan[iso]
-  if (ov === 'rest') return null
-  if (ov && S.routines.some(r => r.id === ov)) return ov
-  const wd = new Date(iso + 'T12:00:00').getDay()
-  return S.week[wd] || null
+  if (ov === 'rest') return []
+  const raw = ov !== undefined ? ov : S.week[new Date(iso + 'T12:00:00').getDay()]
+  const ids = Array.isArray(raw) ? raw : (raw ? [raw] : [])
+  return ids.filter(id => S.routines.some(r => r.id === id))
 }
-export function effectiveRoutine(S, iso) {
-  const id = effectiveRoutineId(S, iso)
-  return id ? S.routines.find(r => r.id === id) || null : null
-}
+export function effectiveRoutineId(S, iso) { return effectiveRoutineIds(S, iso)[0] || null }
+export function effectiveRoutines(S, iso) { return effectiveRoutineIds(S, iso).map(id => S.routines.find(r => r.id === id)).filter(Boolean) }
+export function effectiveRoutine(S, iso) { return effectiveRoutines(S, iso)[0] || null }
 export function buildSets(S, cfg) {
   const last = lastEntryFor(S, cfg.id)
   const n = Math.max(1, cfg.sets || 1)
@@ -221,6 +220,20 @@ export function setsDoneActive(A) {
   return n
 }
 export const lastBW = S => (S.bodyweight.length ? S.bodyweight[S.bodyweight.length - 1] : null)
+
+// Rough estimate for resistance training: moderate intensity, based on body weight and elapsed time.
+// It is deliberately labeled as an estimate; it is not a medical or wearable-grade measurement.
+export function estimatedCalories(S, start, end, bw, entries = []) {
+  const minutes = Math.max(0, (Number(end) - Number(start)) / 60000)
+  const kg = Math.max(35, Number(bw || (lastBW(S) || {}).w || 70))
+  const doneSets = entries.reduce((n, e) => n + e.sets.filter(x => x.done).length, 0)
+  const volume = entries.reduce((n, e) => n + e.sets.filter(x => x.done).reduce((a, x) => a + (Number(x.w) || 0) * (Number(x.reps) || Number(x.r) || 1), 0), 0)
+  const density = minutes > 0 ? doneSets / minutes : 0
+  const volumeFactor = Math.min(1.25, 1 + Math.log10(1 + volume / Math.max(kg, 1)) * 0.08)
+  const densityFactor = Math.min(1.2, 0.9 + density * 0.12)
+  const intensity = Math.min(1.25, Math.max(0.85, volumeFactor * densityFactor))
+  return Math.max(0, Math.round(5 * intensity * 3.5 * kg / 200 * minutes))
+}
 
 // Group consecutive items sharing a superset id (sg) into "units" of indices.
 // items may be routine exercises ({sg}) or active-workout entries ({sg}).
