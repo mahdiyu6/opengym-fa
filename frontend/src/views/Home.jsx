@@ -53,8 +53,24 @@ const todayOvr = S.dayPlan[todayISO()] !== undefined
     const iso = isoOf(d)
     const eff = effectiveRoutineId(S, iso), ovr = S.dayPlan[iso] !== undefined, done = doneDays.has(iso)
     const dot = done ? ' done' : ovr && eff ? ' ovr' : eff ? ' plan' : ''
-    strip.push(<div key={i} className={'wday' + (iso === todayISO() ? ' today' : '')} onClick={() => dayOverrideSheet(iso)}>
-      <div className="lbl">{t(DAYS[d.getDay()])}</div><div className="num">{d.getDate()}</div><div className={'dot' + dot} /></div>)
+    strip.push(
+  <div
+    key={i}
+    className={'wday' + (iso === todayISO() ? ' today' : '')}
+    onClick={() => dayOverrideSheet(iso)}
+  >
+    <div className="lbl">
+      {displayDayName(d)}
+    </div>
+
+    <div className="num">
+      {displayDayNumber(d)}
+    </div>
+
+    <div className={'dot' + dot} />
+  </div>
+)
+      
   }
   const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6)
   const wkLabel = weekOffset === 0 ? t('This week') : `${monday.getDate()} ${monday.toLocaleDateString(dateLocale(), { month: 'short' })} – ${sunday.getDate()} ${sunday.toLocaleDateString(dateLocale(), { month: 'short' })}`
