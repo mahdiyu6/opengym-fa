@@ -31,14 +31,47 @@ const others = S.routines.filter(r => !todayIds.includes(r.id))
     ? t('today is {0}', todayRoutines.map(r => r.name).join(' + '))
     : t('rest day, but no one’s stopping you')}
 </div></div></div>
-    {todayR && <div className="card" style={{ borderColor: 'var(--acc)' }}>
-      <h2 className="accent">{t("Today's plan")}{todayOvr ? ' · ' + t('rescheduled') : ''}</h2>
-      <div className="row between" style={{ marginBottom: 12 }}>
-        <div><div className="big">{todayR.name}</div><div className="muted small">{exCount(todayR.ex.length)}</div></div>
-        <span className="lrow-i" style={{ width: 38, height: 38, borderRadius: 9, fontSize: 22 }}><Icon name={glyphOf(todayR.emoji)} /></span>
+{todayRoutines.length > 0 && (
+  <div className="card" style={{ borderColor: 'var(--acc)' }}>
+    <h2 className="accent">
+      {t("Today's plan")}
+      {todayOvr ? ' · ' + t('rescheduled') : ''}
+    </h2>
+
+    <div className="row between" style={{ marginBottom: 12 }}>
+      <div>
+        <div className="big">
+          {todayRoutines.map(r => r.name).join(' + ')}
+        </div>
+
+        <div className="muted small">
+          {t('{0} routines', todayRoutines.length)} ·{' '}
+          {exCount(todayRoutines.reduce((sum, r) => sum + r.ex.length, 0))}
+        </div>
       </div>
-      <Button variant="primary" icon="play" onClick={() => startFlow(todayR.id)}>{t('Start {0}', todayR.name)}</Button>
-    </div>}
+
+      <span
+        className="lrow-i"
+        style={{
+          width: 38,
+          height: 38,
+          borderRadius: 9,
+          fontSize: 22
+        }}
+      >
+        <Icon name={glyphOf(todayRoutines[0].emoji)} />
+      </span>
+    </div>
+
+    <Button
+      variant="primary"
+      icon="play"
+      onClick={() => startFlow(todayIds)}
+    >
+      {t('Start {0}', todayRoutines.map(r => r.name).join(' + '))}
+    </Button>
+  </div>
+)}
     {others.length > 0 && <><h4 className="sec">{t('Other routines')}</h4>
       <div className="list">{others.map(r => <div key={r.id} className="item" onClick={() => startFlow(r.id)}>
         <span className="lrow-i"><Icon name={glyphOf(r.emoji)} /></span>
