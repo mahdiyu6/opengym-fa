@@ -74,7 +74,14 @@ const onToday = () => {
           </span>
           <div style={{ minWidth: 0 }}>
             <div className="lbl2">{t('Today')}</div>
-            <div className="ttl">{S.active ? t('{0} — in progress', S.active.name) : routine ? routine.name : t('Rest day')}{todayOvr && routine ? ' · ' + t('rescheduled') : ''}</div>
+<div className="ttl">
+  {S.active
+    ? t('{0} — in progress', S.active.name)
+    : routines.length
+      ? routines.map(r => r.name).join(' + ')
+      : t('Rest day')}
+  {todayOvr && routines.length ? ' · ' + t('rescheduled') : ''}
+</div>
           </div>
         </div>
         {S.active ? <span className="tag" style={{ color: 'var(--orange)', background: 'color-mix(in srgb,var(--orange) 16%,transparent)' }}>{t('Resume')}</span>
