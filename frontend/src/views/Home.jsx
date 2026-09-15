@@ -120,7 +120,7 @@ const onToday = () => {
               {fmtNum(Math.abs(delta))}
             </span>
           )}
-          <span className="dim small" style={{ marginLeft: 'auto' }}>{fmtDate(bw.d, true)}</span>
+          <span className="dim small" style={{ marginLeft: 'auto' }}>{fmtDate(bw.d, true, S.calendar || 'gregorian')}</span>
         </div>
         {S.targetW && (
           <div className="small row" style={{ color: 'var(--yellow)', marginTop: 4, gap: 5 }}>
