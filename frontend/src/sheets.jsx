@@ -830,20 +830,59 @@ export function startFlow(routineIds) {
     onDone: bw => beginWorkout(ids, bw)
   })
 }
-export function beginWorkout(routineId, bw) {
+export function beginWorkout(routineIds, bw) {
   const st = S()
-  const ids = Array.isArray(routineId) ? routineId : (routineId ? [routineId] : [])
-  const routines = ids.map(id => st.routines.find(x => x.id === id)).filter(Boolean)
+
+  const ids = Array.isArray(routineIds)
+    ? routineIds
+    : routineIds
+      ? [routineIds]
+      : []
+
+  const routines = ids
+    .map(id => st.routines.find(x => x.id === id))
+    .filter(Boolean)
+
   const r = routines[0] || null
   // The prescription is applied as the session is built, so you walk up to the bar with the
   // right weight already on the screen instead of being told about it afterwards. `plan` is
   // kept on the entry purely so the workout can explain the number it chose.
-  const entries = routines.flatMap(routine => routine.ex.map(cfg => ({ ...cfg, _routineId: routine.id, _routineName: routine.name }))).map(cfg => {
-    const plan = nextPrescription(st, cfg, routines.find(x => x.id === cfg._routineId) || r)
-    return { id: cfg.id, sg: cfg.sg, target: { ...cfg }, plan, sets: applyPrescription(buildSets(st, cfg), plan) }
+  const entries = routines
+  .flatMap(routine =>
+    routine.ex.map(cfg => ({
+      ...cfg,
+      _routineId: routine.id,
+      _routineName: routine.name
+    }))
+  )
+  .map(cfg => {
+    const plan = nextPrescription(
+      st,
+      cfg,
+      routines.find(x => x.id === cfg._routineId) || r
+    )
+
+    return {
+      id: cfg.id,
+      sg: cfg.sg,
+      target: { ...cfg },
+      plan,
+      sets: applyPrescription(buildSets(st, cfg), plan)
+    }
   })
   update(s => {
-    s.active = { id: uid(), d: todayISO(), start: Date.now(), routineId: ids, name: routines.length ? routines.map(x => x.name).join(' + ') : t('Freestyle'), bw: bw || null, cur: 0, entries }
+    s.active = {
+  id: uid(),
+  d: todayISO(),
+  start: Date.now(),
+  routineId: ids,
+  name: routines.length
+    ? routines.map(x => x.name).join(' + ')
+    : t('Freestyle'),
+  bw: bw || null,
+  cur: 0,
+  entries
+}
   })
   useUI.getState().stopRest()
   nav('/workout')
