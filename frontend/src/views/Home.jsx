@@ -44,7 +44,15 @@ const todayOvr = S.dayPlan[todayISO()] !== undefined
   const bwPoints = S.bodyweight.slice(-30).map(b => ({ t: b.t || new Date(b.d).getTime(), y: b.w, d: b.d }))
 
   // today's session shown right under the week strip
-  const onToday = () => { if (S.active) nav('/workout'); else if (routine) startFlow(routine.id); else dayOverrideSheet(todayISO()) }
+const onToday = () => {
+  if (S.active) {
+    nav('/workout')
+  } else if (routines.length) {
+    startFlow(routines.map(r => r.id))
+  } else {
+    dayOverrideSheet(todayISO())
+  }
+}
 
   return <div className="narrow">
     <div className="hdr">
