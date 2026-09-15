@@ -818,8 +818,17 @@ export function WorkoutRow({ w, onClick }) {
 }
 
 /* ============================ workout lifecycle ============================ */
-export function startFlow(routineId) {
-  bwSheet({ required: true, onDone: bw => beginWorkout(routineId, bw) })
+export function startFlow(routineIds) {
+  const ids = Array.isArray(routineIds)
+    ? routineIds
+    : routineIds
+      ? [routineIds]
+      : []
+
+  bwSheet({
+    required: true,
+    onDone: bw => beginWorkout(ids, bw)
+  })
 }
 export function beginWorkout(routineId, bw) {
   const st = S()
