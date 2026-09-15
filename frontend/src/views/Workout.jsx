@@ -19,9 +19,11 @@ import { glyphOf } from '../lib/glyphs.js'
 function StartChooser() {
   const nav = useNavigate()
   const S = useStore(s => s.S)
-  const todayR = effectiveRoutine(S, todayISO())
-  const todayOvr = S.dayPlan[todayISO()] !== undefined
-  const others = S.routines.filter(r => r !== todayR)
+const todayRoutines = effectiveRoutines(S, todayISO())
+const todayR = todayRoutines[0] || null
+const todayOvr = S.dayPlan[todayISO()] !== undefined
+const todayIds = todayRoutines.map(r => r.id)
+const others = S.routines.filter(r => !todayIds.includes(r.id))
   return <div className="narrow">
     <div className="hdr"><div><h1>{t('Start workout')}</h1><div className="sub">{t(DAYN[new Date().getDay()])} — {todayR ? t('today is {0}', todayR.name) : t('rest day, but no one’s stopping you')}</div></div></div>
     {todayR && <div className="card" style={{ borderColor: 'var(--acc)' }}>
