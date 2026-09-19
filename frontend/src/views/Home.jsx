@@ -45,11 +45,21 @@ const todayOvr = S.dayPlan[todayISO()] !== undefined
   const prevBW = S.bodyweight.length > 1 ? S.bodyweight[S.bodyweight.length - 2] : null
   const delta = bw && prevBW ? bw.w - prevBW.w : null
 
-  const monday = new Date(today); monday.setDate(today.getDate() - ((today.getDay() + 6) % 7) + weekOffset * 7)
+  // Gregorian: Monday → Sunday
+  // Persian/Jalali: Saturday → Friday
+  const weekStartOffset = calendar === 'jalali'
+    ? (today.getDay() + 1) % 7
+    : (today.getDay() + 6) % 7
+
+  const weekStart = new Date(today)
+  weekStart.setDate(today.getDate() - weekStartOffset + weekOffset * 7)
+
   const doneDays = new Set(S.workouts.map(w => w.d))
   const strip = []
+
   for (let i = 0; i < 7; i++) {
-    const d = new Date(monday); d.setDate(monday.getDate() + i)
+    const d = new Date(weekStart)
+    d.setDate(weekStart.getDate() + i)
     const iso = isoOf(d)
     const eff = effectiveRoutineId(S, iso), ovr = S.dayPlan[iso] !== undefined, done = doneDays.has(iso)
     const dot = done ? ' done' : ovr && eff ? ' ovr' : eff ? ' plan' : ''
@@ -71,13 +81,16 @@ const todayOvr = S.dayPlan[todayISO()] !== undefined
   </div>
 )
       
-  }
-  const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6)
-  const wkLabel = weekOffset === 0
-  ? t('This week')
-  : `${displayDayNumber(monday)} ${displayMonth(monday)} – ${displayDayNumber(sunday)} ${displayMonth(sunday)}`
+  }  const weekEnd = new Date(weekStart)
+  weekEnd.setDate(weekStart.getDate() + 6)
 
-  const wThisWeek = S.workouts.filter(w => weekKey(w.d) === weekKey(todayISO())).length
+  const wkLabel = weekOffset === 0
+    ? t('This week')
+    : `${displayDayNumber(weekStart)} ${displayMonth(weekStart)} – ${displayDayNumber(weekEnd)} ${displayMonth(weekEnd)}`
+
+    const weekStartISO = isoOf(weekStart)
+  const weekEndISO = isoOf(weekEnd)
+  const wThisWeek = S.workouts.filter(w => w.d >= weekStartISO && w.d <= weekEndISO).length
   const plannedPerWeek = Object.keys(S.week).filter(k => S.week[k]).length
   const bwPoints = S.bodyweight.slice(-30).map(b => ({ t: b.t || new Date(b.d).getTime(), y: b.w, d: b.d }))
 
