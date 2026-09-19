@@ -49,6 +49,100 @@ export const fmtVol = (v, unit) => fmtNum(v) + ' ' + unit
 // Plural forms are not automatic when the English string is the key.
 export const exCount = n => t(n === 1 ? '{0} exercise' : '{0} exercises', n)
 
+// Calendar helpers.
+// Workout dates remain stored as Gregorian ISO dates.
+// These helpers only control how dates are displayed in the selected calendar.
+
+export function calendarParts(date, calendar = 'gregorian') {
+  const d = date instanceof Date
+    ? date
+    : new Date(date + 'T12:00:00')
+
+  const locale = calendar === 'jalali'
+    ? 'fa-IR-u-ca-persian'
+    : dateLocale()
+
+  const parts = new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  }).formatToParts(d)
+
+  const get = type =>
+    Number(parts.find(p => p.type === type)?.value || 0)
+
+  return {
+    year: get('year'),
+    month: get('month'),
+    day: get('day')
+  }
+}
+
+export function calendarMonthStart(date, calendar = 'gregorian') {
+  const d = new Date(date)
+
+  if (calendar !== 'jalali') {
+    return new Date(d.getFullYear(), d.getMonth(), 1, 12)
+  }
+
+  // Move backwards until the first day of the Persian month.
+  for (let i = 0; i < 32; i++) {
+    const p = calendarParts(d, 'jalali')
+
+    if (p.day === 1) {
+      return new Date(
+        d.getFullYear(),
+        d.getMonth(),
+        d.getDate(),
+        12
+      )
+    }
+
+    d.setDate(d.getDate() - 1)
+  }
+
+  return new Date(date)
+}
+
+export function calendarMonthLabel(date, calendar = 'gregorian') {
+  const d = calendarMonthStart(date, calendar)
+
+  return d.toLocaleDateString(
+    calendar === 'jalali'
+      ? 'fa-IR-u-ca-persian'
+      : dateLocale(),
+    {
+      month: 'long',
+      year: 'numeric'
+    }
+  )
+}
+
+export function calendarMonthDays(monthStart, calendar = 'gregorian') {
+  const start = calendarMonthStart(monthStart, calendar)
+  const startParts = calendarParts(start, calendar)
+  const days = []
+
+  for (let i = 0; i < 33; i++) {
+    const d = new Date(start)
+    d.setDate(start.getDate() + i)
+
+    const p = calendarParts(d, calendar)
+
+    if (
+      i > 0 &&
+      (p.year !== startParts.year ||
+       p.month !== startParts.month)
+    ) {
+      break
+    }
+
+    days.push(d)
+  }
+
+  return days
+}
+
 export function weekKey(d) {
   const dt = new Date(d + 'T12:00:00')
   const day = (dt.getDay() + 6) % 7
