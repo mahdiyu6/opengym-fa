@@ -2,7 +2,23 @@ import { useEffect, useRef, useState } from 'react'
 import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
 import { EXDB, EXIDX, BODYPARTS, isCardio, isBodyweightEq, allExercises, equipmentOf } from './lib/exercises.js'
-import { fmtDate, fmtNum, fmtVol, fmtDur, durPart, todayISO, uid, exCount, DAYN, MONTHS_LONG, ACCENTS } from './lib/format.js'
+import {
+  fmtDate,
+  fmtNum,
+  fmtVol,
+  fmtDur,
+  durPart,
+  todayISO,
+  uid,
+  exCount,
+  DAYN,
+  MONTHS_LONG,
+  ACCENTS,
+  calendarParts,
+  calendarMonthStart,
+  calendarMonthLabel,
+  calendarMonthDays
+} from './lib/format.js'
 import { lastEntryFor, bestWeightFor, buildSets, effectiveRoutineId, effectiveRoutineIds, workoutVolume, setsDone, setsDoneActive, lastBW, estimatedCalories, supersetUnits, unitOf, setLabel, defaultConfig, cleanupSg, modeOf, effortOf, isBw, isPerSide, sideReps } from './lib/history.js'
 import { beep, vibrate } from './lib/sound.js'
 import { t, instrFor, getLang, INSTR_LANGS } from './lib/i18n.js'
@@ -748,7 +764,17 @@ function WorkoutDetail({ w, close }) {
   const st = useStore(s => s.S)
   return <>
     <h3>{w.name}</h3>
-    <div className="muted small" style={{ marginBottom: 12 }}>{[fmtDate(w.d, true), ...durPart(w.end - w.start), fmtVol(w.vol, st.unit), ...(w.bw ? [fmtNum(w.bw) + ' ' + st.unit] : [])].join(' · ')}</div>
+        <div className="muted small" style={{ marginBottom: 12 }}>
+      {[
+        fmtDate(w.d, true, st.calendar || 'gregorian'),
+        ...durPart(w.end - w.start),
+        fmtVol(w.vol, st.unit),
+        ...(w.bw ? [fmtNum(w.bw) + ' ' + st.unit] : []),
+        ...(w.calories != null
+          ? [fmtNum(w.calories) + ' kcal']
+          : [])
+      ].join(' · ')}
+    </div>
     {w.entries.map((e, i) => {
       const ex = EXIDX[e.id]
       return <div key={i} className="row" style={{ marginBottom: 12, alignItems: 'flex-start' }}>
