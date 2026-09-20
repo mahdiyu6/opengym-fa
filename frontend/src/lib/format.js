@@ -59,8 +59,8 @@ export function calendarParts(date, calendar = 'gregorian') {
     : new Date(date + 'T12:00:00')
 
   const locale = calendar === 'jalali'
-    ? 'fa-IR-u-ca-persian'
-    : dateLocale()
+    ? 'en-US-u-ca-persian'
+    : 'en-US'
 
   const parts = new Intl.DateTimeFormat(locale, {
     year: 'numeric',
