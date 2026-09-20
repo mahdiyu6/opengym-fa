@@ -765,17 +765,22 @@ function WorkoutDetail({ w, close }) {
   const st = useStore(s => s.S)
   return <>
     <h3>{w.name}</h3>
-        <div className="muted small" style={{ marginBottom: 12 }}>
-      {[
-        fmtDate(w.d, true, st.calendar || 'gregorian'),
-        ...durPart(w.end - w.start),
-        fmtVol(w.vol, st.unit),
-        ...(w.bw ? [fmtNum(w.bw) + ' ' + st.unit] : []),
-        ...(w.calories != null
-          ? [fmtNum(w.calories) + ' kcal']
-          : [])
-      ].join(' · ')}
-    </div>
+<div className="muted small" style={{ marginBottom: 12 }}>
+  <div style={{ marginBottom: 4 }}>
+    {fmtDate(w.d, true, st.calendar || 'gregorian')}
+  </div>
+
+  <div>
+    {[
+      ...durPart(w.end - w.start),
+      fmtVol(w.vol, st.unit),
+      ...(w.bw ? [fmtNum(w.bw) + ' ' + st.unit] : []),
+      ...(w.calories != null
+        ? [fmtNum(w.calories) + ' kcal']
+        : [])
+    ].join(' · ')}
+  </div>
+</div>
     {w.entries.map((e, i) => {
       const ex = EXIDX[e.id]
       return <div key={i} className="row" style={{ marginBottom: 12, alignItems: 'flex-start' }}>
