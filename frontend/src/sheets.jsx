@@ -17,7 +17,8 @@ import {
   calendarParts,
   calendarMonthStart,
   calendarMonthLabel,
-  calendarMonthDays
+  calendarMonthDays,
+  isoOf
 } from './lib/format.js'
 import { lastEntryFor, bestWeightFor, buildSets, effectiveRoutineId, effectiveRoutineIds, workoutVolume, setsDone, setsDoneActive, lastBW, estimatedCalories, supersetUnits, unitOf, setLabel, defaultConfig, cleanupSg, modeOf, effortOf, isBw, isPerSide, sideReps } from './lib/history.js'
 import { beep, vibrate } from './lib/sound.js'
