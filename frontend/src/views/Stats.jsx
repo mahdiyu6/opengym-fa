@@ -37,7 +37,7 @@ function MuscleBalance({ S }) {
   const on = hard && rated
   const load = loadOfWorkouts(inWin, on ? isHardSet : null)
   const { worked, missed } = rankOf(load)
-  const top = worked.slice(0, 4)
+  const top = worked
   const max = worked.length ? load[worked[0]] : 0
   const sets = m => Math.round((load[m] || 0) * 10) / 10
 
