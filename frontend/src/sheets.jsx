@@ -1233,8 +1233,9 @@ function doFinishWorkout() {
     const rec = is1RMRecord(st, e.id, e)
     if (rec && !prs.includes(e.id)) e1prs.push({ id: e.id, ...rec })
   })
+  const pausedMs = (A.pausedMs || 0) + (A.pausedAt ? Date.now() - A.pausedAt : 0)
   const w = {
-    id: A.id, d: A.d, start: A.start, end: Date.now(), routineId: A.routineId, name: A.name, bw: A.bw,
+    id: A.id, d: A.d, start: A.start + pausedMs, end: Date.now(), routineId: A.routineId, name: A.name, bw: A.bw,
     // `target` (what the session prescribed) is kept alongside the sets: without it a
     // finished workout cannot say whether it hit its reps, and a timed session reads back
     // as "0 reps". It is what the progression engine works from.
@@ -1242,7 +1243,7 @@ function doFinishWorkout() {
     prs
   }
   w.vol = workoutVolume(w)
-  w.calories = estimatedCalories(st, A.start, w.end, A.bw, w.entries)
+  w.calories = estimatedCalories(st, w.start, w.end, A.bw, w.entries)
   update(s => {
     w.entries.forEach(e => {
       const mx = Math.max(0, ...e.sets.filter(x => x.done).map(x => x.w || 0), e.topW || 0)
