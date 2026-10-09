@@ -16,17 +16,34 @@ export default function TabBar({ onStart }) {
   const on = k => cur === k || (cur === 'history' && k === 'stats') || (cur === 'settings' && k === 'home')
 
   const startWorkout = () => {
-  if (!S.active) {
-    const ids = effectiveRoutineIds(S, todayISO())
+    if (!S.active) {
+      const ids = effectiveRoutineIds(S, todayISO())
 
-    if (ids.length) {
-      onStart(ids)
+      if (ids.length) {
+        onStart(ids)
+        return
+      }
+
+      nav('/workout')
       return
     }
-  }
 
-  nav('/workout')
-}
+    if (S.active.pausedAt) {
+      const now = Date.now()
+      useStore.getState().update(s => {
+        if (s.active?.pausedAt) {
+          s.active.pausedMs =
+            (s.active.pausedMs || 0) + (now - s.active.pausedAt)
+          s.active.pausedAt = null
+        }
+      })
+      nav('/workout')
+    } else {
+      useStore.getState().update(s => {
+        if (s.active) s.active.pausedAt = Date.now()
+      })
+    }
+  }
   const Tab = ({ k, icon, to, label }) => (
     <button className={on(k) ? 'on' : ''} onClick={() => nav(to)}>
       <Icon name={icon} /><span>{label}</span>
@@ -38,8 +55,12 @@ export default function TabBar({ onStart }) {
       <Tab k="home" icon="house" to="/home" label={t('Home')} />
       <Tab k="plan" icon="calendar" to="/plan" label={t('Plan')} />
       <button className={'start' + (S.active ? ' rec' : '')} onClick={startWorkout}>
-        <span className="cir"><Icon name={S.active ? 'play' : 'dumbbell'} /></span>
-        <span>{S.active ? t('Resume') : t('Start')}</span>
+        <span className="cir">
+          <Icon name={S.active ? (S.active.pausedAt ? 'play' : 'pause') : 'dumbbell'} />
+        </span>
+        <span>
+          {S.active ? t(S.active.pausedAt ? 'Resume' : 'Pause') : t('Start')}
+        </span>
       </button>
       <Tab k="stats" icon="chart" to="/stats" label={t('Stats')} />
       <Tab k="library" icon="list" to="/library" label={t('Exercises')} />
