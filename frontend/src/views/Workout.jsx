@@ -84,12 +84,27 @@ const others = S.routines.filter(r => !todayIds.includes(r.id))
 }
 
 /* ---------- elapsed clock (isolated so the workout tree doesn't re-render every second) ---------- */
-function Elapsed({ start }) {
+function Elapsed({ start, pausedMs = 0, pausedAt = null }) {
   const [t, setT] = useState('0:00')
+
   useEffect(() => {
-    const tick = () => { const s = Math.floor((Date.now() - start) / 1000); setT(Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0')) }
-    tick(); const iv = setInterval(tick, 1000); return () => clearInterval(iv)
-  }, [start])
+    const tick = () => {
+      const pausedNow = pausedAt ? Date.now() - pausedAt : 0
+      const s = Math.floor(
+        Math.max(0, Date.now() - start - pausedMs - pausedNow) / 1000
+      )
+
+      setT(
+        Math.floor(s / 60) + ':' +
+        String(s % 60).padStart(2, '0')
+      )
+    }
+
+    tick()
+    const iv = setInterval(tick, 1000)
+    return () => clearInterval(iv)
+  }, [start, pausedMs, pausedAt])
+
   return <span>{t}</span>
 }
 
@@ -294,7 +309,11 @@ function ActiveWorkout() {
   return <div className="narrow">
     <div className="hdr">
       <button className="iconbtn" aria-label={t('Discard')} onClick={() => confirmSheet({ title: t('Discard workout?'), message: t('The sets you logged in this session will be lost.'), confirmText: t('Discard'), danger: true, onConfirm: () => { update(s => { s.active = null }); stopRest(); nav('/home') } })}><Icon name="xmark" /></button>
-      <div style={{ textAlign: 'center' }}><div style={{ fontWeight: 600 }}>{A.name}</div><div className="sub"><Elapsed start={A.start} /> · {t('{0} sets', done + '/' + total)}</div></div>
+      <div style={{ textAlign: 'center' }}><div style={{ fontWeight: 600 }}>{A.name}</div><div className="sub"><Elapsed
+  start={A.start}
+  pausedMs={A.pausedMs || 0}
+  pausedAt={A.pausedAt || null}
+/> · {t('{0} sets', done + '/' + total)}</div></div>
       <button className="iconbtn" style={{ color: 'var(--acc)' }} aria-label={t('Finish')} onClick={finishWorkout}><Icon name="check" /></button>
     </div>
     <div className="wprog"><i style={{ width: (total ? done / total * 100 : 0) + '%' }} /></div>
