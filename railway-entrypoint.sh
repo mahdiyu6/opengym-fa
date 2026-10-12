@@ -13,7 +13,7 @@ envsubst '${WEB_PORT}' \
   < /etc/nginx/http.d/default.conf.template \
   > /etc/nginx/http.d/default.conf
 
-rm -f /etc/nginx/http.d/default.conf.template
+
 
 node /app/api/server.js &
 API_PID=$!
