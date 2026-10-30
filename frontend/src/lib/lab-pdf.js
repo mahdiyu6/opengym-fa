@@ -1,18 +1,39 @@
-// OpenGym Health PDF extraction prototype v2. Keeps source traceability; never auto-saves.
-const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs';
-const TESS='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js';
-let pdfjsPromise,tessPromise;
-async function pdfjs(){if(!pdfjsPromise)pdfjsPromise=import(PDFJS).then(m=>{m.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';return m});return pdfjsPromise}
-export function normalizeDigits(s=''){return String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٫٬]/g,'.').replace(/\u00a0/g,' ')}
-function rows(items){const out=[];for(const i of items){const str=(i.str||'').trim();if(!str)continue;const x=i.transform?.[4]||0,y=i.transform?.[5]||0;let r=out.find(a=>Math.abs(a.y-y)<2.6);if(!r){r={y,parts:[]};out.push(r)}r.parts.push({x,str})}return out.sort((a,b)=>b.y-a.y).map(r=>({y:r.y,text:r.parts.sort((a,b)=>a.x-b.x).map(p=>p.str).join(' ').replace(/\s+/g,' ').trim()})).filter(r=>r.text)}
-async function readText(file){const lib=await pdfjs(),pdf=await lib.getDocument({data:await file.arrayBuffer()}).promise,p=[];for(let n=1;n<=pdf.numPages;n++){const page=await pdf.getPage(n),rr=rows((await page.getTextContent()).items);p.push({page:n,rows:rr,text:rr.map(r=>r.text).join('\n'),source:'text'})}return p}
-async function readOCR(file,onProgress=()=>{}){const lib=await pdfjs();if(!tessPromise)tessPromise=import(TESS);const tess=await tessPromise,pdf=await lib.getDocument({data:await file.arrayBuffer()}).promise,w=await tess.createWorker('eng',1,{logger:onProgress}),p=[];try{for(let n=1;n<=pdf.numPages;n++){const page=await pdf.getPage(n),v=page.getViewport({scale:2}),c=document.createElement('canvas');c.width=Math.ceil(v.width);c.height=Math.ceil(v.height);await page.render({canvasContext:c.getContext('2d'),viewport:v}).promise;const res=await w.recognize(c),text=res.data.text||'';p.push({page:n,rows:text.split(/\r?\n/).filter(Boolean).map(text=>({text})),text,source:'ocr'});c.width=c.height=1}}finally{await w.terminate()}return p}
-export async function extractLabPdf(file,{onProgress=()=>{},forceOCR=false}={}){let pages=forceOCR?[]:await readText(file);if(forceOCR||pages.reduce((n,p)=>n+p.text.length,0)<80)pages=await readOCR(file,onProgress);return{pages,text:pages.map(p=>`--- PAGE ${p.page} [${p.source}] ---\n${p.text}`).join('\n\n'),usedOCR:pages.some(p=>p.source==='ocr')}}
-export async function extractPdfText(file){return (await extractLabPdf(file)).text}
-const UNIT='(10\\s*\\*\\s*[36]\\s*\\/\\s*[µμu]?L|mL\\s*\\/\\s*min\\s*\\/\\s*1\\.73\\s*m²|mIU\\s*\\/\\s*mL|mIU\\s*\\/\\s*L|µIU\\s*\\/\\s*mL|uIU\\s*\\/\\s*mL|µmol\\s*\\/\\s*L|umol\\s*\\/\\s*L|mmol\\s*\\/\\s*L|nmol\\s*\\/\\s*L|pmol\\s*\\/\\s*L|mg\\s*\\/\\s*dL|mg\\s*\\/\\s*L|µg\\s*\\/\\s*dL|ug\\s*\\/\\s*dL|ng\\s*\\/\\s*mL|ng\\s*\\/\\s*dL|pg\\s*\\/\\s*mL|pg\\s*\\/\\s*dL|g\\s*\\/\\s*dL|g\\s*\\/\\s*L|IU\\s*\\/\\s*L|U\\s*\\/\\s*L|mEq\\s*\\/\\s*L|mm\\s*\\/\\s*h(?:r)?|fL|pg|%|ratio|index)';
-const NUM='-?\\d+(?:[.,]\\d+)?';
-const aliases=[[/^wbc$/i,'White blood cells'],[/^rbc$/i,'Red blood cells'],[/^hemoglobin a1c$/i,'HbA1c'],[/^fasting blood glucose$/i,'Fasting glucose'],[/^sgot\\s*\\(?\\s*ast\\s*\\)?$/i,'AST'],[/^sgpt\\s*\\(?\\s*alt\\s*\\)?$/i,'ALT'],[/^vitamin d total\\(25-oh\\)$/i,'25-OH Vitamin D']];
-export function canonicalName(s){s=s.replace(/\b[HL]\b/g,'').replace(/[*!]+/g,'').replace(/\s+/g,' ').trim();return aliases.find(([re])=>re.test(s))?.[1]||s}
-function parseLine(line,page,source){const original=normalizeDigits(line).replace(/[–—]/g,'-').replace(/\s+/g,' ').trim();if(!original||/reference intervals|reference interval|normal range|page \d+ of \d+|calculated by/i.test(original))return null;const u=original.match(new RegExp(UNIT,'i'));if(!u)return null;const before=original.slice(0,u.index).trim(),v=before.match(new RegExp('('+NUM+')\\s*[*]?\\s*$'));if(!v)return null;const rawName=before.slice(0,v.index).replace(/(?:^|\\s)[HL]\\s*$/,'').replace(/[*!|:]+$/,'').trim();if(rawName.length<2||rawName.length>90||!/[A-Za-z]/.test(rawName))return null;const tail=original.slice(u.index+u[0].length),range=tail.match(new RegExp('(?:^|\\s|:)(\\d+(?:[.,]\\d+)?)\\s*(?:-|to)\\s*(\\d+(?:[.,]\\d+)?)(?=\\s|:|$)','i'));return{name:canonicalName(rawName),originalName:rawName,value:v[1].replace(',','.'),unit:u[1].replace(/\s+/g,''),refLow:range?.[1].replace(',','.')||'',refHigh:range?.[2].replace(',','.')||'',status:'unknown',page,source,sourceLine:line,confidence:source==='text'?.82:.55,verified:false}}
-export function parseLabReportText(text,meta={}){const pages=meta.pages||text.split(/(?=--- PAGE \d+)/).map((text,i)=>({page:i+1,text,source:meta.usedOCR?'ocr':'text'})),items=[],seen=new Set();for(const p of pages)for(const line of p.text.split(/\r?\n/)){const x=parseLine(line,p.page,p.source);if(!x)continue;const k=[x.name.toLowerCase(),x.value,x.unit.toLowerCase(),x.page].join('|');if(!seen.has(k)){seen.add(k);items.push(x)}}const warnings=[meta.usedOCR?'OCR انگلیسی استفاده شده؛ نام‌ها و اعداد باید بازبینی شوند.':'متن PDF استخراج شده؛ چیدمان ستون‌ها ممکن است نیاز به اصلاح داشته باشد.','محدوده‌های مرجع چندخطی/متنی خودکار تفسیر نمی‌شوند.','هر نتیجه باید با صفحه اصلی تأیید شود؛ خروجی تشخیص پزشکی نیست.'];return{date:'',items,warnings,metrics:{pages:pages.length,parsedRows:items.length,ocr:!!meta.usedOCR}}}
-export async function extractAndParseLabPdf(file,options={}){const r=await extractLabPdf(file,options);return{...parseLabReportText(r.text,{pages:r.pages,usedOCR:r.usedOCR}),rawText:r.text,usedOCR:r.usedOCR}}
+// Browser-side PDF text extraction. PDF bytes stay in the browser.
+let promise
+async function pdfjs(){
+ if(!promise) promise=import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs').then(m=>{m.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';return m})
+ return promise
+}
+export async function extractPdfText(file){
+ const lib=await pdfjs(),pdf=await lib.getDocument({data:await file.arrayBuffer()}).promise,pages=[]
+ for(let p=1;p<=pdf.numPages;p++){
+  const page=await pdf.getPage(p),content=await page.getTextContent()
+  const items=content.items.map(i=>({s:i.str,x:i.transform?.[4]||0,y:i.transform?.[5]||0})),rows=[]
+  for(const it of items){let row=rows.find(r=>Math.abs(r.y-it.y)<3);if(!row){row={y:it.y,a:[]};rows.push(row)}row.a.push(it)}
+  rows.sort((a,b)=>b.y-a.y)
+  pages.push(`--- PAGE ${p} ---\n`+rows.map(r=>r.a.sort((a,b)=>a.x-b.x).map(x=>x.s).join(' ').replace(/\s+/g,' ').trim()).filter(Boolean).join('\n'))
+ }
+ return pages.join('\n\n')
+}
+export function parseLabReportText(text){
+ const warnings=[],items=[],seen=new Set()
+ if(!text.trim())return{date:'',items:[],warnings:['PDF متن قابل‌استخراج ندارد؛ احتمالاً تصویری/اسکن‌شده است. OCR هنوز پیاده نشده.']}
+ const dm=text.match(/(?:sample|collection|received|report|date|تاریخ(?:\s+(?:پذیرش|نمونه|گزارش))?)\s*[:：]?\s*(\d{4}[/-]\d{1,2}[/-]\d{1,2})/i)
+ const date=dm?dm[1].replaceAll('/','-'):''
+ const lines=text.split(/\r?\n/).map(s=>s.replace(/\s+/g,' ').trim()).filter(Boolean)
+ const unitRx=/(mg\/dL|mmol\/L|µmol\/L|umol\/L|ng\/mL|pg\/mL|ng\/dL|pg\/dL|g\/dL|g\/L|mIU\/L|mIU\/mL|µIU\/mL|uIU\/mL|IU\/L|U\/L|%|fL|pg|mm³|\/µL|nmol\/L|pmol\/L|mm\/hr|mg\/L|µg\/dL|ug\/dL|µg\/L|ug\/L)\b/i
+ for(const line of lines){
+  if(line.length<4||/reference interval|normal range|patient name|page \d|نتیجه آزمایش|نام بیمار/i.test(line))continue
+  const um=line.match(unitRx);if(!um)continue
+  const before=line.slice(0,um.index).trim()
+  const vm=before.match(/(-?\d+(?:[.,]\d+)?)\s*$/);if(!vm)continue
+  const value=vm[1].replace(',','.'),name=before.slice(0,vm.index).replace(/[|:;·]+$/,'').trim(),unit=um[1]
+  if(name.length<2||name.length>80||!/[a-zA-Z\u0600-\u06FF]/.test(name))continue
+  const tail=line.slice(um.index+unit.length)
+  const range=tail.match(/^\s*(\d+(?:[.,]\d+)?)\s*[-–]\s*(\d+(?:[.,]\d+)?)/)
+  const key=name.toLowerCase()+'|'+value+'|'+unit.toLowerCase();if(seen.has(key))continue;seen.add(key)
+  items.push({name,value,unit,refLow:range?range[1].replace(',','.'): '',refHigh:range?range[2].replace(',','.'): '',status:'unknown',sourceLine:line,verified:false})
+ }
+ warnings.push(items.length?'استخراج آزمایشی است؛ ممکن است ردیف‌ها جا بیفتند یا ستون‌ها اشتباه جفت شوند. هر ردیف را با PDF تطبیق بده.':'نتیجه‌ای با الگوی مطمئن پیدا نشد. متن خام را بررسی کن؛ هیچ موردی خودکار ذخیره نشده است.')
+ return{date,items,warnings}
+}
