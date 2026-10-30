@@ -21,7 +21,7 @@ export function parseLabReportText(text){
  const dm=text.match(/(?:sample|collection|received|report|date|تاریخ(?:\s+(?:پذیرش|نمونه|گزارش))?)\s*[:：]?\s*(\d{4}[/-]\d{1,2}[/-]\d{1,2})/i)
  const date=dm?dm[1].replaceAll('/','-'):''
  const lines=text.split(/\r?\n/).map(s=>s.replace(/\s+/g,' ').trim()).filter(Boolean)
- const unitRx=/(mg\/dL|mmol\/L|µmol\/L|umol\/L|ng\/mL|pg\/mL|ng\/dL|pg\/dL|g\/dL|g\/L|mIU\/L|mIU\/mL|µIU\/mL|uIU\/mL|IU\/L|U\/L|%|fL|pg|mm³|\/µL|nmol\/L|pmol\/L|mm\/hr|mg\/L|µg\/dL|ug\/dL|µg\/L|ug\/L)\b/i
+ const unitRx=/(10\s*\*\s*[36]\s*\/\s*[µμu]L|mg\/dL|mmol\/L|µmol\/L|umol\/L|ng\/mL|pg\/mL|ng\/dL|pg\/dL|g\/dL|g\/L|mIU\/L|mIU\/mL|µIU\/mL|uIU\/mL|IU\/L|U\/L|%|fL|pg|mm³|\/µL|\/μL|nmol\/L|pmol\/L|mm\/hr|mg\/L|µg\/dL|ug\/dL|µg\/L|ug\/L)\b/i
  for(const line of lines){
   if(line.length<4||/reference interval|normal range|patient name|page \d|نتیجه آزمایش|نام بیمار/i.test(line))continue
   const um=line.match(unitRx);if(!um)continue
