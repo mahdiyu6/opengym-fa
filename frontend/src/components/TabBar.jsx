@@ -63,7 +63,7 @@ export default function TabBar({ onStart }) {
         </span>
       </button>
       <Tab k="stats" icon="chart" to="/stats" label={t('Stats')} />
-      <Tab k="health" icon="chart" to="/health" label="Health" />
+      <Tab k="health" icon="health" to="/health" label="Health" />
     </nav>
   )
 }
