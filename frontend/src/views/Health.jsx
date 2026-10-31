@@ -22,6 +22,30 @@ export default function Health(){
   catch(e){setError('خواندن PDF ناموفق بود: '+(e?.message||'خطای نامشخص'))}finally{setBusy(false)}
  }
  function edit(i,k,v){setDraft(d=>({...d,items:d.items.map((x,j)=>i===j?{...x,[k]:v,status:'unknown'}:x)}))}
+ function addRow() {
+  setDraft(d => ({
+    ...d,
+    items: [
+      ...d.items,
+      {
+        name: '',
+        value: '',
+        unit: '',
+        refLow: '',
+        refHigh: '',
+        status: 'unknown',
+        sourceLine: 'Manually added',
+        verified: false
+      }
+    ]
+  }))
+}
+function removeRow(index) {
+  setDraft(d => ({
+    ...d,
+    items: d.items.filter((_, i) => i !== index)
+  }))
+}
  function save(){const r={id:draft.id,name:draft.name,date:draft.date||new Date().toISOString().slice(0,10),createdAt:new Date().toISOString(),items:draft.items.map(x=>({...x,status:statusOf(x),verified:true}))};const next=[r,...reports];try{write(next);setReports(next);setDraft(null);setNotice('ذخیره شد؛ داده فقط در همین مرورگر قرار دارد.')}catch{setError('ذخیره‌سازی مرورگر ناموفق بود.')}}
  function remove(id){if(!confirm('این گزارش حذف شود؟'))return;const next=reports.filter(r=>r.id!==id);write(next);setReports(next);setSelected(null)}
  if(selected)return <main className="health-page" dir="rtl" lang="fa"><button className="health-secondary" onClick={()=>setSelected(null)}>‹ بازگشت</button><h1>{selected.name}</h1><section className="health-card"><div className="health-value">{selected.value} <small>{selected.unit}</small></div><span className={'health-badge '+statusOf(selected)}>{labels[statusOf(selected)]}</span><p>تاریخ: {selected.reportDate||'نامشخص'}</p><p>محدوده مرجع: {selected.refLow!==''||selected.refHigh!==''?`${selected.refLow||'—'} تا ${selected.refHigh||'—'} ${selected.unit||''}`:'در PDF مشخص نشده؛ وضعیت قطعی نیست.'}</p><p className="health-warning">این ابزار تشخیص پزشکی نیست. محدوده‌ها را با برگه اصلی بررسی کن.</p></section><section className="health-card"><h2>تاریخچه</h2>{all.filter(x=>x.name.toLowerCase()===selected.name.toLowerCase()).sort((a,b)=>(a.reportDate||'').localeCompare(b.reportDate||'')).map(x=><p key={x.itemKey}>{x.reportDate}: <b>{x.value} {x.unit}</b></p>)}</section></main>
