@@ -146,38 +146,7 @@ export default function Health() {
     high: tx('High', 'بالا'),
     unknown: tx('Needs review', 'نیازمند بررسی')
   }
-  const selectedHistory = selected
-    ? all
-        .filter(x =>
-          String(x.name || '').trim().toLowerCase() ===
-          String(selected.name || '').trim().toLowerCase()
-        )
-        .map(x => ({ ...x, numeric: numericValue(x.value) }))
-        .filter(x => x.numeric !== null)
-        .sort((a, b) =>
-          (a.reportDate || '').localeCompare(b.reportDate || '')
-        )
-    : []
-
-  const historyUnits = [...new Set(selectedHistory.map(x => x.unit || ''))]
-  const sameUnit = historyUnits.length <= 1
-
-  const chartPoints = sameUnit
-    ? selectedHistory.map(x => ({ ...x, value: x.numeric }))
-    : []
-
-  const latestTwo = selectedHistory.slice(-2)
-  const previousResult = latestTwo.length === 2 ? latestTwo[0] : null
-  const latestResult = latestTwo.length === 2 ? latestTwo[1] : null
-
-  const difference = previousResult && latestResult
-    ? latestResult.numeric - previousResult.numeric
-    : null
-
-  const percentageChange =
-    previousResult && previousResult.numeric !== 0
-      ? (difference / Math.abs(previousResult.numeric)) * 100
-      : null
+  
   const input = useRef(null)
 
   const reports = useStore(s => s.S.labReports || [])
@@ -348,7 +317,38 @@ updateStore(s => {
   }
 
   const statusLabel = item => statusLabels[statusOf(item)]
+const selectedHistory = selected
+    ? all
+        .filter(x =>
+          String(x.name || '').trim().toLowerCase() ===
+          String(selected.name || '').trim().toLowerCase()
+        )
+        .map(x => ({ ...x, numeric: numericValue(x.value) }))
+        .filter(x => x.numeric !== null)
+        .sort((a, b) =>
+          (a.reportDate || '').localeCompare(b.reportDate || '')
+        )
+    : []
 
+  const historyUnits = [...new Set(selectedHistory.map(x => x.unit || ''))]
+  const sameUnit = historyUnits.length <= 1
+
+  const chartPoints = sameUnit
+    ? selectedHistory.map(x => ({ ...x, value: x.numeric }))
+    : []
+
+  const latestTwo = selectedHistory.slice(-2)
+  const previousResult = latestTwo.length === 2 ? latestTwo[0] : null
+  const latestResult = latestTwo.length === 2 ? latestTwo[1] : null
+
+  const difference = previousResult && latestResult
+    ? latestResult.numeric - previousResult.numeric
+    : null
+
+  const percentageChange =
+    previousResult && previousResult.numeric !== 0
+      ? (difference / Math.abs(previousResult.numeric)) * 100
+      : null
     // Selected test detail
   if (selected) {
     return (
