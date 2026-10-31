@@ -186,3 +186,40 @@
     font-size: 15px;
   }
 }
+.health-info {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--sep);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.health-info > h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+
+.health-info-block {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--sep);
+}
+
+.health-info-block h3 {
+  margin: 0 0 7px;
+  font-size: 14px;
+  color: var(--accent);
+}
+
+.health-info-block p {
+  margin: 0;
+  line-height: 1.8;
+  color: var(--label);
+  font-size: 14px;
+}
+
+.health-info-note {
+  margin: 14px 0 0;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--label-2);
+}
