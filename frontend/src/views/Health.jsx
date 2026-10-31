@@ -1,8 +1,9 @@
 
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { directionFor, getLang, t, useLang } from '../lib/i18n.js'
 import { extractPdfText, parseLabReportText } from '../lib/lab-pdf.js'
 import './health.css'
+import { useStore } from '../store/useStore.js'
 
 const KEY = 'opengym.health.reports.v1'
 
