@@ -186,18 +186,21 @@ export default function Health() {
       }))
     }
 
-    const next = [r, ...reports]
+try {
+  updateStore(s => {
+    s.labReports = [
+      r,
+      ...(s.labReports || []).filter(x => x.id !== r.id)
+    ]
+  })
 
-    try {
-      write(next)
-      setReports(next)
-      setDraft(null)
-      setNotice(
-        tx(
-          'Report saved. Data is stored only in this browser.',
-          'ذخیره شد؛ داده فقط در همین مرورگر قرار دارد.'
-        )
-      )
+  setDraft(null)
+  setNotice(
+    tx(
+      'Report saved to your app data. It will sync with your account when signed in and online.',
+      'گزارش در اطلاعات برنامه ذخیره شد و در صورت ورود به حساب و اتصال اینترنت، همگام‌سازی می‌شود.'
+    )
+  )
     } catch {
       setError(
         tx(
@@ -211,9 +214,9 @@ export default function Health() {
   function remove(id) {
     if (!confirm(tx('Delete this report?', 'این گزارش حذف شود؟'))) return
 
-    const next = reports.filter(r => r.id !== id)
-    write(next)
-    setReports(next)
+updateStore(s => {
+  s.labReports = (s.labReports || []).filter(r => r.id !== id)
+})
     setSelected(null)
   }
 
