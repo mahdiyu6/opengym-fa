@@ -113,4 +113,76 @@
     white-space: normal;
   }
 }
+.health-trend-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
 
+.health-trend-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  min-width: 0;
+}
+
+.health-trend-summary small {
+  font-size: 12px;
+  color: var(--label-2);
+}
+
+.health-trend-summary b {
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+.health-chart-wrap {
+  width: 100%;
+  margin: 12px 0;
+  overflow: hidden;
+}
+
+.health-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.health-chart-grid {
+  stroke: var(--sep-op);
+  stroke-width: 1;
+}
+
+.health-chart-label {
+  fill: var(--label-2);
+  font-size: 11px;
+}
+
+.health-chart-line {
+  fill: none;
+  stroke: var(--orange);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.health-chart-point {
+  fill: var(--orange);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+@media (max-width: 560px) {
+  .health-trend-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .health-trend-summary b {
+    font-size: 15px;
+  }
+}
