@@ -4,6 +4,7 @@ import { directionFor, getLang, t, useLang } from '../lib/i18n.js'
 import { extractPdfText, parseLabReportText } from '../lib/lab-pdf.js'
 import './health.css'
 import { useStore } from '../store/useStore.js'
+import { getLabInfo } from '../lib/lab-info.js'
 
 const KEY = 'opengym.health.reports.v1'
 
@@ -153,6 +154,7 @@ export default function Health() {
   const updateStore = useStore(s => s.update)
   const [draft, setDraft] = useState(null)
   const [selected, setSelected] = useState(null)
+  const info = selected ? getLabInfo(selected.name, lang) : null
   const [query, setQuery] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -383,12 +385,52 @@ const selectedHistory = selected
               : referenceRange(selected)}
           </p>
 
-          <p className="health-warning">
-            {tx(
-              'This tool is not a medical diagnosis. Check the values against the original report.',
-              'این ابزار تشخیص پزشکی نیست. نتایج را با برگه اصلی آزمایش بررسی کن.'
-            )}
-          </p>
+          <section className="health-info">
+  <h2>ⓘ {tx('Information', 'اطلاعات')}</h2>
+
+  {info ? (
+    <>
+      <div className="health-info-block">
+        <h3>{tx('What is it?', 'این شاخص چیست؟')}</h3>
+        <p>{info.what}</p>
+      </div>
+
+      <div className="health-info-block">
+        <h3>{tx('Role in the body', 'نقش در بدن')}</h3>
+        <p>{info.role}</p>
+      </div>
+
+      <div className="health-info-block">
+        <h3>{tx('When is it high?', 'علل احتمالی افزایش')}</h3>
+        <p>{info.high}</p>
+      </div>
+
+      <div className="health-info-block">
+        <h3>{tx('When is it low?', 'علل احتمالی کاهش')}</h3>
+        <p>{info.low}</p>
+      </div>
+
+      <div className="health-info-block">
+        <h3>{tx('Factors affecting the result', 'عوامل مؤثر بر نتیجه')}</h3>
+        <p>{info.factors}</p>
+      </div>
+    </>
+  ) : (
+    <p>
+      {tx(
+        'Information for this marker has not been added yet.',
+        'اطلاعات این شاخص هنوز به دیتاست اضافه نشده است.'
+      )}
+    </p>
+  )}
+
+  <p className="health-info-note">
+    {tx(
+      'Educational information only. Interpret results using the laboratory reference range and clinical context.',
+      'این اطلاعات صرفاً آموزشی است. نتیجه آزمایش باید با محدوده مرجع آزمایشگاه و شرایط بالینی تفسیر شود.'
+    )}
+  </p>
+</section>
         </section>
 
         {/* Comparison of the two latest results */}
