@@ -52,7 +52,34 @@ function removeRow(index) {
  return <main className="health-page" dir="rtl" lang="fa"><header className="health-header"><div><p className="health-kicker">OPENGYM · HEALTH</p><h1>سلامت و آزمایش‌ها</h1><p className="health-muted">گزارش PDF را وارد و نتایج را پیش از ذخیره بازبینی کن.</p></div><button className="health-primary" disabled={busy} onClick={()=>input.current?.click()}>{busy?'در حال خواندن…':'+ بارگذاری PDF'}</button><input ref={input} type="file" accept="application/pdf,.pdf" hidden onChange={e=>{importPdf(e.target.files?.[0]);e.target.value=''}}/></header>
  <div className="health-privacy">حریم خصوصی: این نسخه فایل را به سرور ارسال نمی‌کند؛ نتایج در localStorage همین مرورگر ذخیره می‌شوند و بین دستگاه‌ها همگام نیستند.</div>
  {error&&<div className="health-alert">{error}</div>}{notice&&<div className="health-alert">{notice}</div>}
- {draft&&<section className="health-card"><div className="health-row"><h2>بازبینی قبل از ذخیره</h2><button className="health-secondary" onClick={()=>setDraft(null)}>لغو</button></div><label>تاریخ گزارش <input type="date" value={draft.date} onChange={e=>setDraft({...draft,date:e.target.value})}/></label><p className="health-warning">استخراج آزمایشی است و تضمین پوشش کامل ندارد. مقدار، اعشار، واحد و محدوده را با PDF تطبیق بده.</p>{draft.warnings.map((w,i)=><p className="health-alert" key={i}>{w}</p>)}<div className="health-table-wrap"><table className="health-table"><thead><tr><th>نام</th><th>مقدار</th><th>واحد</th><th>مرجع پایین</th><th>مرجع بالا</th></tr></thead><tbody>{draft.items.map((x,i)=><tr key={i}>{[['name','نام'],['value','مقدار'],['unit','واحد'],['refLow','مرجع پایین'],['refHigh','مرجع بالا']].map(([k,l])=><td key={k}><input aria-label={l} value={x[k]??''} onChange={e=>edit(i,k,e.target.value)}/></td>)}</tr>)}</tbody></table></div><details className="health-raw"><summary>متن خام برای بررسی</summary><pre>{draft.rawText}</pre></details><button className="health-primary" disabled={!draft.items.length} onClick={save}>ذخیره نتایج بازبینی‌شده</button></section>}
+ {draft&&<section className="health-card"><div className="health-row"><h2>بازبینی قبل از ذخیره</h2><button className="health-secondary" onClick={()=>setDraft(null)}>لغو</button></div><label>تاریخ گزارش <input type="date" value={draft.date} onChange={e=>setDraft({...draft,date:e.target.value})}/></label><p className="health-warning">استخراج آزمایشی است و تضمین پوشش کامل ندارد. مقدار، اعشار، واحد و محدوده را با PDF تطبیق بده.</p>{draft.warnings.map((w,i)=><p className="health-alert" key={i}>{w}</p>)}<button type="button" className="health-secondary" onClick={addRow}> + افزودن ردیف </button><div className="health-table-wrap"><table className="health-table"><thead><tr><th>نام</th><th>مقدار</th><th>واحد</th><th>مرجع پایین</th><th>مرجع بالا</th><th>عملیات</th></tr></thead><tbody>{draft.items.map((x, i) => (
+  <tr key={i}>
+    {[
+      ['name', 'نام'],
+      ['value', 'مقدار'],
+      ['unit', 'واحد'],
+      ['refLow', 'مرجع پایین'],
+      ['refHigh', 'مرجع بالا']
+    ].map(([k, l]) => (
+      <td key={k}>
+        <input
+          aria-label={l}
+          value={x[k] ?? ''}
+          onChange={e => edit(i, k, e.target.value)}
+        />
+      </td>
+    ))}
+    <td>
+      <button
+        type="button"
+        className="health-danger"
+        onClick={() => removeRow(i)}
+      >
+        حذف
+      </button>
+    </td>
+  </tr>
+))}</tbody></table></div><details className="health-raw"><summary>متن خام برای بررسی</summary><pre>{draft.rawText}</pre></details><button className="health-primary" disabled={!draft.items.length} onClick={save}>ذخیره نتایج بازبینی‌شده</button></section>}
  <label className="health-search"><span>⌕</span><input placeholder="جست‌وجوی شاخص…" value={query} onChange={e=>setQuery(e.target.value)}/></label>
  {!Object.keys(groups).length?<section className="health-empty"><h2>هنوز آزمایشی ثبت نشده</h2><p>PDF را انتخاب کن؛ نتایج فقط پس از بازبینی ذخیره می‌شوند.</p><button className="health-primary" onClick={()=>input.current?.click()}>انتخاب PDF</button></section>:Object.entries(groups).map(([date,items])=><section className="health-group" key={date}><h2>{date}</h2><div className="health-list">{items.map(x=><button className="health-item" key={x.itemKey} onClick={()=>setSelected(x)}><span className={'health-dot '+statusOf(x)}/><b className="health-item-name">{x.name}</b><span className="health-item-value">{x.value} {x.unit}</span><span>›</span></button>)}</div></section>)}
  {reports.length>0&&<section className="health-card"><h2>گزارش‌های ذخیره‌شده</h2>{reports.map(r=><div className="health-row health-report" key={r.id}><div><b>{r.date}</b><p className="health-muted">{r.name} · {r.items.length} شاخص</p></div><button className="health-danger" onClick={()=>remove(r.id)}>حذف</button></div>)}</section>}
