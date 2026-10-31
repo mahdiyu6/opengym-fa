@@ -33,7 +33,102 @@ const statusOf = x => {
 
   return 'unknown'
 }
+function numericValue(value) {
+  if (value === '' || value == null) return null
+  const n = Number(String(value).trim())
+  return Number.isFinite(n) ? n : null
+}
 
+function referenceRange(item) {
+  const low = item.refLow !== '' && item.refLow != null ? item.refLow : '—'
+  const high = item.refHigh !== '' && item.refHigh != null ? item.refHigh : '—'
+  if (low === '—' && high === '—') return '—'
+  return `${low} – ${high} ${item.unit || ''}`.trim()
+}
+
+function TrendChart({ points, tx }) {
+  const width = 640
+  const height = 250
+  const left = 54
+  const right = 18
+  const top = 18
+  const bottom = 48
+
+  const values = points.map(p => p.value)
+  let min = Math.min(...values)
+  let max = Math.max(...values)
+
+  if (min === max) {
+    const pad = Math.abs(min) * 0.1 || 1
+    min -= pad
+    max += pad
+  } else {
+    const pad = (max - min) * 0.12
+    min -= pad
+    max += pad
+  }
+
+  const x = i => left + (i / Math.max(points.length - 1, 1)) * (width - left - right)
+  const y = v => top + ((max - v) / (max - min)) * (height - top - bottom)
+
+  const path = points
+    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${x(i)} ${y(p.value)}`)
+    .join(' ')
+
+  const ticks = Array.from({ length: 5 }, (_, i) => max - (i / 4) * (max - min))
+
+  return (
+    <div className="health-chart-wrap">
+      <svg
+        className="health-chart"
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-label={tx('Lab result trend chart', 'نمودار روند نتایج آزمایش')}
+      >
+        {ticks.map((v, i) => (
+          <g key={i}>
+            <line
+              className="health-chart-grid"
+              x1={left}
+              x2={width - right}
+              y1={y(v)}
+              y2={y(v)}
+            />
+            <text
+              className="health-chart-label"
+              x={left - 8}
+              y={y(v) + 4}
+              textAnchor="end"
+            >
+              {Number(v.toFixed(2))}
+            </text>
+          </g>
+        ))}
+
+        <path className="health-chart-line" d={path} />
+
+        {points.map((p, i) => (
+          <g key={p.itemKey}>
+            <circle
+              className="health-chart-point"
+              cx={x(i)}
+              cy={y(p.value)}
+              r="5"
+            />
+            <text
+              className="health-chart-label"
+              x={x(i)}
+              y={height - 22}
+              textAnchor="middle"
+            >
+              {(p.reportDate || '').slice(0, 10)}
+            </text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  )
+}
 export default function Health() {
   // Subscribe to the app's language changes
   useLang()
@@ -51,10 +146,42 @@ export default function Health() {
     high: tx('High', 'بالا'),
     unknown: tx('Needs review', 'نیازمند بررسی')
   }
+  const selectedHistory = selected
+    ? all
+        .filter(x =>
+          String(x.name || '').trim().toLowerCase() ===
+          String(selected.name || '').trim().toLowerCase()
+        )
+        .map(x => ({ ...x, numeric: numericValue(x.value) }))
+        .filter(x => x.numeric !== null)
+        .sort((a, b) =>
+          (a.reportDate || '').localeCompare(b.reportDate || '')
+        )
+    : []
 
+  const historyUnits = [...new Set(selectedHistory.map(x => x.unit || ''))]
+  const sameUnit = historyUnits.length <= 1
+
+  const chartPoints = sameUnit
+    ? selectedHistory.map(x => ({ ...x, value: x.numeric }))
+    : []
+
+  const latestTwo = selectedHistory.slice(-2)
+  const previousResult = latestTwo.length === 2 ? latestTwo[0] : null
+  const latestResult = latestTwo.length === 2 ? latestTwo[1] : null
+
+  const difference = previousResult && latestResult
+    ? latestResult.numeric - previousResult.numeric
+    : null
+
+  const percentageChange =
+    previousResult && previousResult.numeric !== 0
+      ? (difference / Math.abs(previousResult.numeric)) * 100
+      : null
   const input = useRef(null)
 
-  const [reports, setReports] = useState(read)
+  const reports = useStore(s => s.S.labReports || [])
+  const updateStore = useStore(s => s.update)
   const [draft, setDraft] = useState(null)
   const [selected, setSelected] = useState(null)
   const [query, setQuery] = useState('')
@@ -222,7 +349,7 @@ updateStore(s => {
 
   const statusLabel = item => statusLabels[statusOf(item)]
 
-  // Selected test detail
+    // Selected test detail
   if (selected) {
     return (
       <main className="health-page" dir={dir} lang={lang}>
@@ -251,40 +378,144 @@ updateStore(s => {
 
           <p>
             {tx('Reference range: ', 'محدوده مرجع: ')}
-            {selected.refLow !== '' || selected.refHigh !== ''
-              ? `${selected.refLow || '—'} – ${selected.refHigh || '—'} ${selected.unit || ''}`
-              : tx(
-                  'Not specified in the PDF; status is uncertain.',
-                  'در PDF مشخص نشده؛ وضعیت قطعی نیست.'
-                )}
+            {referenceRange(selected) === '—'
+              ? tx('Not specified', 'مشخص نشده')
+              : referenceRange(selected)}
           </p>
 
           <p className="health-warning">
             {tx(
               'This tool is not a medical diagnosis. Check the values against the original report.',
-              'این ابزار تشخیص پزشکی نیست. محدوده‌ها را با برگه اصلی بررسی کن.'
+              'این ابزار تشخیص پزشکی نیست. نتایج را با برگه اصلی آزمایش بررسی کن.'
             )}
           </p>
         </section>
 
+        {/* Comparison of the two latest results */}
         <section className="health-card">
-          <h2>{tx('History', 'تاریخچه')}</h2>
+          <h2>{tx('Latest comparison', 'مقایسه دو نتیجه آخر')}</h2>
 
-          {all
-            .filter(x => x.name.toLowerCase() === selected.name.toLowerCase())
-            .sort((a, b) =>
-              (a.reportDate || '').localeCompare(b.reportDate || '')
-            )
-            .map(x => (
-              <p key={x.itemKey}>
-                {x.reportDate}: <b>{x.value} {x.unit}</b>
-              </p>
-            ))}
+          {latestTwo.length < 2 ? (
+            <p className="health-muted">
+              {tx(
+                'At least two numeric results are needed for comparison.',
+                'برای مقایسه، حداقل دو نتیجه عددی لازم است.'
+              )}
+            </p>
+          ) : !sameUnit ? (
+            <p className="health-warning">
+              {tx(
+                'These results have different units and cannot be compared.',
+                'واحد این نتایج متفاوت است و قابل مقایسه نیستند.'
+              )}
+            </p>
+          ) : (
+            <>
+              <div className="health-trend-summary">
+                <div>
+                  <small>{tx('Previous result', 'نتیجه قبلی')}</small>
+                  <b>{previousResult.numeric} {previousResult.unit}</b>
+                  <small>{previousResult.reportDate}</small>
+                </div>
+
+                <div>
+                  <small>{tx('Latest result', 'آخرین نتیجه')}</small>
+                  <b>{latestResult.numeric} {latestResult.unit}</b>
+                  <small>{latestResult.reportDate}</small>
+                </div>
+
+                <div>
+                  <small>{tx('Numeric change', 'تغییر عددی')}</small>
+                  <b>
+                    {difference > 0 ? '+' : ''}
+                    {Number(difference.toFixed(3))} {latestResult.unit}
+                  </b>
+                  <small>
+                    {percentageChange === null
+                      ? tx('Percentage unavailable', 'درصد تغییر قابل محاسبه نیست')
+                      : `${percentageChange > 0 ? '+' : ''}${percentageChange.toFixed(1)}%`}
+                  </small>
+                </div>
+              </div>
+            </>
+          )}
+        </section>
+
+        {/* Trend chart */}
+        <section className="health-card">
+          <h2>{tx('Trend over time', 'روند تغییرات در طول زمان')}</h2>
+
+          {!sameUnit ? (
+            <p className="health-warning">
+              {tx(
+                'The chart is unavailable because the recorded units differ.',
+                'به دلیل تفاوت واحد نتایج ثبت‌شده، نمودار قابل نمایش نیست.'
+              )}
+            </p>
+          ) : chartPoints.length < 2 ? (
+            <p className="health-muted">
+              {tx(
+                'At least two numeric results are needed to draw a trend chart.',
+                'برای رسم نمودار روند، حداقل دو نتیجه عددی لازم است.'
+              )}
+            </p>
+          ) : (
+            <TrendChart points={chartPoints} tx={tx} />
+          )}
+
+          {chartPoints.length > 0 && (
+            <p className="health-muted">
+              {tx(
+                'The chart shows recorded numeric values over time. It does not indicate whether a change is medically good or bad.',
+                'نمودار فقط مقادیر عددی ثبت‌شده در طول زمان را نشان می‌دهد و به‌تنهایی خوب یا بد بودن تغییر را مشخص نمی‌کند.'
+              )}
+            </p>
+          )}
+        </section>
+
+        {/* Full history */}
+        <section className="health-card">
+          <h2>{tx('History & reference ranges', 'تاریخچه و محدوده‌های مرجع')}</h2>
+
+          {!selectedHistory.length ? (
+            <p className="health-muted">
+              {tx('No numeric history found.', 'تاریخچه عددی برای این شاخص پیدا نشد.')}
+            </p>
+          ) : (
+            <div className="health-table-wrap">
+              <table className="health-table">
+                <thead>
+                  <tr>
+                    <th>{tx('Date', 'تاریخ')}</th>
+                    <th>{tx('Result', 'نتیجه')}</th>
+                    <th>{tx('Reference range', 'محدوده مرجع')}</th>
+                    <th>{tx('Status', 'وضعیت')}</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {[...selectedHistory].reverse().map(x => (
+                    <tr key={x.itemKey}>
+                      <td>{x.reportDate || '—'}</td>
+                      <td>
+                        <b>{x.value} {x.unit}</b>
+                      </td>
+                      <td>{referenceRange(x)}</td>
+                      <td>
+                        <span className={'health-badge ' + statusOf(x)}>
+                          {statusLabel(x)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       </main>
     )
   }
-
   return (
     <main className="health-page" dir={dir} lang={lang}>
       <header className="health-header">
@@ -325,8 +556,8 @@ updateStore(s => {
 
       <div className="health-privacy">
         {tx(
-          'Privacy: This version does not upload the file to a server. Results are stored in this browser only and are not synced across devices.',
-          'حریم خصوصی: این نسخه فایل را به سرور ارسال نمی‌کند؛ نتایج در localStorage همین مرورگر ذخیره می‌شوند و بین دستگاه‌ها همگام نیستند.'
+          'Privacy: The PDF itself is not uploaded. Reviewed results are saved in app data and sync with your account when signed in and online.',
+'حریم خصوصی: خود فایل PDF بارگذاری نمی‌شود. نتایج بازبینی‌شده در اطلاعات برنامه ذخیره می‌شوند و در صورت ورود به حساب و اتصال اینترنت با حساب همگام‌سازی خواهند شد.'
         )}
       </div>
 
