@@ -189,3 +189,85 @@
   padding: 6px 0;
   color: var(--label-2) !important;
 }
+
+/* Compound library and multi-item protocol editor */
+.health-compound-picker,
+.health-selected-compounds {
+  border: 1px solid var(--sep);
+  border-radius: 16px;
+  padding: 14px;
+  background: var(--bg);
+  min-width: 0;
+}
+.health-picker-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-bottom: 12px;
+}
+.health-picker-heading h3 { font-size: 15px; margin: 0; color: var(--label); }
+.health-picker-heading span { font-size: 11px; color: var(--label-3); }
+.health-compound-picker > input,
+.health-custom-compound input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  padding: 11px;
+  background: var(--surface);
+  color: var(--label);
+  font: inherit;
+  font-size: 13px;
+}
+.health-catalog-groups { max-height: 340px; overflow-y: auto; margin-top: 12px; }
+.health-catalog-group + .health-catalog-group { border-top: 1px solid var(--sep); margin-top: 12px; padding-top: 12px; }
+.health-catalog-group h4 { font-size: 12px; color: var(--label-2); margin: 0 0 8px; }
+.health-catalog-items { display: flex; flex-wrap: wrap; gap: 7px; }
+.health-catalog-chip {
+  border: 1px solid var(--sep);
+  border-radius: 18px;
+  padding: 7px 10px;
+  background: var(--surface);
+  color: var(--label-2);
+  font: inherit;
+  font-size: 11px;
+  text-align: start;
+}
+.health-catalog-chip.selected { border-color: var(--green); color: var(--green); background: var(--surface-2); }
+.health-custom-compound { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; margin-top: 14px; }
+.health-custom-compound select {
+  min-width: 0;
+  max-width: 145px;
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  padding: 8px;
+  background: var(--surface);
+  color: var(--label);
+  font: inherit;
+  font-size: 12px;
+}
+.health-custom-compound button:disabled { opacity: .45; }
+.health-selected-compounds { display: flex; flex-direction: column; gap: 12px; }
+.health-compound-editor { border: 1px solid var(--sep); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+.health-compound-editor .health-row strong { display: block; color: var(--label); font-size: 14px; }
+.health-compound-editor .health-row small { display: block; color: var(--label-3); font-size: 10px; margin-top: 3px; }
+.health-compound-editor label { min-width: 0; }
+.health-day-picker { display: flex; flex-wrap: wrap; gap: 7px; }
+.health-day-picker button {
+  min-width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--sep); background: var(--surface); color: var(--label-2);
+}
+.health-day-picker button.active { background: var(--green); border-color: var(--green); color: white; }
+.health-record-compounds { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.health-record-compound { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; padding: 10px; border-radius: 12px; background: var(--surface-2); }
+.health-record-compound strong { display: block; font-size: 13px; color: var(--label); }
+.health-record-compound small { display: block; color: var(--label-3); font-size: 10px; margin-top: 3px; }
+.health-record-compound > span { font-size: 12px; color: var(--label); }
+.health-record-compound > small { grid-column: 1 / -1; }
+@media (max-width: 420px) {
+  .health-custom-compound { grid-template-columns: 1fr 1fr; }
+  .health-custom-compound input { grid-column: 1 / -1; }
+  .health-custom-compound select { max-width: none; }
+}
