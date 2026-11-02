@@ -357,14 +357,16 @@ const selectedHistory = selected
   if (selected) {
     return (
       <main className="health-page" dir={dir} lang={lang}>
-        <button
-          className="health-secondary"
-          onClick={() => setSelected(null)}
-        >
-          {tx('‹ Back', '‹ بازگشت')}
-        </button>
+<div className="health-title-row">
+  <h1>{selected.name}</h1>
 
-        <h1>{selected.name}</h1>
+  <button
+    className="health-secondary health-back"
+    onClick={() => setSelected(null)}
+  >
+    {tx('‹ Back', '‹ بازگشت')}
+  </button>
+</div>
 
         <section className="health-card">
           <div className="health-value">
