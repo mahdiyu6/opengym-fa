@@ -562,12 +562,6 @@ const selectedHistory = selected
   }
   return (
     <main className="health-page" dir={dir} lang={lang}>
-      <button
-  className="health-secondary"
-  onClick={() => nav('/health')}
->
-  {tx('‹ Back', '‹ بازگشت')}
-</button>
       <header className="health-header">
         <div>
           <p className="health-kicker">OPENGYM · HEALTH</p>
