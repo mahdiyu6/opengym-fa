@@ -166,5 +166,25 @@
 .health-page > .health-secondary {
   background: var(--bg);
   color: var(--label);
-  border: 1px solid var(--sep);
+  border: none;
+  box-shadow: none;
+}
+
+.health-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.health-title-row h1 {
+  margin: 0;
+}
+
+.health-back {
+  flex-shrink: 0;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 6px 0;
 }
