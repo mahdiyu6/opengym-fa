@@ -424,12 +424,6 @@ const selectedHistory = selected
     </p>
   )}
 
-  <p className="health-info-note">
-    {tx(
-      'Educational information only. Interpret results using the laboratory reference range and clinical context.',
-      'این اطلاعات صرفاً آموزشی است. نتیجه آزمایش باید با محدوده مرجع آزمایشگاه و شرایط بالینی تفسیر شود.'
-    )}
-  </p>
 </section>
         </section>
 
