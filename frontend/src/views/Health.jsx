@@ -5,6 +5,7 @@ import { extractPdfText, parseLabReportText } from '../lib/lab-pdf.js'
 import './health.css'
 import { useStore } from '../store/useStore.js'
 import { getLabInfo } from '../lib/lab-info.js'
+import { useNavigate } from 'react-router-dom'
 
 const KEY = 'opengym.health.reports.v1'
 
@@ -137,6 +138,7 @@ export default function Health() {
   const lang = getLang()
   const dir = directionFor(lang)
   const isFa = lang === 'fa'
+  const nav = useNavigate()
 
   // Persian text for this page; other languages use the app translation system.
   const tx = (english, persian) => isFa ? persian : t(english)
@@ -356,6 +358,12 @@ const selectedHistory = selected
     return (
       <main className="health-page" dir={dir} lang={lang}>
         <button
+  className="health-secondary"
+  onClick={() => nav('/health')}
+>
+  {tx('‹ Back', '‹ بازگشت')}
+</button>
+        <button
           className="health-secondary"
           onClick={() => setSelected(null)}
         >
@@ -554,6 +562,12 @@ const selectedHistory = selected
   }
   return (
     <main className="health-page" dir={dir} lang={lang}>
+      <button
+  className="health-secondary"
+  onClick={() => nav('/health')}
+>
+  {tx('‹ Back', '‹ بازگشت')}
+</button>
       <header className="health-header">
         <div>
           <p className="health-kicker">OPENGYM · HEALTH</p>
