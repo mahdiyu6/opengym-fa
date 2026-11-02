@@ -187,4 +187,5 @@
   box-shadow: none !important;
   background: transparent !important;
   padding: 6px 0;
+  color: var(--label-2) !important;
 }
