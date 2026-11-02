@@ -232,3 +232,26 @@
   box-shadow: none !important;
   padding: 6px 0;
 }
+
+.health-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.health-title-row h1 {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.health-back {
+  flex-shrink: 0;
+  background: transparent !important;
+  color: var(--label-2) !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 6px 0;
+}
