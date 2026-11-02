@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { getLang, useLang } from '../lib/i18n.js'
@@ -6,72 +6,110 @@ import './health-hub.css'
 
 const today = () => new Date().toISOString().slice(0, 10)
 
+const CATALOG = [
+  { category: 'Anabolic & hormonal', fa: 'آنابولیک و هورمونی', items: ['Testosterone', 'Testosterone cypionate', 'Testosterone enanthate', 'Testosterone propionate', 'Sustanon', 'Nandrolone', 'Boldenone', 'Trenbolone', 'Drostanolone', 'Methenolone (Primobolan)', 'Oxandrolone', 'Stanozolol', 'Methandienone', 'Oxymetholone', 'Fluoxymesterone', 'Clomiphene', 'Enclomiphene', 'Tamoxifen', 'Anastrozole', 'Exemestane', 'Letrozole', 'hCG', 'hMG', 'DHEA'] },
+  { category: 'Peptides & related', fa: 'پپتیدها و ترکیبات مرتبط', items: ['BPC-157', 'TB-500', 'CJC-1295', 'Ipamorelin', 'GHRP-2', 'GHRP-6', 'Tesamorelin', 'Sermorelin', 'IGF-1 LR3', 'MK-677 (Ibutamoren)', 'AOD-9604', 'GHK-Cu', 'Melanotan II', 'PT-141'] },
+  { category: 'Ancillaries', fa: 'داروهای کمکی', items: ['Cabergoline', 'Pramipexole', 'Finasteride', 'Dutasteride', 'Proviron (Mesterolone)', 'Raloxifene', 'Aromasin (Exemestane)', 'Arimidex (Anastrozole)', 'Nolvadex (Tamoxifen)'] },
+  { category: 'Health support', fa: 'حمایت از سلامت', items: ['Omega-3', 'Vitamin D3', 'Vitamin K2', 'Magnesium', 'Zinc', 'CoQ10', 'NAC', 'TUDCA', 'Milk thistle', 'Psyllium', 'Electrolytes', 'Fiber'] },
+  { category: 'Supplements', fa: 'مکمل‌ها', items: ['Whey protein', 'Creatine monohydrate', 'Casein protein', 'EAAs', 'BCAAs', 'Beta-alanine', 'Citrulline', 'Caffeine', 'L-Carnitine', 'Ashwagandha', 'Multivitamin', 'Collagen'] }
+]
+
 const emptyForm = {
   name: '',
-  type: 'TRT',
-  compounds: '',
-  amount: '',
-  unit: 'mg',
-  schedule: '',
+  type: 'Personal',
+  compounds: [],
   startDate: today(),
   endDate: '',
   notes: ''
 }
 
+const makeCompound = (name, category) => ({
+  id: 'hc-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+  name,
+  category,
+  amount: '',
+  unit: 'mg',
+  concentration: '',
+  concentrationUnit: 'mg/ml',
+  frequency: 'daily',
+  days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  notes: ''
+})
+
 export default function PerformanceHealth() {
   useLang()
   const fa = getLang() === 'fa'
   const nav = useNavigate()
-
-  const protocols = useStore(s => s.S.healthProtocols)
+  const protocols = useStore(s => s.S.healthProtocols || [])
   const update = useStore(s => s.update)
-
   const [form, setForm] = useState(emptyForm)
   const [showForm, setShowForm] = useState(false)
+  const [query, setQuery] = useState('')
+  const [customName, setCustomName] = useState('')
+  const [customCategory, setCustomCategory] = useState('Other')
 
   const tx = (en, faText) => fa ? faText : en
+  const filteredCatalog = useMemo(() => CATALOG.map(group => ({
+    ...group,
+    items: group.items.filter(name => name.toLowerCase().includes(query.trim().toLowerCase()))
+  })).filter(group => group.items.length), [query])
 
   function change(key, value) {
     setForm(old => ({ ...old, [key]: value }))
   }
 
+  function addCompound(name, category) {
+    if (form.compounds.some(c => c.name.toLowerCase() === name.toLowerCase())) return
+    change('compounds', [...form.compounds, makeCompound(name, category)])
+  }
+
+  function updateCompound(id, key, value) {
+    change('compounds', form.compounds.map(c => c.id === id ? { ...c, [key]: value } : c))
+  }
+
+  function toggleDay(id, day) {
+    const compound = form.compounds.find(c => c.id === id)
+    if (!compound) return
+    const days = compound.days.includes(day)
+      ? compound.days.filter(x => x !== day)
+      : [...compound.days, day]
+    updateCompound(id, 'days', days)
+  }
+
   function saveProtocol(e) {
     e.preventDefault()
-
     if (!form.name.trim()) return
-
     const item = {
       ...form,
       id: 'hp-' + Date.now(),
       createdAt: new Date().toISOString(),
-      status: 'active'
+      status: 'active',
+      compounds: form.compounds
     }
-
-    update(s => {
-      s.healthProtocols = [item, ...(s.healthProtocols || [])]
-    })
-
+    update(s => { s.healthProtocols = [item, ...(s.healthProtocols || [])] })
     setForm(emptyForm)
+    setQuery('')
+    setCustomName('')
     setShowForm(false)
   }
 
   function removeProtocol(id) {
     if (!confirm(tx('Delete this protocol?', 'این پروتکل حذف شود؟'))) return
-
-    update(s => {
-      s.healthProtocols = (s.healthProtocols || []).filter(x => x.id !== id)
-    })
+    update(s => { s.healthProtocols = (s.healthProtocols || []).filter(x => x.id !== id) })
   }
 
   function finishProtocol(id) {
     update(s => {
       s.healthProtocols = (s.healthProtocols || []).map(x =>
-        x.id === id
-          ? { ...x, status: 'completed', completedAt: new Date().toISOString() }
-          : x
+        x.id === id ? { ...x, status: 'completed', completedAt: new Date().toISOString() } : x
       )
     })
   }
+
+  const days = [
+    ['Mon', 'د'], ['Tue', 'س'], ['Wed', 'چ'], ['Thu', 'پ'],
+    ['Fri', 'ج'], ['Sat', 'ش'], ['Sun', 'ی']
+  ]
 
   return (
     <main className="health-page" dir={fa ? 'rtl' : 'ltr'}>
@@ -83,30 +121,22 @@ export default function PerformanceHealth() {
         <div>
           <h1>{tx('Performance & Health', 'پایش عملکرد و سلامت')}</h1>
           <p className="health-muted">
-            {tx(
-              'Track your protocols and health trends.',
-              'ثبت و پیگیری پروتکل‌ها و روند وضعیت سلامت.'
-            )}
+            {tx('Your personal compound library and protocol records.', 'کتابخانه ترکیبات و سوابق پروتکل‌های شخصی شما.')}
           </p>
         </div>
       </header>
 
       <div className="health-warning">
         {tx(
-          'This section is for personal recordkeeping. It does not recommend doses, cycles or medication changes. Discuss treatment decisions with your clinician.',
-          'این بخش برای ثبت و پیگیری سوابق شخصی است و دوز، چرخه مصرف یا تغییر دارو پیشنهاد نمی‌دهد. تصمیم‌های درمانی را با پزشک خود بررسی کنید.'
+          'Recordkeeping only. This tool does not recommend compounds, doses, cycles or medication changes. Enter only information from your own records and discuss treatment decisions with a qualified clinician.',
+          'این ابزار صرفاً برای ثبت سوابق است و هیچ ترکیب، دوز، چرخه یا تغییری در دارو پیشنهاد نمی‌کند. فقط اطلاعات سوابق خود را وارد کنید و تصمیم‌های درمانی را با پزشک بررسی کنید.'
         )}
       </div>
 
       <div className="health-section-heading">
-        <h2>{tx('Protocols', 'پروتکل‌ها')}</h2>
-        <button
-          className="health-primary"
-          onClick={() => setShowForm(v => !v)}
-        >
-          {showForm
-            ? tx('Cancel', 'انصراف')
-            : tx('+ Add protocol', '+ ثبت پروتکل')}
+        <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
+        <button className="health-primary" onClick={() => setShowForm(v => !v)}>
+          {showForm ? tx('Cancel', 'انصراف') : tx('+ New protocol', '+ پروتکل جدید')}
         </button>
       </div>
 
@@ -114,183 +144,194 @@ export default function PerformanceHealth() {
         <form className="health-card health-protocol-form" onSubmit={saveProtocol}>
           <label>
             {tx('Protocol name', 'عنوان پروتکل')}
-            <input
-              value={form.name}
-              onChange={e => change('name', e.target.value)}
-              placeholder={tx('e.g. TRT protocol', 'مثلاً پروتکل TRT')}
-              required
-            />
-          </label>
-
-          <label>
-            {tx('Protocol type', 'نوع پروتکل')}
-            <select
-              value={form.type}
-              onChange={e => change('type', e.target.value)}
-            >
-              <option value="TRT">TRT</option>
-              <option value="PED">PED</option>
-              <option value="Other">{tx('Other', 'سایر')}</option>
-            </select>
-          </label>
-
-          <label>
-            {tx('Compounds', 'ترکیبات')}
-            <textarea
-              value={form.compounds}
-              onChange={e => change('compounds', e.target.value)}
-              placeholder={tx(
-                'Enter the compounds you want to record',
-                'ترکیبات موردنظر برای ثبت را وارد کنید'
-              )}
-              rows={3}
-            />
+            <input value={form.name} onChange={e => change('name', e.target.value)}
+              placeholder={tx('e.g. Personal health record', 'مثلاً سوابق شخصی')} required />
           </label>
 
           <div className="health-form-row">
             <label>
-              {tx('Recorded amount', 'مقدار ثبت‌شده')}
-              <input
-                value={form.amount}
-                onChange={e => change('amount', e.target.value)}
-                placeholder="—"
-              />
-            </label>
-
-            <label>
-              {tx('Unit', 'واحد')}
-              <select
-                value={form.unit}
-                onChange={e => change('unit', e.target.value)}
-              >
-                <option value="mg">mg</option>
-                <option value="mcg">mcg</option>
-                <option value="ml">ml</option>
-                <option value="IU">IU</option>
-                <option value="other">{tx('Other', 'سایر')}</option>
+              {tx('Record category', 'دسته‌بندی سابقه')}
+              <select value={form.type} onChange={e => change('type', e.target.value)}>
+                <option value="Personal">{tx('Personal', 'شخصی')}</option>
+                <option value="Prescribed">{tx('Prescribed treatment', 'درمان تجویزشده')}</option>
+                <option value="Other">{tx('Other', 'سایر')}</option>
               </select>
             </label>
-          </div>
-
-          <label>
-            {tx('Schedule / frequency', 'زمان‌بندی / تناوب ثبت‌شده')}
-            <input
-              value={form.schedule}
-              onChange={e => change('schedule', e.target.value)}
-              placeholder={tx('Personal record', 'ثبت شخصی')}
-            />
-          </label>
-
-          <div className="health-form-row">
             <label>
               {tx('Start date', 'تاریخ شروع')}
-              <input
-                type="date"
-                value={form.startDate}
-                onChange={e => change('startDate', e.target.value)}
-              />
-            </label>
-
-            <label>
-              {tx('End date', 'تاریخ پایان')}
-              <input
-                type="date"
-                value={form.endDate}
-                onChange={e => change('endDate', e.target.value)}
-              />
+              <input type="date" value={form.startDate} onChange={e => change('startDate', e.target.value)} />
             </label>
           </div>
 
-          <label>
-            {tx('Notes', 'توضیحات')}
-            <textarea
-              value={form.notes}
-              onChange={e => change('notes', e.target.value)}
-              rows={3}
-            />
-          </label>
+          <section className="health-compound-picker">
+            <div className="health-picker-heading">
+              <h3>{tx('Compound library', 'کتابخانه ترکیبات')}</h3>
+              <span>{tx('Select items to add to this record', 'موارد موردنظر را به این سابقه اضافه کنید')}</span>
+            </div>
+            <input value={query} onChange={e => setQuery(e.target.value)}
+              placeholder={tx('Search compounds and supplements…', 'جست‌وجوی ترکیبات و مکمل‌ها…')} />
+            <div className="health-catalog-groups">
+              {filteredCatalog.map(group => (
+                <div className="health-catalog-group" key={group.category}>
+                  <h4>{fa ? group.fa : group.category}</h4>
+                  <div className="health-catalog-items">
+                    {group.items.map(name => {
+                      const selected = form.compounds.some(c => c.name.toLowerCase() === name.toLowerCase())
+                      return <button type="button" key={name}
+                        className={'health-catalog-chip' + (selected ? ' selected' : '')}
+                        onClick={() => selected
+                          ? change('compounds', form.compounds.filter(c => c.name.toLowerCase() !== name.toLowerCase()))
+                          : addCompound(name, group.category)}>
+                        {selected ? '✓ ' : '+ '}{name}
+                      </button>
+                    })}
+                  </div>
+                </div>
+              ))}
+              {!filteredCatalog.length && <p className="health-muted">{tx('No catalog match. Add it below as a custom item.', 'موردی پیدا نشد؛ می‌توانید آن را به‌صورت دستی اضافه کنید.')}</p>}
+            </div>
+            <div className="health-custom-compound">
+              <input value={customName} onChange={e => setCustomName(e.target.value)}
+                placeholder={tx('Add a custom compound or supplement', 'افزودن ترکیب یا مکمل دلخواه')} />
+              <select value={customCategory} onChange={e => setCustomCategory(e.target.value)}>
+                <option value="Other">{tx('Other', 'سایر')}</option>
+                {CATALOG.map(g => <option key={g.category} value={g.category}>{fa ? g.fa : g.category}</option>)}
+              </select>
+              <button type="button" className="health-secondary" disabled={!customName.trim()}
+                onClick={() => { addCompound(customName.trim(), customCategory); setCustomName('') }}>
+                {tx('Add', 'افزودن')}
+              </button>
+            </div>
+          </section>
 
-          <button className="health-primary" type="submit">
-            {tx('Save protocol', 'ذخیره پروتکل')}
-          </button>
+          {form.compounds.length > 0 && (
+            <section className="health-selected-compounds">
+              <div className="health-picker-heading">
+                <h3>{tx('Selected items', 'موارد انتخاب‌شده')}</h3>
+                <span>{form.compounds.length}</span>
+              </div>
+              {form.compounds.map(compound => (
+                <article className="health-compound-editor" key={compound.id}>
+                  <div className="health-row">
+                    <div>
+                      <strong>{compound.name}</strong>
+                      <small>{compound.category}</small>
+                    </div>
+                    <button type="button" className="health-danger"
+                      onClick={() => change('compounds', form.compounds.filter(c => c.id !== compound.id))}>
+                      {tx('Remove', 'حذف')}
+                    </button>
+                  </div>
+                  <div className="health-form-row">
+                    <label>{tx('Recorded amount', 'مقدار ثبت‌شده')}
+                      <input inputMode="decimal" value={compound.amount}
+                        onChange={e => updateCompound(compound.id, 'amount', e.target.value)} placeholder="—" />
+                    </label>
+                    <label>{tx('Unit', 'واحد')}
+                      <select value={compound.unit} onChange={e => updateCompound(compound.id, 'unit', e.target.value)}>
+                        <option>mg</option><option>mcg</option><option>ml</option><option>IU</option><option>g</option><option>capsule</option><option>tablet</option><option>other</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div className="health-form-row">
+                    <label>{tx('Label concentration (optional)', 'غلظت درج‌شده روی بسته (اختیاری)')}
+                      <input value={compound.concentration}
+                        onChange={e => updateCompound(compound.id, 'concentration', e.target.value)}
+                        placeholder={tx('e.g. label value', 'مقدار درج‌شده روی برچسب')} />
+                    </label>
+                    <label>{tx('Concentration unit', 'واحد غلظت')}
+                      <select value={compound.concentrationUnit}
+                        onChange={e => updateCompound(compound.id, 'concentrationUnit', e.target.value)}>
+                        <option>mg/ml</option><option>mcg/ml</option><option>IU/ml</option><option>mg/tablet</option><option>other</option>
+                      </select>
+                    </label>
+                  </div>
+                  <label>{tx('Recorded schedule', 'زمان‌بندی ثبت‌شده')}
+                    <select value={compound.frequency} onChange={e => updateCompound(compound.id, 'frequency', e.target.value)}>
+                      <option value="daily">{tx('Daily', 'روزانه')}</option>
+                      <option value="every_other_day">{tx('Every other day', 'یک روز در میان')}</option>
+                      <option value="weekly">{tx('Weekly', 'هفتگی')}</option>
+                      <option value="selected_days">{tx('Selected weekdays', 'روزهای انتخابی هفته')}</option>
+                      <option value="as_needed">{tx('As recorded / as needed', 'طبق سابقه / در صورت نیاز')}</option>
+                      <option value="custom">{tx('Custom / not specified', 'سفارشی / نامشخص')}</option>
+                    </select>
+                  </label>
+                  {compound.frequency === 'selected_days' && (
+                    <div className="health-day-picker">
+                      {days.map(([day, faDay]) => (
+                        <button type="button" key={day} className={compound.days.includes(day) ? 'active' : ''}
+                          onClick={() => toggleDay(compound.id, day)}>
+                          {fa ? faDay : day.slice(0, 2)}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <label>{tx('Notes', 'توضیحات')}
+                    <input value={compound.notes} onChange={e => updateCompound(compound.id, 'notes', e.target.value)} />
+                  </label>
+                </article>
+              ))}
+            </section>
+          )}
+
+          <div className="health-form-row">
+            <label>{tx('End date (optional)', 'تاریخ پایان (اختیاری)')}
+              <input type="date" value={form.endDate} onChange={e => change('endDate', e.target.value)} />
+            </label>
+            <label>{tx('Notes', 'توضیحات')}
+              <input value={form.notes} onChange={e => change('notes', e.target.value)} />
+            </label>
+          </div>
+
+          <button className="health-primary" type="submit">{tx('Save record', 'ذخیره سابقه')}</button>
         </form>
       )}
 
       {protocols.length === 0 ? (
         <div className="health-empty">
           <div style={{ fontSize: 38 }}>📋</div>
-          <h2>{tx('No protocols yet', 'هنوز پروتکلی ثبت نشده')}</h2>
-          <p className="health-muted">
-            {tx(
-              'Add a protocol to start keeping your records.',
-              'برای شروع ثبت سوابق، یک پروتکل اضافه کنید.'
-            )}
-          </p>
+          <h2>{tx('No protocols yet', 'هنوز سابقه‌ای ثبت نشده')}</h2>
+          <p className="health-muted">{tx('Create a record and add items from the compound library.', 'یک سابقه بسازید و موارد را از کتابخانه ترکیبات اضافه کنید.')}</p>
         </div>
       ) : (
         <div className="health-protocol-list">
-          {protocols.map(item => (
-            <article className="health-card" key={item.id}>
-              <div className="health-row">
-                <div>
-                  <h2>{item.name}</h2>
-                  <span className="health-protocol-type">{item.type}</span>
+          {protocols.map(item => {
+            const compoundList = Array.isArray(item.compounds) ? item.compounds : []
+            return (
+              <article className="health-card" key={item.id}>
+                <div className="health-row">
+                  <div>
+                    <h2>{item.name}</h2>
+                    <span className="health-protocol-type">{item.type || 'Personal'}</span>
+                  </div>
+                  <span className={'health-protocol-status ' + item.status}>
+                    {item.status === 'active' ? tx('Active', 'فعال') : tx('Completed', 'پایان‌یافته')}
+                  </span>
                 </div>
-                <span className={'health-protocol-status ' + item.status}>
-                  {item.status === 'active'
-                    ? tx('Active', 'فعال')
-                    : tx('Completed', 'پایان‌یافته')}
-                </span>
-              </div>
-
-              {item.compounds && (
+                {Array.isArray(item.compounds) ? (
+                  compoundList.length ? <div className="health-record-compounds">
+                    {compoundList.map(c => <div className="health-record-compound" key={c.id || c.name}>
+                      <div><strong>{c.name}</strong><small>{c.category}</small></div>
+                      <span>{c.amount ? c.amount + ' ' + c.unit : tx('Amount not entered', 'مقدار ثبت نشده')}</span>
+                      <small>{tx('Schedule:', 'زمان‌بندی:')} {tx(
+                        ({daily:'Daily',every_other_day:'Every other day',weekly:'Weekly',selected_days:'Selected weekdays',as_needed:'As needed',custom:'Custom'})[c.frequency] || 'Not specified',
+                        ({daily:'روزانه',every_other_day:'یک روز در میان',weekly:'هفتگی',selected_days:'روزهای انتخابی',as_needed:'در صورت نیاز',custom:'سفارشی'})[c.frequency] || 'نامشخص'
+                      )}</small>
+                    </div>)}
+                  </div> : <p className="health-protocol-detail">{tx('No compounds added.', 'ترکیبی اضافه نشده است.')}</p>
+                ) : item.compounds ? <p className="health-protocol-detail"><b>{tx('Legacy compounds:', 'ترکیبات ثبت‌شده قبلی:')}</b> {item.compounds}</p> : null}
                 <p className="health-protocol-detail">
-                  <b>{tx('Compounds:', 'ترکیبات:')}</b> {item.compounds}
+                  <b>{tx('Start:', 'شروع:')}</b> {item.startDate || '—'} {' · '}
+                  <b>{tx('End:', 'پایان:')}</b> {item.endDate || '—'}
                 </p>
-              )}
-
-              {item.amount && (
-                <p className="health-protocol-detail">
-                  <b>{tx('Recorded amount:', 'مقدار ثبت‌شده:')}</b>{' '}
-                  {item.amount} {item.unit}
-                </p>
-              )}
-
-              {item.schedule && (
-                <p className="health-protocol-detail">
-                  <b>{tx('Schedule:', 'زمان‌بندی:')}</b> {item.schedule}
-                </p>
-              )}
-
-              <p className="health-protocol-detail">
-                <b>{tx('Start:', 'شروع:')}</b> {item.startDate || '—'}
-                {' · '}
-                <b>{tx('End:', 'پایان:')}</b> {item.endDate || '—'}
-              </p>
-
-              {item.notes && (
-                <p className="health-protocol-detail">{item.notes}</p>
-              )}
-
-              <div className="health-protocol-actions">
-                {item.status === 'active' && (
-                  <button
-                    className="health-secondary"
-                    onClick={() => finishProtocol(item.id)}
-                  >
-                    {tx('Mark completed', 'ثبت پایان پروتکل')}
-                  </button>
-                )}
-
-                <button
-                  className="health-danger"
-                  onClick={() => removeProtocol(item.id)}
-                >
-                  {tx('Delete', 'حذف')}
-                </button>
-              </div>
-            </article>
-          ))}
+                {item.notes && <p className="health-protocol-detail">{item.notes}</p>}
+                <div className="health-protocol-actions">
+                  {item.status === 'active' && <button className="health-secondary" onClick={() => finishProtocol(item.id)}>{tx('Mark completed', 'ثبت پایان پروتکل')}</button>}
+                  <button className="health-danger" onClick={() => removeProtocol(item.id)}>{tx('Delete', 'حذف')}</button>
+                </div>
+              </article>
+            )
+          })}
         </div>
       )}
     </main>
