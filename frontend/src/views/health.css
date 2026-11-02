@@ -223,3 +223,12 @@
   line-height: 1.8;
   color: var(--label-2);
 }
+
+/* Back button on lab test detail page */
+.health-page > .health-secondary {
+  background: transparent !important;
+  color: var(--label-2) !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 6px 0;
+}
