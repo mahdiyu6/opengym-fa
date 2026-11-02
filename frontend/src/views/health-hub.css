@@ -163,3 +163,8 @@
     grid-template-columns: 1fr;
   }
 }
+.health-page > .health-secondary {
+  background: var(--bg);
+  color: var(--label);
+  border: 1px solid var(--sep);
+}
