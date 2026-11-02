@@ -556,25 +556,29 @@ const selectedHistory = selected
   }
   return (
     <main className="health-page" dir={dir} lang={lang}>
-            <button
-  className="health-secondary"
-  onClick={() => nav('/health')}
->
-  {tx('‹ Back', '‹ بازگشت')}
-</button>
+            
       <header className="health-header">
-        <div>
-          <p className="health-kicker">OPENGYM · HEALTH</p>
+      <div>
+  <p className="health-kicker">OPENGYM · HEALTH</p>
 
-          <h1>{tx('Health & Lab Tests', 'سلامت و آزمایش‌ها')}</h1>
+  <div className="health-title-row">
+    <h1>{tx('Health & Lab Tests', 'سلامت و آزمایش‌ها')}</h1>
 
-          <p className="health-muted">
-            {tx(
-              'Import a PDF report and review the results before saving.',
-              'گزارش PDF را وارد و نتایج را پیش از ذخیره بازبینی کن.'
-            )}
-          </p>
-        </div>
+    <button
+      className="health-secondary health-back"
+      onClick={() => nav('/health')}
+    >
+      {tx('‹ Back', '‹ بازگشت')}
+    </button>
+  </div>
+
+  <p className="health-muted">
+    {tx(
+      'Import a PDF report and review the results before saving.',
+      'گزارش PDF را وارد و نتایج را پیش از ذخیره بازبینی کن.'
+    )}
+  </p>
+</div>
 
         <button
           className="health-primary"
