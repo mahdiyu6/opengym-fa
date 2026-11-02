@@ -189,9 +189,9 @@
 .health-info {
   margin-top: 16px;
   padding: 16px;
-  border: 1px solid var(--sep);
+  border: 1px solid color-mix(in srgb, var(--orange) 25%, var(--sep));
   border-radius: 16px;
-  background: var(--surface);
+  background: color-mix(in srgb, var(--orange) 13%, var(--surface));
 }
 
 .health-info > h2 {
@@ -219,7 +219,7 @@
 
 .health-info-note {
   margin: 14px 0 0;
-  font-size: 12px;
+  font-size: 9px;
   line-height: 1.8;
   color: var(--label-2);
 }
