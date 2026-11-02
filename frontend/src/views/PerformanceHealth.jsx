@@ -23,7 +23,7 @@ export default function PerformanceHealth() {
   const fa = getLang() === 'fa'
   const nav = useNavigate()
 
-  const protocols = useStore(s => s.S.healthProtocols || [])
+  const protocols = useStore(s => s.S.healthProtocols)
   const update = useStore(s => s.update)
 
   const [form, setForm] = useState(emptyForm)
