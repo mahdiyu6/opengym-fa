@@ -408,32 +408,41 @@ const compoundCount = protocols.reduce(
       {tx('Clear filters', 'پاک‌کردن فیلترها')}
     </button>
   </div>
+{doseLogs.length === 0 ? (
+  <p className="health-muted">
+    {tx('No entries recorded yet.', 'هنوز موردی ثبت نشده است.')}
+  </p>
+) : filteredDoseLogs.length === 0 ? (
+  <p className="health-muted">
+    {tx('No entries match these filters.', 'موردی با این فیلترها پیدا نشد.')}
+  </p>
+) : (
+  <>
+    <p className="health-muted">
+      {tx('Showing', 'تعداد نتایج:')} {filteredDoseLogs.length}
+    </p>
 
-    {doseLogs.length === 0 ? (
-      <p className="health-muted">
-        {tx('No entries recorded yet.', 'هنوز موردی ثبت نشده است.')}
-      </p>
-    ) : (
-      doseLogs.map(entry => (
-        <article className="health-log-entry" key={entry.id}>
-          <div>
-            <strong>{entry.compoundName}</strong>
-            <small>{entry.protocolName} · {entry.date}</small>
-            <span>{entry.amount} {entry.unit}</span>
-            {entry.notes && <small>{entry.notes}</small>}
-          </div>
+    {filteredDoseLogs.map(entry => (
+      <article className="health-log-entry" key={entry.id}>
+        <div>
+          <strong>{entry.compoundName}</strong>
+          <small>{entry.protocolName} · {entry.date}</small>
+          <span>{entry.amount} {entry.unit}</span>
+          {entry.notes && <small>{entry.notes}</small>}
+        </div>
 
-          <button
-            type="button"
-            className="health-danger"
-            onClick={() => removeDoseLog(entry.id)}
-          >
-            {tx('Delete', 'حذف')}
-          </button>
-        </article>
-      ))
-    )}
-  </div>
+        <button
+          type="button"
+          className="health-danger"
+          onClick={() => removeDoseLog(entry.id)}
+        >
+          {tx('Delete', 'حذف')}
+        </button>
+      </article>
+    ))}
+  </>
+)}
+</div>
 </section>
       <div className="health-section-heading">
         <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
