@@ -218,6 +218,147 @@ const compoundCount = protocols.reduce(
     <strong>{protocols.length}</strong>
   </div>
 </div>
+      <section className="health-card health-log-section">
+  <div className="health-picker-heading">
+    <h3>{tx('Daily log', 'ثبت روزانه')}</h3>
+    <span>{tx('Personal record only', 'صرفاً ثبت سوابق شخصی')}</span>
+  </div>
+
+  <form className="health-log-form" onSubmit={saveDoseLog}>
+    <label>
+      {tx('Protocol', 'پروتکل')}
+      <select
+        value={logForm.protocolId}
+        onChange={e => setLogForm(old => ({
+          ...old,
+          protocolId: e.target.value,
+          compoundId: ''
+        }))}
+        required
+      >
+        <option value="">{tx('Select a protocol', 'انتخاب پروتکل')}</option>
+        {protocols.map(p => (
+          <option key={p.id} value={p.id}>{p.name}</option>
+        ))}
+      </select>
+    </label>
+
+    <label>
+      {tx('Compound', 'ترکیب')}
+      <select
+        value={logForm.compoundId}
+        onChange={e => setLogForm(old => ({
+          ...old,
+          compoundId: e.target.value
+        }))}
+        disabled={!logCompounds.length}
+        required
+      >
+        <option value="">{tx('Select a compound', 'انتخاب ترکیب')}</option>
+        {logCompounds.map(c => (
+          <option key={c.id} value={c.id}>{c.name}</option>
+        ))}
+      </select>
+    </label>
+
+    <div className="health-form-row">
+      <label>
+        {tx('Record date', 'تاریخ ثبت')}
+        <input
+          type="date"
+          value={logForm.date}
+          onChange={e => setLogForm(old => ({
+            ...old,
+            date: e.target.value
+          }))}
+          required
+        />
+      </label>
+
+      <label>
+        {tx('Recorded amount', 'مقدار ثبت‌شده')}
+        <input
+          inputMode="decimal"
+          value={logForm.amount}
+          onChange={e => setLogForm(old => ({
+            ...old,
+            amount: e.target.value
+          }))}
+          placeholder="—"
+          required
+        />
+      </label>
+    </div>
+
+    <label>
+      {tx('Unit', 'واحد')}
+      <select
+        value={logForm.unit}
+        onChange={e => setLogForm(old => ({
+          ...old,
+          unit: e.target.value
+        }))}
+      >
+        <option>mg</option>
+        <option>mcg</option>
+        <option>ml</option>
+        <option>IU</option>
+        <option>g</option>
+        <option>capsule</option>
+        <option>tablet</option>
+        <option>other</option>
+      </select>
+    </label>
+
+    <label>
+      {tx('Notes (optional)', 'توضیحات (اختیاری)')}
+      <input
+        value={logForm.notes}
+        onChange={e => setLogForm(old => ({
+          ...old,
+          notes: e.target.value
+        }))}
+      />
+    </label>
+
+    <button
+      className="health-primary"
+      type="submit"
+      disabled={!protocols.length || !logCompounds.length}
+    >
+      {tx('Save log entry', 'ثبت در تاریخچه')}
+    </button>
+  </form>
+
+  <div className="health-log-history">
+    <h3>{tx('Recent entries', 'ثبت‌های اخیر')}</h3>
+
+    {doseLogs.length === 0 ? (
+      <p className="health-muted">
+        {tx('No entries recorded yet.', 'هنوز موردی ثبت نشده است.')}
+      </p>
+    ) : (
+      doseLogs.map(entry => (
+        <article className="health-log-entry" key={entry.id}>
+          <div>
+            <strong>{entry.compoundName}</strong>
+            <small>{entry.protocolName} · {entry.date}</small>
+            <span>{entry.amount} {entry.unit}</span>
+            {entry.notes && <small>{entry.notes}</small>}
+          </div>
+
+          <button
+            type="button"
+            className="health-danger"
+            onClick={() => removeDoseLog(entry.id)}
+          >
+            {tx('Delete', 'حذف')}
+          </button>
+        </article>
+      ))
+    )}
+  </div>
+</section>
       <div className="health-section-heading">
         <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
         <button className="health-primary" onClick={() => setShowForm(v => !v)}>
