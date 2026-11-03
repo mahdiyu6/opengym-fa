@@ -271,3 +271,86 @@
   .health-custom-compound input { grid-column: 1 / -1; }
   .health-custom-compound select { max-width: none; }
 }
+
+.health-dose-block,
+.health-frequency-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--sep);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.health-dose-mode,
+.health-frequency-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.health-frequency-options {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.health-dose-mode button,
+.health-frequency-options button {
+  min-width: 0;
+  padding: 10px 6px;
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--label-2);
+  font: inherit;
+  font-size: 12px;
+}
+
+.health-dose-mode button.active,
+.health-frequency-options button.active {
+  background: var(--surface-2);
+  color: var(--green);
+  border-color: var(--green);
+  font-weight: 700;
+}
+
+.health-frequency-block > strong {
+  color: var(--label);
+  font-size: 13px;
+}
+
+.health-day-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  padding-top: 4px;
+}
+
+.health-day-picker button {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--sep);
+  background: var(--bg);
+  color: var(--label-2);
+  font-size: 12px;
+}
+
+.health-day-picker button.active {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+  font-weight: 700;
+}
+
+.health-compound-editor {
+  gap: 14px;
+}
+
+@media (max-width: 380px) {
+  .health-frequency-options button {
+    font-size: 10px;
+    padding: 9px 3px;
+  }
+}
