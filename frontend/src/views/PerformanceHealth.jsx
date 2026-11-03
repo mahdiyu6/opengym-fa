@@ -31,8 +31,9 @@ const makeCompound = (name, category) => ({
   unit: 'mg',
   concentration: '',
   concentrationUnit: 'mg/ml',
+  amountBasis: 'per_week',
   frequency: 'daily',
-  days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  days: [],
   notes: ''
 })
 
@@ -222,17 +223,89 @@ export default function PerformanceHealth() {
                       {tx('Remove', 'حذف')}
                     </button>
                   </div>
-                  <div className="health-form-row">
-                    <label>{tx('Recorded amount', 'مقدار ثبت‌شده')}
-                      <input inputMode="decimal" value={compound.amount}
-                        onChange={e => updateCompound(compound.id, 'amount', e.target.value)} placeholder="—" />
-                    </label>
-                    <label>{tx('Unit', 'واحد')}
-                      <select value={compound.unit} onChange={e => updateCompound(compound.id, 'unit', e.target.value)}>
-                        <option>mg</option><option>mcg</option><option>ml</option><option>IU</option><option>g</option><option>capsule</option><option>tablet</option><option>other</option>
-                      </select>
-                    </label>
-                  </div>
+            <div className="health-dose-block">
+  <label>
+    {tx('Recorded amount', 'مقدار ثبت‌شده')}
+    <input
+      inputMode="decimal"
+      value={compound.amount}
+      onChange={e => updateCompound(compound.id, 'amount', e.target.value)}
+      placeholder="—"
+    />
+  </label>
+
+  <div className="health-dose-mode">
+    <button
+      type="button"
+      className={compound.amountBasis === 'per_week' ? 'active' : ''}
+      onClick={() => updateCompound(compound.id, 'amountBasis', 'per_week')}
+    >
+      {tx('Per week', 'در هفته')}
+    </button>
+
+    <button
+      type="button"
+      className={compound.amountBasis === 'per_dose' ? 'active' : ''}
+      onClick={() => updateCompound(compound.id, 'amountBasis', 'per_dose')}
+    >
+      {tx('Per dose', 'در هر نوبت')}
+    </button>
+  </div>
+
+  <label>
+    {tx('Unit', 'واحد')}
+    <select
+      value={compound.unit}
+      onChange={e => updateCompound(compound.id, 'unit', e.target.value)}
+    >
+      <option>mg</option>
+      <option>mcg</option>
+      <option>ml</option>
+      <option>IU</option>
+      <option>g</option>
+      <option>capsule</option>
+      <option>tablet</option>
+      <option>other</option>
+    </select>
+  </label>
+</div>
+
+<div className="health-frequency-block">
+  <strong>{tx('Recorded frequency', 'تناوب ثبت‌شده')}</strong>
+
+  <div className="health-frequency-options">
+    {[
+      ['daily', 'Daily', 'روزانه'],
+      ['every_other_day', 'Every other day', 'یک روز در میان'],
+      ['selected_days', 'Selected days', 'روزهای انتخابی']
+    ].map(([value, en, faLabel]) => (
+      <button
+        type="button"
+        key={value}
+        className={compound.frequency === value ? 'active' : ''}
+        onClick={() => updateCompound(compound.id, 'frequency', value)}
+      >
+        {tx(en, faLabel)}
+      </button>
+    ))}
+  </div>
+
+  {compound.frequency === 'selected_days' && (
+    <div className="health-day-picker">
+      {days.map(([day, faDay]) => (
+        <button
+          type="button"
+          key={day}
+          className={(compound.days || []).includes(day) ? 'active' : ''}
+          aria-pressed={(compound.days || []).includes(day)}
+          onClick={() => toggleDay(compound.id, day)}
+        >
+          {fa ? faDay : day.slice(0, 2)}
+        </button>
+      ))}
+    </div>
+  )}
+</div>
                   <div className="health-form-row">
                     <label>{tx('Label concentration (optional)', 'غلظت درج‌شده روی بسته (اختیاری)')}
                       <input value={compound.concentration}
@@ -246,26 +319,6 @@ export default function PerformanceHealth() {
                       </select>
                     </label>
                   </div>
-                  <label>{tx('Recorded schedule', 'زمان‌بندی ثبت‌شده')}
-                    <select value={compound.frequency} onChange={e => updateCompound(compound.id, 'frequency', e.target.value)}>
-                      <option value="daily">{tx('Daily', 'روزانه')}</option>
-                      <option value="every_other_day">{tx('Every other day', 'یک روز در میان')}</option>
-                      <option value="weekly">{tx('Weekly', 'هفتگی')}</option>
-                      <option value="selected_days">{tx('Selected weekdays', 'روزهای انتخابی هفته')}</option>
-                      <option value="as_needed">{tx('As recorded / as needed', 'طبق سابقه / در صورت نیاز')}</option>
-                      <option value="custom">{tx('Custom / not specified', 'سفارشی / نامشخص')}</option>
-                    </select>
-                  </label>
-                  {compound.frequency === 'selected_days' && (
-                    <div className="health-day-picker">
-                      {days.map(([day, faDay]) => (
-                        <button type="button" key={day} className={compound.days.includes(day) ? 'active' : ''}
-                          onClick={() => toggleDay(compound.id, day)}>
-                          {fa ? faDay : day.slice(0, 2)}
-                        </button>
-                      ))}
-                    </div>
-                  )}
                   <label>{tx('Notes', 'توضیحات')}
                     <input value={compound.notes} onChange={e => updateCompound(compound.id, 'notes', e.target.value)} />
                   </label>
