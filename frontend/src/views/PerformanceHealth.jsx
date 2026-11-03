@@ -111,7 +111,12 @@ export default function PerformanceHealth() {
     ['Mon', 'د'], ['Tue', 'س'], ['Wed', 'چ'], ['Thu', 'پ'],
     ['Fri', 'ج'], ['Sat', 'ش'], ['Sun', 'ی']
   ]
-
+const activeCount = protocols.filter(p => p.status === 'active').length
+const completedCount = protocols.filter(p => p.status === 'completed').length
+const compoundCount = protocols.reduce(
+  (total, p) => total + (Array.isArray(p.compounds) ? p.compounds.length : 0),
+  0
+)
   return (
     <main className="health-page" dir={fa ? 'rtl' : 'ltr'}>
       <button className="health-secondary" onClick={() => nav('/health')}>
@@ -133,7 +138,27 @@ export default function PerformanceHealth() {
           'این ابزار صرفاً برای ثبت سوابق است و هیچ ترکیب، دوز، چرخه یا تغییری در دارو پیشنهاد نمی‌کند. فقط اطلاعات سوابق خود را وارد کنید و تصمیم‌های درمانی را با پزشک بررسی کنید.'
         )}
       </div>
+<div className="health-stats-grid">
+  <div className="health-stat-card">
+    <span>{tx('Active records', 'سوابق فعال')}</span>
+    <strong>{activeCount}</strong>
+  </div>
 
+  <div className="health-stat-card">
+    <span>{tx('Completed', 'پایان‌یافته')}</span>
+    <strong>{completedCount}</strong>
+  </div>
+
+  <div className="health-stat-card">
+    <span>{tx('Recorded compounds', 'ترکیبات ثبت‌شده')}</span>
+    <strong>{compoundCount}</strong>
+  </div>
+
+  <div className="health-stat-card">
+    <span>{tx('Total records', 'کل سوابق')}</span>
+    <strong>{protocols.length}</strong>
+  </div>
+</div>
       <div className="health-section-heading">
         <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
         <button className="health-primary" onClick={() => setShowForm(v => !v)}>
