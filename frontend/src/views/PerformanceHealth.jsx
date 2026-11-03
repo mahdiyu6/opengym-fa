@@ -65,6 +65,29 @@ const selectedLogProtocol = protocols.find(
 const logCompounds = Array.isArray(selectedLogProtocol?.compounds)
   ? selectedLogProtocol.compounds
   : []
+  const [historyFilter, setHistoryFilter] = useState({
+  compound: '',
+  from: '',
+  to: ''
+})
+
+const historyCompounds = [...new Set(
+  doseLogs.map(entry => entry.compoundName).filter(Boolean)
+)]
+
+const filteredDoseLogs = useMemo(() => {
+  return doseLogs
+    .filter(entry => {
+      if (historyFilter.compound &&
+          entry.compoundName !== historyFilter.compound) return false
+
+      if (historyFilter.from && entry.date < historyFilter.from) return false
+      if (historyFilter.to && entry.date > historyFilter.to) return false
+
+      return true
+    })
+    .sort((a, b) => b.date.localeCompare(a.date))
+}, [doseLogs, historyFilter])
   const tx = (en, faText) => fa ? faText : en
   const filteredCatalog = useMemo(() => CATALOG.map(group => ({
     ...group,
