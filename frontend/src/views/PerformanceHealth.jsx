@@ -122,7 +122,50 @@ const logCompounds = Array.isArray(selectedLogProtocol?.compounds)
       )
     })
   }
+function saveDoseLog(e) {
+  e.preventDefault()
 
+  const protocol = protocols.find(p => p.id === logForm.protocolId)
+  const compound = Array.isArray(protocol?.compounds)
+    ? protocol.compounds.find(c => c.id === logForm.compoundId)
+    : null
+
+  if (!protocol || !compound || !logForm.date || !logForm.amount.trim()) {
+    return
+  }
+
+  const entry = {
+    id: 'hl-' + Date.now(),
+    protocolId: protocol.id,
+    protocolName: protocol.name,
+    compoundId: compound.id,
+    compoundName: compound.name,
+    date: logForm.date,
+    amount: logForm.amount.trim(),
+    unit: logForm.unit,
+    notes: logForm.notes.trim(),
+    createdAt: new Date().toISOString()
+  }
+
+  update(s => {
+    s.healthDoseLogs = [entry, ...(s.healthDoseLogs || [])]
+  })
+
+  setLogForm(old => ({
+    ...old,
+    compoundId: '',
+    amount: '',
+    notes: ''
+  }))
+}
+
+function removeDoseLog(id) {
+  if (!confirm(tx('Delete this log entry?', 'این ثبت از تاریخچه حذف شود؟'))) return
+
+  update(s => {
+    s.healthDoseLogs = (s.healthDoseLogs || []).filter(x => x.id !== id)
+  })
+}
   const days = [
     ['Mon', 'د'], ['Tue', 'س'], ['Wed', 'چ'], ['Thu', 'پ'],
     ['Fri', 'ج'], ['Sat', 'ش'], ['Sun', 'ی']
