@@ -544,7 +544,7 @@
   }
 }
 
-/* Mobile date fields: prevent Safari overflow */
+/* Mobile date fields: fix width and height */
 .health-page,
 .health-page .health-protocol-form,
 .health-page .health-log-form {
@@ -573,10 +573,14 @@
   width: 100% !important;
   min-width: 0 !important;
   max-width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  padding: 11px 12px !important;
+  line-height: normal !important;
   flex: 1 1 0;
   -webkit-appearance: none;
   appearance: none;
-  overflow: hidden;
+  overflow: visible;
 }
 
 @media (max-width: 480px) {
@@ -588,5 +592,7 @@
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
+    height: 48px !important;
+    min-height: 48px !important;
   }
 }
