@@ -543,3 +543,50 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Mobile date fields: prevent Safari overflow */
+.health-page,
+.health-page .health-protocol-form,
+.health-page .health-log-form {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.health-page .health-form-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.health-page .health-form-row > label {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+}
+
+.health-page input[type="date"] {
+  display: block;
+  box-sizing: border-box;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  flex: 1 1 0;
+  -webkit-appearance: none;
+  appearance: none;
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .health-page .health-form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .health-page input[type="date"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
