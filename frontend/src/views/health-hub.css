@@ -473,3 +473,73 @@
     align-items: flex-start;
   }
 }
+
+/* Fix form rows and date/input overflow */
+.health-protocol-form,
+.health-log-form {
+  min-width: 0;
+}
+
+.health-protocol-form .health-form-row,
+.health-log-form .health-form-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.health-protocol-form .health-form-row > label,
+.health-log-form .health-form-row > label {
+  min-width: 0;
+  width: 100%;
+}
+
+.health-protocol-form input,
+.health-protocol-form select,
+.health-log-form input,
+.health-log-form select {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.health-protocol-form input[type="date"],
+.health-log-form input[type="date"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.health-dose-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.health-dose-fields > label {
+  min-width: 0;
+  width: 100%;
+}
+
+.health-dose-fields input,
+.health-dose-fields select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 380px) {
+  .health-protocol-form .health-form-row,
+  .health-log-form .health-form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
