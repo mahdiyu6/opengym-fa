@@ -353,8 +353,61 @@ const compoundCount = protocols.reduce(
     </button>
   </form>
 
-  <div className="health-log-history">
-    <h3>{tx('Recent entries', 'ثبت‌های اخیر')}</h3>
+<div className="health-log-history">
+  <h3>{tx('Recent entries', 'ثبت‌های اخیر')}</h3>
+
+  <div className="health-history-filters">
+    <label>
+      {tx('Filter by compound', 'فیلتر بر اساس ترکیب')}
+      <select
+        value={historyFilter.compound}
+        onChange={e => setHistoryFilter(old => ({
+          ...old,
+          compound: e.target.value
+        }))}
+      >
+        <option value="">{tx('All compounds', 'همه ترکیبات')}</option>
+        {historyCompounds.map(name => (
+          <option key={name} value={name}>{name}</option>
+        ))}
+      </select>
+    </label>
+
+    <div className="health-history-date-filters">
+      <label>
+        {tx('From date', 'از تاریخ')}
+        <input
+          type="date"
+          value={historyFilter.from}
+          onChange={e => setHistoryFilter(old => ({
+            ...old,
+            from: e.target.value
+          }))}
+        />
+      </label>
+
+      <label>
+        {tx('To date', 'تا تاریخ')}
+        <input
+          type="date"
+          value={historyFilter.to}
+          min={historyFilter.from || undefined}
+          onChange={e => setHistoryFilter(old => ({
+            ...old,
+            to: e.target.value
+          }))}
+        />
+      </label>
+    </div>
+
+    <button
+      type="button"
+      className="health-secondary"
+      onClick={() => setHistoryFilter({ compound: '', from: '', to: '' })}
+    >
+      {tx('Clear filters', 'پاک‌کردن فیلترها')}
+    </button>
+  </div>
 
     {doseLogs.length === 0 ? (
       <p className="health-muted">
