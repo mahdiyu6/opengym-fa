@@ -448,16 +448,36 @@ const compoundCount = protocols.reduce(
                       {tx('Remove', 'حذف')}
                     </button>
                   </div>
-            <div className="health-dose-block">
-  <label>
-    {tx('Recorded amount', 'مقدار ثبت‌شده')}
-    <input
-      inputMode="decimal"
-      value={compound.amount}
-      onChange={e => updateCompound(compound.id, 'amount', e.target.value)}
-      placeholder="—"
-    />
-  </label>
+            
+              <div className="health-dose-block">
+  <div className="health-dose-fields">
+    <label>
+      {tx('Recorded amount', 'مقدار ثبت‌شده')}
+      <input
+        inputMode="decimal"
+        value={compound.amount}
+        onChange={e => updateCompound(compound.id, 'amount', e.target.value)}
+        placeholder="—"
+      />
+    </label>
+
+    <label>
+      {tx('Unit', 'واحد')}
+      <select
+        value={compound.unit}
+        onChange={e => updateCompound(compound.id, 'unit', e.target.value)}
+      >
+        <option>mg</option>
+        <option>mcg</option>
+        <option>ml</option>
+        <option>IU</option>
+        <option>g</option>
+        <option>capsule</option>
+        <option>tablet</option>
+        <option>other</option>
+      </select>
+    </label>
+  </div>
 
   <div className="health-dose-mode">
     <button
@@ -476,23 +496,6 @@ const compoundCount = protocols.reduce(
       {tx('Per dose', 'در هر نوبت')}
     </button>
   </div>
-
-  <label>
-    {tx('Unit', 'واحد')}
-    <select
-      value={compound.unit}
-      onChange={e => updateCompound(compound.id, 'unit', e.target.value)}
-    >
-      <option>mg</option>
-      <option>mcg</option>
-      <option>ml</option>
-      <option>IU</option>
-      <option>g</option>
-      <option>capsule</option>
-      <option>tablet</option>
-      <option>other</option>
-    </select>
-  </label>
 </div>
 
 <div className="health-frequency-block">
