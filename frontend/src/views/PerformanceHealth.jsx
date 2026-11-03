@@ -365,11 +365,47 @@ export default function PerformanceHealth() {
                   compoundList.length ? <div className="health-record-compounds">
                     {compoundList.map(c => <div className="health-record-compound" key={c.id || c.name}>
                       <div><strong>{c.name}</strong><small>{c.category}</small></div>
-                      <span>{c.amount ? c.amount + ' ' + c.unit : tx('Amount not entered', 'مقدار ثبت نشده')}</span>
-                      <small>{tx('Schedule:', 'زمان‌بندی:')} {tx(
-                        ({daily:'Daily',every_other_day:'Every other day',weekly:'Weekly',selected_days:'Selected weekdays',as_needed:'As needed',custom:'Custom'})[c.frequency] || 'Not specified',
-                        ({daily:'روزانه',every_other_day:'یک روز در میان',weekly:'هفتگی',selected_days:'روزهای انتخابی',as_needed:'در صورت نیاز',custom:'سفارشی'})[c.frequency] || 'نامشخص'
-                      )}</small>
+<span>
+  {c.amount
+    ? `${c.amount} ${c.unit} · ${
+        c.amountBasis === 'per_dose'
+          ? tx('Per dose', 'در هر نوبت')
+          : tx('Per week', 'در هفته')
+      }`
+    : tx('Amount not entered', 'مقدار ثبت نشده')}
+</span>
+
+<small>
+  {tx('Frequency:', 'تناوب:')} {tx(
+    ({
+      daily: 'Daily',
+      every_other_day: 'Every other day',
+      weekly: 'Weekly',
+      selected_days: 'Selected weekdays'
+    })[c.frequency] || 'Not specified',
+    ({
+      daily: 'روزانه',
+      every_other_day: 'یک روز در میان',
+      weekly: 'هفتگی',
+      selected_days: 'روزهای انتخابی'
+    })[c.frequency] || 'نامشخص'
+  )}
+</small>
+
+{c.frequency === 'selected_days' && Array.isArray(c.days) && c.days.length > 0 && (
+  <small>
+    {tx('Days:', 'روزها:')} {c.days.map(day => {
+      const match = days.find(([key]) => key === day)
+      return match ? (fa ? match[1] : match[0]) : day
+    }).join('، ')}
+  </small>
+)}
+
+{c.concentration && (
+  <small>
+    {tx('Concentration:', 'غلظت:')} {c.concentration} {c.concentrationUnit}
+  </small>
+)}
                     </div>)}
                   </div> : <p className="health-protocol-detail">{tx('No compounds added.', 'ترکیبی اضافه نشده است.')}</p>
                 ) : item.compounds ? <p className="health-protocol-detail"><b>{tx('Legacy compounds:', 'ترکیبات ثبت‌شده قبلی:')}</b> {item.compounds}</p> : null}
