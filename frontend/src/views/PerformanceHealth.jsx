@@ -532,7 +532,7 @@ const compoundCount = protocols.reduce(
   )}
 </div>
                   <div className="health-form-row">
-                    <label>{tx('Label concentration (optional)', 'غلظت درج‌شده روی بسته (اختیاری)')}
+                    <label>{tx('Label concentration', 'غلظت درج‌شده روی بسته')}
                       <input value={compound.concentration}
                         onChange={e => updateCompound(compound.id, 'concentration', e.target.value)}
                         placeholder={tx('e.g. label value', 'مقدار درج‌شده روی برچسب')} />
