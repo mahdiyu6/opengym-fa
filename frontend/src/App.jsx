@@ -27,6 +27,8 @@ import Admin from './views/Admin.jsx'
 import Health from './views/Health.jsx'
 import HealthHome from './views/HealthHome.jsx'
 import PerformanceHealth from './views/PerformanceHealth.jsx'
+import HealthDoseLogHistory from './views/HealthDoseLogHistory.jsx'
+import HealthCheckInHistory from './views/HealthCheckInHistory.jsx'
 
 bindUI(useUI)   // lets the shared controls open sheets without importing the store at module scope
 
