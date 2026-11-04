@@ -89,6 +89,8 @@ function Shell() {
               <Route path="/health" element={<HealthHome />} />
               <Route path="/health/labs" element={<Health />} />
               <Route path="/health/performance" element={<PerformanceHealth />} />
+              <Route path="/health/performance/logs" element={<HealthDoseLogHistory />} />
+              <Route path="/health/performance/check-ins" element={<HealthCheckInHistory />} />
             </Routes>
           )}
         </ErrorBoundary>
