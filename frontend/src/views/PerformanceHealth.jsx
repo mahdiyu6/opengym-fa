@@ -617,6 +617,7 @@ const compoundCount = protocols.reduce(
     </>
   )}
 </div>
+       </section>
         <section className="health-card health-checkin-section">
   <div className="health-picker-heading">
     <h3>{tx('Weekly check-in', 'ارزیابی هفتگی')}</h3>
