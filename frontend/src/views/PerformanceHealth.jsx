@@ -43,6 +43,18 @@ export default function PerformanceHealth() {
   const nav = useNavigate()
   const protocols = useStore(s => s.S.healthProtocols || [])
   const doseLogs = useStore(s => s.S.healthDoseLogs || [])
+  const checkIns = useStore(s => s.S.healthCheckIns || [])
+const [checkInForm, setCheckInForm] = useState({
+  date: today(),
+  weight: '',
+  waist: '',
+  sleep: '',
+  sleepQuality: '3',
+  energy: '3',
+  mood: '3',
+  training: '',
+  notes: ''
+})
   const update = useStore(s => s.update)
   const [form, setForm] = useState(emptyForm)
   const [showForm, setShowForm] = useState(false)
