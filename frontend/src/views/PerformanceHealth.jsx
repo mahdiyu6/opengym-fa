@@ -88,6 +88,62 @@ const filteredDoseLogs = useMemo(() => {
     })
     .sort((a, b) => b.date.localeCompare(a.date))
 }, [doseLogs, historyFilter])
+ const [calendarMonth, setCalendarMonth] = useState(() => {
+  const d = new Date()
+  return new Date(d.getFullYear(), d.getMonth(), 1)
+})
+
+const [selectedCalendarDate, setSelectedCalendarDate] = useState(today())
+
+const calendarCells = useMemo(() => {
+  const year = calendarMonth.getFullYear()
+  const month = calendarMonth.getMonth()
+
+  const firstDay = new Date(year, month, 1)
+  const offset = (firstDay.getDay() + 6) % 7
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+  return Array.from({ length: 42 }, (_, index) => {
+    const dayNumber = index - offset + 1
+
+    if (dayNumber < 1 || dayNumber > daysInMonth) return null
+
+    return [
+      year,
+      String(month + 1).padStart(2, '0'),
+      String(dayNumber).padStart(2, '0')
+    ].join('-')
+  })
+}, [calendarMonth])
+
+const calendarLogCounts = useMemo(() => {
+  return doseLogs.reduce((counts, entry) => {
+    if (entry.date) {
+      counts[entry.date] = (counts[entry.date] || 0) + 1
+    }
+    return counts
+  }, {})
+}, [doseLogs])
+
+const selectedDayLogs = useMemo(() => {
+  return doseLogs
+    .filter(entry => entry.date === selectedCalendarDate)
+    .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''))
+}, [doseLogs, selectedCalendarDate])
+
+function changeCalendarMonth(amount) {
+  setCalendarMonth(old => new Date(
+    old.getFullYear(),
+    old.getMonth() + amount,
+    1
+  ))
+}
+
+function goToCalendarToday() {
+  const d = new Date()
+  setCalendarMonth(new Date(d.getFullYear(), d.getMonth(), 1))
+  setSelectedCalendarDate(today())
+}
   const tx = (en, faText) => fa ? faText : en
   const filteredCatalog = useMemo(() => CATALOG.map(group => ({
     ...group,
