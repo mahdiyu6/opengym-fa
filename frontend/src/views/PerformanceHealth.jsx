@@ -257,6 +257,46 @@ function removeDoseLog(id) {
     s.healthDoseLogs = (s.healthDoseLogs || []).filter(x => x.id !== id)
   })
 }
+ function saveCheckIn(e) {
+  e.preventDefault()
+
+  const entry = {
+    id: 'hci-' + Date.now(),
+    ...checkInForm,
+    createdAt: new Date().toISOString()
+  }
+
+  update(s => {
+    s.healthCheckIns = [
+      entry,
+      ...(s.healthCheckIns || [])
+    ]
+  })
+
+  setCheckInForm({
+    date: today(),
+    weight: '',
+    waist: '',
+    sleep: '',
+    sleepQuality: '3',
+    energy: '3',
+    mood: '3',
+    training: '',
+    notes: ''
+  })
+}
+
+function removeCheckIn(id) {
+  if (!confirm(tx(
+    'Delete this weekly check-in?',
+    'این ارزیابی هفتگی حذف شود؟'
+  ))) return
+
+  update(s => {
+    s.healthCheckIns = (s.healthCheckIns || [])
+      .filter(entry => entry.id !== id)
+  })
+}
   const days = [
     ['Mon', 'د'], ['Tue', 'س'], ['Wed', 'چ'], ['Thu', 'پ'],
     ['Fri', 'ج'], ['Sat', 'ش'], ['Sun', 'ی']
