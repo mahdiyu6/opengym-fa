@@ -999,3 +999,39 @@
 .health-history-pagination button {
   min-width: 82px;
 }
+
+/* Daily log preview: 2 columns, 5 rows */
+
+.health-log-history > .health-log-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.health-log-preview-grid .health-log-entry {
+  min-width: 0;
+  margin: 0;
+  padding: 9px;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.health-log-preview-grid .health-log-entry > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.health-log-preview-grid .health-log-entry .health-danger {
+  flex-shrink: 0;
+  font-size: 10px;
+  padding: 5px 7px;
+}
+
+.health-log-preview-grid .health-log-entry strong {
+  font-size: 11px;
+}
+
+.health-log-preview-grid .health-log-entry small,
+.health-log-preview-grid .health-log-entry span {
+  font-size: 10px;
+}
