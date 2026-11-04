@@ -456,7 +456,116 @@ const compoundCount = protocols.reduce(
     </button>
   </form>
 
- <HealthDoseSchedule />
+  <section className="health-card health-calendar-section">
+  <div className="health-picker-heading">
+    <h3>{tx('Activity calendar', 'تقویم ثبت‌ها')}</h3>
+    <button
+      type="button"
+      className="health-secondary"
+      onClick={goToCalendarToday}
+    >
+      {tx('Today', 'امروز')}
+    </button>
+  </div>
+
+  <div className="health-calendar-navigation">
+    <button
+      type="button"
+      className="health-secondary"
+      onClick={() => changeCalendarMonth(-1)}
+      aria-label={tx('Previous month', 'ماه قبل')}
+    >
+      ‹
+    </button>
+
+    <strong>
+      {calendarMonth.toLocaleDateString(fa ? 'fa-IR' : 'en-US', {
+        month: 'long',
+        year: 'numeric'
+      })}
+    </strong>
+
+    <button
+      type="button"
+      className="health-secondary"
+      onClick={() => changeCalendarMonth(1)}
+      aria-label={tx('Next month', 'ماه بعد')}
+    >
+      ›
+    </button>
+  </div>
+
+  <div className="health-calendar-grid">
+    {[
+      ['Mon', 'د'], ['Tue', 'س'], ['Wed', 'چ'],
+      ['Thu', 'پ'], ['Fri', 'ج'], ['Sat', 'ش'], ['Sun', 'ی']
+    ].map(([en, faDay]) => (
+      <div className="health-calendar-weekday" key={en}>
+        {tx(en, faDay)}
+      </div>
+    ))}
+
+    {calendarCells.map((date, index) => {
+      if (!date) {
+        return <div className="health-calendar-empty" key={`empty-${index}`} />
+      }
+
+      const count = calendarLogCounts[date] || 0
+      const isSelected = selectedCalendarDate === date
+      const isToday = today() === date
+      const dayNumber = Number(date.slice(-2))
+
+      return (
+        <button
+          type="button"
+          key={date}
+          className={[
+            'health-calendar-day',
+            count ? 'has-logs' : '',
+            isSelected ? 'selected' : '',
+            isToday ? 'is-today' : ''
+          ].filter(Boolean).join(' ')}
+          onClick={() => setSelectedCalendarDate(date)}
+          aria-pressed={isSelected}
+          aria-label={`${date}, ${count} ${tx('entries', 'ثبت')}`}
+        >
+          <span>
+            {fa
+              ? new Date(date + 'T12:00:00').toLocaleDateString('fa-IR', {
+                  day: 'numeric',
+                  calendar: 'gregory'
+                })
+              : dayNumber}
+          </span>
+
+          {count > 0 && (
+            <small>{count}</small>
+          )}
+        </button>
+      )
+    })}
+  </div>
+
+  <div className="health-calendar-day-details">
+    <h4>
+      {tx('Entries for', 'ثبت‌های تاریخ')} {selectedCalendarDate}
+    </h4>
+
+    {selectedDayLogs.length === 0 ? (
+      <p className="health-muted">
+        {tx('No entries on this day.', 'برای این روز ثبتی وجود ندارد.')}
+      </p>
+    ) : (
+      selectedDayLogs.map(entry => (
+        <div className="health-calendar-entry" key={entry.id}>
+          <strong>{entry.compoundName}</strong>
+          <span>{entry.amount} {entry.unit}</span>
+          {entry.notes && <small>{entry.notes}</small>}
+        </div>
+      ))
+    )}
+  </div>
+</section>      
         
 <div className="health-log-history">
   <div className="health-history-title-row">
