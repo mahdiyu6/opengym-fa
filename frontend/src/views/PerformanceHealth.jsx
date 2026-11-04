@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { getLang, useLang } from '../lib/i18n.js'
+import HealthDoseSchedule from './HealthDoseSchedule.jsx'
 import './health-hub.css'
 
 const today = () => new Date().toISOString().slice(0, 10)
