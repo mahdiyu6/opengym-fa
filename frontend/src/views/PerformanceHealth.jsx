@@ -584,27 +584,29 @@ const compoundCount = protocols.reduce(
     </p>
   ) : (
     <>
-      {recentDoseLogs.map(entry => (
-        <article
-          className="health-log-entry health-log-entry-compact"
-          key={entry.id}
-        >
-          <div>
-            <strong>{entry.compoundName}</strong>
-            <small>{entry.protocolName} · {entry.date}</small>
-            <span>{entry.amount} {entry.unit}</span>
-            {entry.notes && <small>{entry.notes}</small>}
-          </div>
+     <div className="health-log-preview-grid">
+  {recentDoseLogs.map(entry => (
+    <article
+      className="health-log-entry health-log-entry-compact"
+      key={entry.id}
+    >
+      <div>
+        <strong>{entry.compoundName}</strong>
+        <small>{entry.protocolName} · {entry.date}</small>
+        <span>{entry.amount} {entry.unit}</span>
+        {entry.notes && <small>{entry.notes}</small>}
+      </div>
 
-          <button
-            type="button"
-            className="health-danger"
-            onClick={() => removeDoseLog(entry.id)}
-          >
-            {tx('Delete', 'حذف')}
-          </button>
-        </article>
-      ))}
+      <button
+        type="button"
+        className="health-danger"
+        onClick={() => removeDoseLog(entry.id)}
+      >
+        {tx('Delete', 'حذف')}
+      </button>
+    </article>
+  ))}
+</div>
 
       {doseLogs.length > 10 && (
         <p className="health-muted health-preview-count">
