@@ -92,7 +92,7 @@ const recentCheckIns = useMemo(() => {
       (b.date || '').localeCompare(a.date || '') ||
       (b.createdAt || '').localeCompare(a.createdAt || '')
     )
-    .slice(0, 10)
+    .slice(0, 5)
 }, [checkIns])
  const [calendarMonth, setCalendarMonth] = useState(() => {
   const d = new Date()
@@ -748,7 +748,7 @@ const compoundCount = protocols.reduce(
   </form>
 <div className="health-checkin-history">
   <div className="health-history-title-row">
-    <h4>{tx('Previous check-ins', '۱۰ ارزیابی اخیر')}</h4>
+    <h4>{tx('Previous check-ins', '۵ ارزیابی اخیر')}</h4>
 
     <button
       type="button"
@@ -831,11 +831,11 @@ const compoundCount = protocols.reduce(
         </article>
       ))}
 
-      {checkIns.length > 10 && (
+      {checkIns.length > 5 && (
         <p className="health-muted health-preview-count">
           {tx(
-            `Showing 10 of ${checkIns.length} check-ins`,
-            `نمایش ۱۰ مورد از ${checkIns.length} ارزیابی`
+            `Showing 5 of ${checkIns.length} check-ins`,
+            `نمایش ۵ مورد از ${checkIns.length} ارزیابی`
           )}
         </p>
       )}
