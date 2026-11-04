@@ -842,7 +842,8 @@ const compoundCount = protocols.reduce(
     </>
   )}
 </div>
-      <div className="health-section-heading">
+     </section>
+          <div className="health-section-heading">
         <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
         <button className="health-primary" onClick={() => setShowForm(v => !v)}>
           {showForm ? tx('Cancel', 'انصراف') : tx('+ New protocol', '+ پروتکل جدید')}
