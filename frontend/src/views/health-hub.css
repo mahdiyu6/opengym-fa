@@ -899,3 +899,103 @@
     grid-column: auto;
   }
 }
+
+/* Compact history previews on Performance page */
+
+.health-history-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.health-history-title-row h3,
+.health-history-title-row h4 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--label);
+}
+
+.health-view-all-link {
+  border: 0;
+  background: transparent;
+  color: var(--green);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 4px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.health-log-entry-compact {
+  padding: 9px 11px;
+  margin-top: 6px;
+  border-radius: 10px;
+}
+
+.health-log-entry-compact strong {
+  font-size: 12px;
+}
+
+.health-log-entry-compact small {
+  font-size: 10px;
+}
+
+.health-log-entry-compact span {
+  font-size: 11px;
+}
+
+.health-checkin-entry-compact {
+  padding: 10px;
+  margin-top: 7px;
+  border-radius: 11px;
+}
+
+.health-checkin-entry-compact .health-checkin-values {
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.health-checkin-entry-compact .health-checkin-values span,
+.health-checkin-entry-compact p {
+  font-size: 10px;
+}
+
+.health-checkin-entry-compact .health-checkin-entry-heading strong {
+  font-size: 12px;
+}
+
+.health-preview-count {
+  text-align: center;
+  font-size: 10px;
+  margin: 10px 0 2px;
+}
+
+/* Full history page pagination */
+
+.health-history-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--sep);
+}
+
+.health-history-pagination span {
+  color: var(--label-2);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.health-history-pagination button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.health-history-pagination button {
+  min-width: 82px;
+}
