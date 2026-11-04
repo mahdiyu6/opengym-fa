@@ -662,6 +662,196 @@ const compoundCount = protocols.reduce(
 )}
 </div>
 </section>
+     <section className="health-card health-checkin-section">
+  <div className="health-picker-heading">
+    <h3>{tx('Weekly check-in', 'ارزیابی هفتگی')}</h3>
+    <span>{tx('Track your personal progress', 'ثبت روند وضعیت شخصی')}</span>
+  </div>
+
+  <form className="health-checkin-form" onSubmit={saveCheckIn}>
+    <label>
+      {tx('Assessment date', 'تاریخ ارزیابی')}
+      <input
+        type="date"
+        value={checkInForm.date}
+        onChange={e => setCheckInForm(old => ({
+          ...old,
+          date: e.target.value
+        }))}
+        required
+      />
+    </label>
+
+    <div className="health-checkin-grid">
+      <label>
+        {tx('Body weight (kg)', 'وزن بدن (کیلوگرم)')}
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          value={checkInForm.weight}
+          onChange={e => setCheckInForm(old => ({
+            ...old,
+            weight: e.target.value
+          }))}
+          placeholder="—"
+        />
+      </label>
+
+      <label>
+        {tx('Waist (cm)', 'دور کمر (سانتی‌متر)')}
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          value={checkInForm.waist}
+          onChange={e => setCheckInForm(old => ({
+            ...old,
+            waist: e.target.value
+          }))}
+          placeholder="—"
+        />
+      </label>
+
+      <label>
+        {tx('Average sleep (hours)', 'میانگین خواب (ساعت)')}
+        <input
+          type="number"
+          step="0.5"
+          min="0"
+          max="24"
+          value={checkInForm.sleep}
+          onChange={e => setCheckInForm(old => ({
+            ...old,
+            sleep: e.target.value
+          }))}
+          placeholder="—"
+        />
+      </label>
+    </div>
+
+    {[
+      ['sleepQuality', 'Sleep quality', 'کیفیت خواب'],
+      ['energy', 'Energy level', 'سطح انرژی'],
+      ['mood', 'General well-being', 'حال عمومی']
+    ].map(([key, en, faText]) => (
+      <label key={key}>
+        {tx(en, faText)}
+        <select
+          value={checkInForm[key]}
+          onChange={e => setCheckInForm(old => ({
+            ...old,
+            [key]: e.target.value
+          }))}
+        >
+          <option value="1">{tx('1 - Very low', '۱ - خیلی ضعیف')}</option>
+          <option value="2">{tx('2 - Low', '۲ - ضعیف')}</option>
+          <option value="3">{tx('3 - متوسط', '۳ - متوسط')}</option>
+          <option value="4">{tx('4 - Good', '۴ - خوب')}</option>
+          <option value="5">{tx('5 - Very good', '۵ - خیلی خوب')}</option>
+        </select>
+      </label>
+    ))}
+
+    <label>
+      {tx('Training status', 'وضعیت تمرین')}
+      <select
+        value={checkInForm.training}
+        onChange={e => setCheckInForm(old => ({
+          ...old,
+          training: e.target.value
+        }))}
+      >
+        <option value="">{tx('Not specified', 'مشخص نشده')}</option>
+        <option value="excellent">{tx('Excellent', 'عالی')}</option>
+        <option value="good">{tx('Good', 'خوب')}</option>
+        <option value="average">{tx('Average', 'متوسط')}</option>
+        <option value="poor">{tx('Poor', 'ضعیف')}</option>
+      </select>
+    </label>
+
+    <label>
+      {tx('Notes', 'توضیحات')}
+      <textarea
+        rows="3"
+        value={checkInForm.notes}
+        onChange={e => setCheckInForm(old => ({
+          ...old,
+          notes: e.target.value
+        }))}
+        placeholder={tx(
+          'Any observations about this week...',
+          'هر نکته‌ای درباره وضعیت این هفته...'
+        )}
+      />
+    </label>
+
+    <button className="health-primary" type="submit">
+      {tx('Save weekly check-in', 'ذخیره ارزیابی هفتگی')}
+    </button>
+  </form>
+
+  <div className="health-checkin-history">
+    <h4>{tx('Previous check-ins', 'ارزیابی‌های قبلی')}</h4>
+
+    {checkIns.length === 0 ? (
+      <p className="health-muted">
+        {tx('No weekly check-ins yet.', 'هنوز ارزیابی هفتگی ثبت نشده است.')}
+      </p>
+    ) : (
+      [...checkIns]
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .map(entry => (
+          <article className="health-checkin-entry" key={entry.id}>
+            <div className="health-checkin-entry-heading">
+              <strong>{entry.date}</strong>
+              <button
+                type="button"
+                className="health-danger"
+                onClick={() => removeCheckIn(entry.id)}
+              >
+                {tx('Delete', 'حذف')}
+              </button>
+            </div>
+
+            <div className="health-checkin-values">
+              {entry.weight && (
+                <span>{tx('Weight:', 'وزن:')} {entry.weight} kg</span>
+              )}
+              {entry.waist && (
+                <span>{tx('Waist:', 'دور کمر:')} {entry.waist} cm</span>
+              )}
+              {entry.sleep && (
+                <span>{tx('Sleep:', 'خواب:')} {entry.sleep} h</span>
+              )}
+              <span>{tx('Sleep quality:', 'کیفیت خواب:')} {entry.sleepQuality}/5</span>
+              <span>{tx('Energy:', 'انرژی:')} {entry.energy}/5</span>
+              <span>{tx('Well-being:', 'حال عمومی:')} {entry.mood}/5</span>
+            </div>
+
+            {entry.training && (
+              <p>{tx('Training:', 'تمرین:')} {tx(
+                ({
+                  excellent: 'Excellent',
+                  good: 'Good',
+                  average: 'Average',
+                  poor: 'Poor'
+                })[entry.training] || entry.training,
+                ({
+                  excellent: 'عالی',
+                  good: 'خوب',
+                  average: 'متوسط',
+                  poor: 'ضعیف'
+                })[entry.training] || entry.training
+              )}</p>
+            )}
+
+            {entry.notes && <p>{entry.notes}</p>}
+          </article>
+        ))
+    )}
+  </div>
+</section>
       <div className="health-section-heading">
         <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
         <button className="health-primary" onClick={() => setShowForm(v => !v)}>
