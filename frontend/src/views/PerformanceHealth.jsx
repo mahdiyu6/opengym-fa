@@ -77,29 +77,23 @@ const selectedLogProtocol = protocols.find(
 const logCompounds = Array.isArray(selectedLogProtocol?.compounds)
   ? selectedLogProtocol.compounds
   : []
-  const [historyFilter, setHistoryFilter] = useState({
-  compound: '',
-  from: '',
-  to: ''
-})
+  const recentDoseLogs = useMemo(() => {
+  return [...doseLogs]
+    .sort((a, b) =>
+      (b.date || '').localeCompare(a.date || '') ||
+      (b.createdAt || '').localeCompare(a.createdAt || '')
+    )
+    .slice(0, 10)
+}, [doseLogs])
 
-const historyCompounds = [...new Set(
-  doseLogs.map(entry => entry.compoundName).filter(Boolean)
-)]
-
-const filteredDoseLogs = useMemo(() => {
-  return doseLogs
-    .filter(entry => {
-      if (historyFilter.compound &&
-          entry.compoundName !== historyFilter.compound) return false
-
-      if (historyFilter.from && entry.date < historyFilter.from) return false
-      if (historyFilter.to && entry.date > historyFilter.to) return false
-
-      return true
-    })
-    .sort((a, b) => b.date.localeCompare(a.date))
-}, [doseLogs, historyFilter])
+const recentCheckIns = useMemo(() => {
+  return [...checkIns]
+    .sort((a, b) =>
+      (b.date || '').localeCompare(a.date || '') ||
+      (b.createdAt || '').localeCompare(a.createdAt || '')
+    )
+    .slice(0, 10)
+}, [checkIns])
  const [calendarMonth, setCalendarMonth] = useState(() => {
   const d = new Date()
   return new Date(d.getFullYear(), d.getMonth(), 1)
@@ -572,97 +566,58 @@ const compoundCount = protocols.reduce(
   </div>
 </section>      
 <div className="health-log-history">
-  <h3>{tx('Recent entries', 'ثبت‌های اخیر')}</h3>
-
-  <div className="health-history-filters">
-    <label>
-      {tx('Filter by compound', 'فیلتر بر اساس ترکیب')}
-      <select
-        value={historyFilter.compound}
-        onChange={e => setHistoryFilter(old => ({
-          ...old,
-          compound: e.target.value
-        }))}
-      >
-        <option value="">{tx('All compounds', 'همه ترکیبات')}</option>
-        {historyCompounds.map(name => (
-          <option key={name} value={name}>{name}</option>
-        ))}
-      </select>
-    </label>
-
-    <div className="health-history-date-filters">
-      <label>
-        {tx('From date', 'از تاریخ')}
-        <input
-          type="date"
-          value={historyFilter.from}
-          onChange={e => setHistoryFilter(old => ({
-            ...old,
-            from: e.target.value
-          }))}
-        />
-      </label>
-
-      <label>
-        {tx('To date', 'تا تاریخ')}
-        <input
-          type="date"
-          value={historyFilter.to}
-          min={historyFilter.from || undefined}
-          onChange={e => setHistoryFilter(old => ({
-            ...old,
-            to: e.target.value
-          }))}
-        />
-      </label>
-    </div>
+  <div className="health-history-title-row">
+    <h3>{tx('Recent entries', '۱۰ ثبت اخیر')}</h3>
 
     <button
       type="button"
-      className="health-secondary"
-      onClick={() => setHistoryFilter({ compound: '', from: '', to: '' })}
+      className="health-view-all-link"
+      onClick={() => nav('/health/performance/logs')}
     >
-      {tx('Clear filters', 'پاک‌کردن فیلترها')}
+      {tx('View all →', 'مشاهده همه ←')}
     </button>
   </div>
-{doseLogs.length === 0 ? (
-  <p className="health-muted">
-    {tx('No entries recorded yet.', 'هنوز موردی ثبت نشده است.')}
-  </p>
-) : filteredDoseLogs.length === 0 ? (
-  <p className="health-muted">
-    {tx('No entries match these filters.', 'موردی با این فیلترها پیدا نشد.')}
-  </p>
-) : (
-  <>
+
+  {doseLogs.length === 0 ? (
     <p className="health-muted">
-      {tx('Showing', 'تعداد نتایج:')} {filteredDoseLogs.length}
+      {tx('No entries recorded yet.', 'هنوز موردی ثبت نشده است.')}
     </p>
-
-    {filteredDoseLogs.map(entry => (
-      <article className="health-log-entry" key={entry.id}>
-        <div>
-          <strong>{entry.compoundName}</strong>
-          <small>{entry.protocolName} · {entry.date}</small>
-          <span>{entry.amount} {entry.unit}</span>
-          {entry.notes && <small>{entry.notes}</small>}
-        </div>
-
-        <button
-          type="button"
-          className="health-danger"
-          onClick={() => removeDoseLog(entry.id)}
+  ) : (
+    <>
+      {recentDoseLogs.map(entry => (
+        <article
+          className="health-log-entry health-log-entry-compact"
+          key={entry.id}
         >
-          {tx('Delete', 'حذف')}
-        </button>
-      </article>
-    ))}
-  </>
-)}
+          <div>
+            <strong>{entry.compoundName}</strong>
+            <small>{entry.protocolName} · {entry.date}</small>
+            <span>{entry.amount} {entry.unit}</span>
+            {entry.notes && <small>{entry.notes}</small>}
+          </div>
+
+          <button
+            type="button"
+            className="health-danger"
+            onClick={() => removeDoseLog(entry.id)}
+          >
+            {tx('Delete', 'حذف')}
+          </button>
+        </article>
+      ))}
+
+      {doseLogs.length > 10 && (
+        <p className="health-muted health-preview-count">
+          {tx(
+            `Showing 10 of ${doseLogs.length} entries`,
+            `نمایش ۱۰ مورد از ${doseLogs.length} ثبت`
+          )}
+        </p>
+      )}
+    </>
+  )}
 </div>
-</section>
-     <section className="health-card health-checkin-section">
+        <section className="health-card health-checkin-section">
   <div className="health-picker-heading">
     <h3>{tx('Weekly check-in', 'ارزیابی هفتگی')}</h3>
     <span>{tx('Track your personal progress', 'ثبت روند وضعیت شخصی')}</span>
@@ -790,47 +745,71 @@ const compoundCount = protocols.reduce(
       {tx('Save weekly check-in', 'ذخیره ارزیابی هفتگی')}
     </button>
   </form>
+<div className="health-checkin-history">
+  <div className="health-history-title-row">
+    <h4>{tx('Previous check-ins', '۱۰ ارزیابی اخیر')}</h4>
 
-  <div className="health-checkin-history">
-    <h4>{tx('Previous check-ins', 'ارزیابی‌های قبلی')}</h4>
+    <button
+      type="button"
+      className="health-view-all-link"
+      onClick={() => nav('/health/performance/check-ins')}
+    >
+      {tx('View all →', 'مشاهده همه ←')}
+    </button>
+  </div>
 
-    {checkIns.length === 0 ? (
-      <p className="health-muted">
-        {tx('No weekly check-ins yet.', 'هنوز ارزیابی هفتگی ثبت نشده است.')}
-      </p>
-    ) : (
-      [...checkIns]
-        .sort((a, b) => b.date.localeCompare(a.date))
-        .map(entry => (
-          <article className="health-checkin-entry" key={entry.id}>
-            <div className="health-checkin-entry-heading">
-              <strong>{entry.date}</strong>
-              <button
-                type="button"
-                className="health-danger"
-                onClick={() => removeCheckIn(entry.id)}
-              >
-                {tx('Delete', 'حذف')}
-              </button>
-            </div>
+  {checkIns.length === 0 ? (
+    <p className="health-muted">
+      {tx('No weekly check-ins yet.', 'هنوز ارزیابی هفتگی ثبت نشده است.')}
+    </p>
+  ) : (
+    <>
+      {recentCheckIns.map(entry => (
+        <article
+          className="health-checkin-entry health-checkin-entry-compact"
+          key={entry.id}
+        >
+          <div className="health-checkin-entry-heading">
+            <strong>{entry.date}</strong>
 
-            <div className="health-checkin-values">
-              {entry.weight && (
-                <span>{tx('Weight:', 'وزن:')} {entry.weight} kg</span>
-              )}
-              {entry.waist && (
-                <span>{tx('Waist:', 'دور کمر:')} {entry.waist} cm</span>
-              )}
-              {entry.sleep && (
-                <span>{tx('Sleep:', 'خواب:')} {entry.sleep} h</span>
-              )}
-              <span>{tx('Sleep quality:', 'کیفیت خواب:')} {entry.sleepQuality}/5</span>
-              <span>{tx('Energy:', 'انرژی:')} {entry.energy}/5</span>
-              <span>{tx('Well-being:', 'حال عمومی:')} {entry.mood}/5</span>
-            </div>
+            <button
+              type="button"
+              className="health-danger"
+              onClick={() => removeCheckIn(entry.id)}
+            >
+              {tx('Delete', 'حذف')}
+            </button>
+          </div>
 
-            {entry.training && (
-              <p>{tx('Training:', 'تمرین:')} {tx(
+          <div className="health-checkin-values">
+            {entry.weight && (
+              <span>{tx('Weight:', 'وزن:')} {entry.weight} kg</span>
+            )}
+
+            {entry.waist && (
+              <span>{tx('Waist:', 'دور کمر:')} {entry.waist} cm</span>
+            )}
+
+            {entry.sleep && (
+              <span>{tx('Sleep:', 'خواب:')} {entry.sleep} h</span>
+            )}
+
+            <span>
+              {tx('Sleep quality:', 'کیفیت خواب:')} {entry.sleepQuality}/5
+            </span>
+
+            <span>
+              {tx('Energy:', 'انرژی:')} {entry.energy}/5
+            </span>
+
+            <span>
+              {tx('Well-being:', 'حال عمومی:')} {entry.mood}/5
+            </span>
+          </div>
+
+          {entry.training && (
+            <p>
+              {tx('Training:', 'تمرین:')} {tx(
                 ({
                   excellent: 'Excellent',
                   good: 'Good',
@@ -843,15 +822,25 @@ const compoundCount = protocols.reduce(
                   average: 'متوسط',
                   poor: 'ضعیف'
                 })[entry.training] || entry.training
-              )}</p>
-            )}
+              )}
+            </p>
+          )}
 
-            {entry.notes && <p>{entry.notes}</p>}
-          </article>
-        ))
-    )}
-  </div>
-</section>
+          {entry.notes && <p>{entry.notes}</p>}
+        </article>
+      ))}
+
+      {checkIns.length > 10 && (
+        <p className="health-muted health-preview-count">
+          {tx(
+            `Showing 10 of ${checkIns.length} check-ins`,
+            `نمایش ۱۰ مورد از ${checkIns.length} ارزیابی`
+          )}
+        </p>
+      )}
+    </>
+  )}
+</div>
       <div className="health-section-heading">
         <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
         <button className="health-primary" onClick={() => setShowForm(v => !v)}>
