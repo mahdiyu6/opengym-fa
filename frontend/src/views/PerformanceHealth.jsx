@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { getLang, useLang } from '../lib/i18n.js'
 import HealthDoseSchedule from './HealthDoseSchedule.jsx'
+import HealthSideEffects from './HealthSideEffects.jsx'
 import './health-hub.css'
 
 const today = () => new Date().toISOString().slice(0, 10)
@@ -507,6 +508,7 @@ const compoundCount = protocols.reduce(
   )}
 </div>
        </section>
+       <HealthSideEffects />
         <section className="health-card health-checkin-section">
   <div className="health-picker-heading">
     <h3>{tx('Weekly check-in', 'ارزیابی هفتگی')}</h3>
