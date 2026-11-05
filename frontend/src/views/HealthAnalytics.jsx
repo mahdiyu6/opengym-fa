@@ -1049,6 +1049,23 @@ export default function HealthAnalytics() {
           </div>
         </div>
 
+        {filteredEffects.length === 0 && (
+          <p className="health-muted">
+            {tx(
+              'No side-effect records in this period.',
+              'در این بازه عارضه‌ای ثبت نشده است.'
+            )}
+          </p>
+        )}
+
+        <p className="health-muted health-analytics-note">
+          {tx(
+            'Recorded symptoms are not proof of a connection to a protocol or compound. Seek professional medical assessment for concerning symptoms.',
+            'ثبت هم‌زمان یک علامت و پروتکل، اثبات‌کننده رابطه علت و معلولی نیست. برای علائم نگران‌کننده ارزیابی پزشکی دریافت کنید.'
+          )}
+        </p>
+      </section>
+
       <section className="health-card health-analytics-section">
         <h3>{tx('Training Overview', 'نمای کلی تمرین')}</h3>
 
@@ -1148,24 +1165,7 @@ export default function HealthAnalytics() {
           </div>
         )}
       </section>
-        
-        {filteredEffects.length === 0 && (
-          <p className="health-muted">
-            {tx(
-              'No side-effect records in this period.',
-              'در این بازه عارضه‌ای ثبت نشده است.'
-            )}
-          </p>
-        )}
-
-        <p className="health-muted health-analytics-note">
-          {tx(
-            'Recorded symptoms are not proof of a connection to a protocol or compound. Seek professional medical assessment for concerning symptoms.',
-            'ثبت هم‌زمان یک علامت و پروتکل، اثبات‌کننده رابطه علت و معلولی نیست. برای علائم نگران‌کننده ارزیابی پزشکی دریافت کنید.'
-          )}
-        </p>
-      </section>
-
+      
       <div className="health-analytics-toolbar">
         <button
           className="health-secondary"
