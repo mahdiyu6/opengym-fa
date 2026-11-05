@@ -733,19 +733,47 @@ export default function HealthAnalytics() {
   margin-top: 6px;
 }
 
+.health-analytics-training-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin: 12px 0 16px;
+}
+
+.health-analytics-training-summary > div {
+  min-width: 0;
+  border: 1px solid var(--sep);
+  border-radius: 13px;
+  padding: 12px;
+  background: var(--surface-2);
+}
+
+.health-analytics-training-summary span {
+  display: block;
+  color: var(--label-3);
+  font-size: 11px;
+}
+
+.health-analytics-training-summary strong {
+  display: block;
+  color: var(--label);
+  font-size: 21px;
+  margin-top: 6px;
+}
+
 @media(max-width:600px) {
   .health-analytics-training-summary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
-          .health-analytics-summary {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
 
-          .health-analytics-charts {
-            grid-template-columns: 1fr;
-          }
-        }
+  .health-analytics-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .health-analytics-charts {
+    grid-template-columns: 1fr;
+  }
+}
 
         @media(max-width:380px) {
           .health-analytics-review-grid {
