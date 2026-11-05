@@ -1042,6 +1042,7 @@ export default function HealthAnalytics() {
                 title={metric.title}
                 unit={metric.unit}
                 fa={fa}
+                accent={metric.accent}
                 data={filteredCheckIns.map(item => ({
                   date: item.date,
                   value: item[metric.key]
