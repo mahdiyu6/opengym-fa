@@ -449,38 +449,46 @@ export default function HealthAnalytics() {
   const current = latest[0]
   const previous = latest[1]
 
+  
   const metrics = [
     {
       key: 'weight',
       title: tx('Body weight', 'وزن بدن'),
-      unit: 'kg'
+      unit: 'kg',
+      accent: '#38bdf8'
     },
     {
       key: 'waist',
       title: tx('Waist', 'دور کمر'),
-      unit: 'cm'
+      unit: 'cm',
+      accent: '#f59e0b'
     },
     {
       key: 'sleep',
       title: tx('Average sleep', 'میانگین خواب'),
-      unit: 'h'
+      unit: 'h',
+      accent: '#a78bfa'
     },
     {
       key: 'sleepQuality',
       title: tx('Sleep quality', 'کیفیت خواب'),
-      unit: '/5'
+      unit: '/5',
+      accent: '#2dd4bf'
     },
     {
       key: 'energy',
       title: tx('Energy', 'انرژی'),
-      unit: '/5'
+      unit: '/5',
+      accent: '#facc15'
     },
     {
       key: 'mood',
       title: tx('Well-being', 'حال عمومی'),
-      unit: '/5'
+      unit: '/5',
+      accent: '#fb7185'
     }
   ]
+
 
   const weeklyLogCounts = useMemo(() => {
     const today = dateValue(localToday())
