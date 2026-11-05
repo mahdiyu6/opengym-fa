@@ -834,29 +834,45 @@ const maxWeeklyLogs = Math.max(
           border-bottom: 1px solid var(--sep);
         }
 
-        .health-analytics-bar-wrap {
-          flex: 1;
-          min-width: 0;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-end;
-          gap: 5px;
-        }
 
-        .health-analytics-bar {
-          width: 100%;
-          max-width: 28px;
-          min-height: 2px;
-          border-radius: 6px 6px 2px 2px;
-          background: var(--green);
-        }
+.health-analytics-bar-wrap {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+}
 
-        .health-analytics-bar-wrap small {
-          color: var(--label-3);
-          font-size: 9px;
-        }
+.health-analytics-bar-count {
+  color: var(--label-2);
+  font-size: 10px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.health-analytics-bar {
+  width: 100%;
+  max-width: 28px;
+  min-height: 2px;
+  border-radius: 7px 7px 3px 3px;
+  background: linear-gradient(
+    180deg,
+    var(--green),
+    color-mix(in srgb, var(--green) 55%, transparent)
+  );
+  transition: height .25s ease;
+}
+
+.health-analytics-bar-wrap small {
+  color: var(--label-3);
+  font-size: 8px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 
         .health-analytics-note {
           font-size: 11px;
