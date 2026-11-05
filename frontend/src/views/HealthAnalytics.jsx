@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
+import { workoutVolume, setsDone } from '../lib/history.js'
 import { getLang, useLang } from '../lib/i18n.js'
 import './health-hub.css'
 
