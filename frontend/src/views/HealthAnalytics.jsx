@@ -776,23 +776,27 @@ export default function HealthAnalytics() {
       </header>
 
       <div className="health-analytics-toolbar">
-        <div className="health-analytics-range">
-          {[
-            ['30', tx('30 days', '۳۰ روز')],
-            ['90', tx('90 days', '۹۰ روز')],
-            ['365', tx('1 year', 'یک سال')],
-            ['all', tx('All time', 'همه زمان‌ها')]
-          ].map(([value, label]) => (
-            <button
-              key={value}
-              type="button"
-              className={range === value ? 'active' : ''}
-              onClick={() => setRange(value)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        
+<div className="health-analytics-range">
+  {[
+    ['7', tx('Week', 'هفته')],
+    ['30', tx('Month', 'ماه')],
+    ['90', tx('3 Months', '۳ ماه')],
+    ['180', tx('6 Months', '۶ ماه')],
+    ['365', tx('1 Year', 'یک سال')],
+    ['all', tx('All Time', 'همه زمان‌ها')]
+  ].map(([value, label]) => (
+    <button
+      key={value}
+      type="button"
+      className={range === value ? 'active' : ''}
+      onClick={() => setRange(value)}
+    >
+      {label}
+    </button>
+  ))}
+</div>
+
 
         <button
           className="health-secondary"
