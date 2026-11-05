@@ -25,6 +25,12 @@ export default function HealthHome() {
       title: fa ? 'تحلیل و بینش‌ها' : 'Analytics & Insights',
       desc: fa ? 'تحلیل جامع تمرین، سلامت و روندها' : 'Explore training, health and long-term trends',
       path: '/health/analytics'
+    },
+    {
+     icon: '📝',
+     title: fa ? 'ثبت هفتگی' : 'Weekly Check-in',
+     desc: fa ? 'ثبت وزن، دور کمر، خواب، انرژی و وضعیت هفتگی' : 'Record weight, waist, sleep, energy and weekly wellbeing',
+     path: '/health/check-in'
     }
   ]
 
