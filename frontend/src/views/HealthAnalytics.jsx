@@ -752,9 +752,9 @@ export default function HealthAnalytics() {
 
       <button
         className="health-secondary"
-        onClick={() => nav('/health/performance')}
+        onClick={() => nav('/health')}
       >
-        {tx('‹ Back to Performance', '‹ بازگشت به پایش عملکرد')}
+        {tx('‹ Back to Health', '‹ بازگشت به سلامت')}
       </button>
 
       <header className="health-header">
