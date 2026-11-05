@@ -243,12 +243,12 @@ function TrendChart({
   )
 }
 
+
 function ReviewValue({
   label,
   current,
   previous,
   unit = '',
-  lowerIsBetter = false,
   fa
 }) {
   const hasBoth = numeric(current) && numeric(previous)
@@ -257,40 +257,41 @@ function ReviewValue({
     ? Number(current) - Number(previous)
     : null
 
-  const improved =
-    delta === null || delta === 0
-      ? null
-      : lowerIsBetter
-        ? delta < 0
-        : delta > 0
-
   return (
     <div className="health-analytics-review-value">
-      <span>{label}</span>
+      <div className="health-analytics-review-top">
+        <span>{label}</span>
 
-      <strong>
-        {numeric(current)
-          ? `${fmt(Number(current))}${unit ? ` ${unit}` : ''}`
-          : '—'}
-      </strong>
+        {delta !== null && (
+          <span className={`health-analytics-review-change ${
+            delta > 0 ? 'up' : delta < 0 ? 'down' : 'same'
+          }`}>
+            {delta > 0 ? '↑' : delta < 0 ? '↓' : '–'}
+            {' '}
+            {delta > 0 ? '+' : ''}
+            {fmt(delta)}
+          </span>
+        )}
+      </div>
 
-      <small>
+      <div className="health-analytics-review-current">
+        <strong>
+          {numeric(current) ? fmt(Number(current)) : '—'}
+        </strong>
+        {unit && <small>{unit}</small>}
+      </div>
+
+      <div className="health-analytics-review-previous">
         {delta === null
           ? (fa
               ? 'برای مقایسه به دو ارزیابی نیاز است'
               : 'Two check-ins needed to compare')
-          : `${delta > 0 ? '+' : ''}${fmt(delta)}${unit ? ` ${unit}` : ''} ${fa ? 'نسبت به قبل' : 'vs previous'}`}
-
-        {improved !== null &&
-          ` · ${
-            improved
-              ? (fa ? 'افزایش' : 'increased')
-              : (fa ? 'کاهش' : 'decreased')
-          }`}
-      </small>
+          : `${fa ? 'مقدار قبلی' : 'Previous'}: ${fmt(Number(previous))} ${unit}`}
+      </div>
     </div>
   )
 }
+
 
 export default function HealthAnalytics() {
   useLang()
