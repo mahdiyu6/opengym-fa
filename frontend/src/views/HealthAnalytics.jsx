@@ -744,31 +744,75 @@ export default function HealthAnalytics() {
           gap: 8px;
         }
 
-        .health-analytics-review-value {
-          min-width: 0;
-          padding: 11px;
-          border: 1px solid var(--sep);
-          border-radius: 12px;
-          background: var(--surface-2);
-        }
+     
+.health-analytics-review-value {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--sep);
+  border-radius: 15px;
+  background: var(--surface-2);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
 
-        .health-analytics-review-value span,
-        .health-analytics-review-value small {
-          display: block;
-          color: var(--label-3);
-          font-size: 10px;
-        }
+.health-analytics-review-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 
-        .health-analytics-review-value strong {
-          display: block;
-          margin: 5px 0;
-          font-size: 18px;
-          color: var(--label);
-        }
+.health-analytics-review-top > span:first-child {
+  color: var(--label-2);
+  font-size: 11px;
+  font-weight: 600;
+}
 
-        .health-analytics-review-value small {
-          line-height: 1.5;
-        }
+.health-analytics-review-change {
+  flex-shrink: 0;
+  padding: 4px 7px;
+  border-radius: 7px;
+  background: var(--bg);
+  font-size: 10px;
+  font-weight: 700;
+  direction: ltr;
+}
+
+.health-analytics-review-change.up,
+.health-analytics-review-change.down {
+  color: var(--label-2);
+}
+
+.health-analytics-review-change.same {
+  color: var(--label-3);
+}
+
+.health-analytics-review-current {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.health-analytics-review-current strong {
+  color: var(--label);
+  font-size: 27px;
+  line-height: 1.2;
+  font-weight: 750;
+}
+
+.health-analytics-review-current small {
+  color: var(--label-3);
+  font-size: 11px;
+}
+
+.health-analytics-review-previous {
+  padding-top: 8px;
+  border-top: 1px solid var(--sep);
+  color: var(--label-3);
+  font-size: 10px;
+  line-height: 1.5;
+}
 
         .health-analytics-bars {
           display: flex;
