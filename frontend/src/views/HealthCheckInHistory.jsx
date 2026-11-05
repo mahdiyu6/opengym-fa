@@ -61,9 +61,9 @@ export default function HealthCheckInHistory() {
     <main className="health-page" dir={fa ? 'rtl' : 'ltr'}>
       <button
         className="health-secondary"
-        onClick={() => nav('/health/performance')}
+        onClick={() => nav('/health')}
       >
-        {tx('‹ Back to Performance', '‹ بازگشت به پایش عملکرد')}
+        {tx('‹ Back to Health', '‹ بازگشت به سلامت')}
       </button>
 
       <header className="health-header">
