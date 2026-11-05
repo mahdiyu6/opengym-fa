@@ -225,7 +225,13 @@ export default function HealthAnalytics() {
       ? s.S.healthProtocols
       : []
   )
-
+  
+  const workouts = useStore(s =>
+    Array.isArray(s.S.workouts)
+      ? s.S.workouts
+      : []
+  )
+  
   const [range, setRange] = useState('90')
 
   const tx = (en, faText) =>
