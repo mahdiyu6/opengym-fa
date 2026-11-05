@@ -490,31 +490,42 @@ export default function HealthAnalytics() {
     }
   ]
 
+const weeklyLogCounts = useMemo(() => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-  const weeklyLogCounts = useMemo(() => {
-    const today = dateValue(localToday())
+  const todayTime = today.getTime()
+  const weekday = (today.getDay() + 6) % 7
+  const currentWeekStart = todayTime - weekday * DAY
 
-    return Array.from({ length: 8 }, (_, index) => {
-      const start = today - (7 - index) * 7 * DAY
-      const end = start + 7 * DAY
+  return Array.from({ length: 8 }, (_, index) => {
+    const start = currentWeekStart - (7 - index) * 7 * DAY
+    const end = start + 7 * DAY
 
-      const count = doseLogs.filter(item => {
-        const date = dateValue(item.date)
-        return date >= start && date < end
-      }).length
+    const count = doseLogs.filter(item => {
+      const date = dateValue(item.date)
+      return date >= start && date < end
+    }).length
 
-      return {
-        label: String(index + 1),
-        count
-      }
-    })
-  }, [doseLogs])
+    const date = new Date(start)
+    const label =
+      `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
 
-  const maxWeeklyLogs = Math.max(
-    1,
-    ...weeklyLogCounts.map(item => item.count)
-  )
+    return {
+      label,
+      count,
+      start,
+      end
+    }
+  })
+}, [doseLogs])
 
+const maxWeeklyLogs = Math.max(
+  1,
+  ...weeklyLogCounts.map(item => item.count)
+)
+
+  
   const activeEffects =
     sideEffects.filter(item => item.status !== 'resolved')
 
