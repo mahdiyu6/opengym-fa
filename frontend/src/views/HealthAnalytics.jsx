@@ -444,8 +444,8 @@ export default function HealthAnalytics() {
       .sort((a, b) => a.date.localeCompare(b.date))
       .slice(-12)
   }, [filteredWorkouts])
-  
-  const latest = [...sortedCheckIns].reverse()
+
+  const latest = [...filteredCheckIns].reverse()
   const current = latest[0]
   const previous = latest[1]
 
