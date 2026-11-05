@@ -317,12 +317,6 @@ const compoundCount = protocols.reduce(
         </div>
       </header>
 
-      <div className="health-warning">
-        {tx(
-          'Recordkeeping only. This tool does not recommend compounds, doses, cycles or medication changes. Enter only information from your own records and discuss treatment decisions with a qualified clinician.',
-          'این ابزار صرفاً برای ثبت سوابق است و هیچ ترکیب، دوز، چرخه یا تغییری در دارو پیشنهاد نمی‌کند. فقط اطلاعات سوابق خود را وارد کنید و تصمیم‌های درمانی را با پزشک بررسی کنید.'
-        )}
-      </div>
 <div className="health-stats-grid">
   <div className="health-stat-card">
     <span>{tx('Active records', 'سوابق فعال')}</span>
