@@ -808,6 +808,194 @@ export default function HealthAnalytics() {
           margin-top: 12px;
         }
 
+.health-analytics-trend-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--sep);
+  border-radius: 16px;
+  background: var(--surface-2);
+  transition: border-color .2s ease;
+}
+
+.health-analytics-trend-card[open] {
+  border-color: var(--trend-accent);
+}
+
+.health-analytics-trend-card summary {
+  display: block;
+  padding: 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.health-analytics-trend-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.health-analytics-trend-top,
+.health-analytics-trend-heading,
+.health-analytics-trend-main,
+.health-analytics-trend-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.health-analytics-trend-heading {
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+.health-analytics-trend-heading strong {
+  color: var(--label);
+  font-size: 13px;
+}
+
+.health-analytics-trend-indicator {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--trend-accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--trend-accent) 45%, transparent);
+}
+
+.health-analytics-trend-unit {
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-analytics-trend-main {
+  justify-content: flex-start;
+  align-items: baseline;
+  margin-top: 13px;
+}
+
+.health-analytics-trend-main > strong {
+  color: var(--label);
+  font-size: 27px;
+  line-height: 1.2;
+  font-weight: 750;
+}
+
+.health-analytics-trend-change {
+  color: var(--trend-accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.health-analytics-trend-sparkline {
+  display: block;
+  width: 100%;
+  height: 65px;
+  margin: 8px 0 3px;
+  overflow: visible;
+}
+
+.health-analytics-trend-empty {
+  min-height: 55px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+}
+
+.health-analytics-trend-footer {
+  padding-top: 9px;
+  border-top: 1px solid var(--sep);
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-analytics-trend-expand {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--trend-accent);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.health-analytics-trend-chevron {
+  display: inline-block;
+  font-size: 15px;
+  transition: transform .2s ease;
+}
+
+.health-analytics-trend-card[open] .health-analytics-trend-chevron {
+  transform: rotate(180deg);
+}
+
+.health-analytics-trend-details {
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--sep);
+}
+
+.health-analytics-trend-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.health-analytics-trend-comparison > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border-radius: 11px;
+  background: var(--bg);
+}
+
+.health-analytics-trend-comparison span,
+.health-analytics-trend-comparison small {
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-analytics-trend-comparison strong {
+  color: var(--label);
+  font-size: 15px;
+}
+
+.health-analytics-trend-detail-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 12px 0;
+  overflow: visible;
+}
+
+.health-analytics-trend-history {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.health-analytics-trend-history > strong {
+  margin-bottom: 8px;
+  color: var(--label-2);
+  font-size: 11px;
+}
+
+.health-analytics-trend-history > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid var(--sep);
+  font-size: 11px;
+}
+
+.health-analytics-trend-history > div span {
+  color: var(--label-3);
+}
+
+.health-analytics-trend-history > div strong {
+  color: var(--label);
+}
+
 .health-analytics-training-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
