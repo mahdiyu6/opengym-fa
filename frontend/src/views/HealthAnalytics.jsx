@@ -33,117 +33,213 @@ const average = values =>
 const fmt = value =>
   Number.isInteger(value) ? String(value) : value.toFixed(1)
 
-function TrendChart({ title, unit, data, emptyText, fa }) {
-  const points = data.filter(item => numeric(item.value))
 
-  if (points.length < 2) {
-    return (
-      <section className="health-analytics-chart">
-        <div className="health-analytics-chart-title">
-          <strong>{title}</strong>
-          <span>{unit}</span>
-        </div>
-        <p className="health-muted">{emptyText}</p>
-      </section>
-    )
-  }
+function TrendChart({
+  title,
+  unit,
+  data,
+  emptyText,
+  fa,
+  accent = '#8b5cf6'
+}) {
+  const points = data
+    .filter(item => numeric(item.value))
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  const hasTrend = points.length >= 2
+  const first = points[0]
+  const last = points[points.length - 1]
 
   const values = points.map(item => Number(item.value))
-  const min = Math.min(...values)
-  const max = Math.max(...values)
+  const min = hasTrend ? Math.min(...values) : 0
+  const max = hasTrend ? Math.max(...values) : 0
   const spread = max - min || Math.max(Math.abs(max) * 0.1, 1)
   const low = min - spread * 0.12
   const high = max + spread * 0.12
 
   const x = index =>
-    12 + (index / (points.length - 1)) * 276
+    8 + (index / Math.max(1, points.length - 1)) * 284
 
   const y = value =>
-    82 - ((value - low) / (high - low)) * 62
+    58 - ((value - low) / (high - low)) * 46
 
   const coords = points
     .map((item, index) => `${x(index)},${y(Number(item.value))}`)
     .join(' ')
 
-  const first = points[0]
-  const last = points[points.length - 1]
-  const change = Number(last.value) - Number(first.value)
+  const change = hasTrend
+    ? Number(last.value) - Number(first.value)
+    : null
+
+  const history = points.slice(-8).reverse()
 
   return (
-    <section className="health-analytics-chart">
-      <div className="health-analytics-chart-title">
-        <strong>{title}</strong>
-        <span>{unit}</span>
-      </div>
+    <details
+      className="health-analytics-trend-card"
+      style={{ '--trend-accent': accent }}
+    >
+      <summary>
+        <div className="health-analytics-trend-top">
+          <div className="health-analytics-trend-heading">
+            <span className="health-analytics-trend-indicator" />
+            <strong>{title}</strong>
+          </div>
 
-      <div className="health-analytics-chart-values">
-        <span>
-          {fa ? 'قدیمی‌تر' : 'Earlier'}: {fmt(Number(first.value))}
-        </span>
-        <span>
-          {fa ? 'جدیدتر' : 'Latest'}: {fmt(Number(last.value))}
-        </span>
-      </div>
+          <span className="health-analytics-trend-unit">
+            {unit}
+          </span>
+        </div>
 
-      <svg
-        className="health-analytics-svg"
-        viewBox="0 0 300 100"
-        role="img"
-        aria-label={`${title} trend`}
-      >
-        <line
-          x1="12"
-          y1="82"
-          x2="288"
-          y2="82"
-          className="health-analytics-axis"
-        />
+        <div className="health-analytics-trend-main">
+          <strong>
+            {last ? fmt(Number(last.value)) : '—'}
+          </strong>
 
-        <line
-          x1="12"
-          y1="51"
-          x2="288"
-          y2="51"
-          className="health-analytics-gridline"
-        />
+          {hasTrend && (
+            <span className="health-analytics-trend-change">
+              {change > 0 ? '+' : ''}
+              {fmt(change)} {unit}
+            </span>
+          )}
+        </div>
 
-        <line
-          x1="12"
-          y1="20"
-          x2="288"
-          y2="20"
-          className="health-analytics-gridline"
-        />
-
-        <polyline
-          points={coords}
-          className="health-analytics-line"
-        />
-
-        {points.map((item, index) => (
-          <circle
-            key={`${item.date}-${index}`}
-            cx={x(index)}
-            cy={y(Number(item.value))}
-            r="3.2"
-            className="health-analytics-dot"
+        {hasTrend ? (
+          <svg
+            className="health-analytics-trend-sparkline"
+            viewBox="0 0 300 70"
+            role="img"
+            aria-label={`${title} trend`}
           >
-            <title>
-              {item.date}: {fmt(Number(item.value))} {unit}
-            </title>
-          </circle>
-        ))}
-      </svg>
+            <polyline
+              points={coords}
+              fill="none"
+              stroke="var(--trend-accent)"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
 
-      <div className="health-analytics-chart-foot">
-        <span>{first.date}</span>
-        <span>{last.date}</span>
-        <strong>
-          {change > 0 ? '+' : ''}
-          {fmt(change)} {unit}
-        </strong>
+            <circle
+              cx={x(points.length - 1)}
+              cy={y(Number(last.value))}
+              r="4"
+              fill="var(--trend-accent)"
+            />
+          </svg>
+        ) : (
+          <p className="health-muted health-analytics-trend-empty">
+            {points.length === 1
+              ? (fa ? 'برای نمایش روند به داده بیشتری نیاز است' : 'More data is needed to show a trend')
+              : emptyText}
+          </p>
+        )}
+
+        <div className="health-analytics-trend-footer">
+          <span>
+            {last
+              ? `${fa ? 'آخرین ثبت' : 'Latest'}: ${last.date}`
+              : (fa ? 'بدون داده' : 'No data')}
+          </span>
+
+          <span className="health-analytics-trend-expand">
+            {fa ? 'مشاهده جزئیات' : 'View details'}
+            <span className="health-analytics-trend-chevron">⌄</span>
+          </span>
+        </div>
+      </summary>
+
+      <div className="health-analytics-trend-details">
+        {hasTrend && (
+          <>
+            <div className="health-analytics-trend-comparison">
+              <div>
+                <span>{fa ? 'اولین مقدار' : 'First value'}</span>
+                <strong>{fmt(Number(first.value))} {unit}</strong>
+                <small>{first.date}</small>
+              </div>
+
+              <div>
+                <span>{fa ? 'آخرین مقدار' : 'Latest value'}</span>
+                <strong>{fmt(Number(last.value))} {unit}</strong>
+                <small>{last.date}</small>
+              </div>
+            </div>
+
+            <svg
+              className="health-analytics-trend-detail-chart"
+              viewBox="0 0 300 100"
+              role="img"
+              aria-label={`${title} detailed trend`}
+            >
+              <line
+                x1="8"
+                y1="88"
+                x2="292"
+                y2="88"
+                stroke="var(--sep)"
+                strokeWidth="1"
+              />
+
+              <line
+                x1="8"
+                y1="50"
+                x2="292"
+                y2="50"
+                stroke="var(--sep)"
+                strokeWidth="1"
+                strokeDasharray="3 4"
+              />
+
+              <polyline
+                points={points
+                  .map((item, index) =>
+                    `${x(index)},${y(Number(item.value)) + 20}`
+                  )
+                  .join(' ')}
+                fill="none"
+                stroke="var(--trend-accent)"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+
+              {points.map((item, index) => (
+                <circle
+                  key={`${item.date}-${index}`}
+                  cx={x(index)}
+                  cy={y(Number(item.value)) + 20}
+                  r="3"
+                  fill="var(--trend-accent)"
+                >
+                  <title>
+                    {item.date}: {fmt(Number(item.value))} {unit}
+                  </title>
+                </circle>
+              ))}
+            </svg>
+
+            <div className="health-analytics-trend-history">
+              <strong>
+                {fa ? 'آخرین ثبت‌ها' : 'Recent records'}
+              </strong>
+
+              {history.map((item, index) => (
+                <div key={`${item.date}-${index}`}>
+                  <span>{item.date}</span>
+                  <strong>{fmt(Number(item.value))} {unit}</strong>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {!hasTrend && (
+          <p className="health-muted">
+            {emptyText}
+          </p>
+        )}
       </div>
-    </section>
+    </details>
   )
 }
 
