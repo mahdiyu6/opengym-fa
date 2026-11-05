@@ -16,7 +16,7 @@ export default function HealthHome() {
     },
     {
       icon: '📈',
-      title: fa ? 'پایش عملکرد و سلامت' : 'Performance & Health',
+      title: fa ? 'پایش عملکرد' : 'Performance',
       desc: fa ? 'پیگیری پروتکل‌ها، عوارض و روند تغییرات' : 'Track protocols, side effects and progress',
       path: '/health/performance'
     }
