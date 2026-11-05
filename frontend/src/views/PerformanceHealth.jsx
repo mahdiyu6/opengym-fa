@@ -309,19 +309,10 @@ const compoundCount = protocols.reduce(
         {tx('‹ Back', '‹ بازگشت')}
       </button>
 
-            <div className="health-section-heading">
-        <h2>{tx('Analytics & Weekly Review', 'تحلیل و مرور هفتگی')}</h2>
-        <button
-          type="button"
-          className="health-secondary"
-          onClick={() => nav('/health/performance/analytics')}
-        >
-          {tx('Open analytics →', 'مشاهده تحلیل‌ها ←')}
-        </button>
-      </div>
+
       <header className="health-header">
         <div>
-          <h1>{tx('Performance & Health', 'پایش عملکرد و سلامت')}</h1>
+          <h1>{tx('Performance', 'پایش عملکرد')}</h1>
           <p className="health-muted">
             {tx('Your personal compound library and protocol records.', 'کتابخانه ترکیبات و سوابق پروتکل‌های شخصی شما.')}
           </p>
