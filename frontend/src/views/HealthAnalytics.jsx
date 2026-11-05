@@ -1312,25 +1312,31 @@ const maxWeeklyLogs = Math.max(
         </p>
 
         <div className="health-analytics-bars">
-          {weeklyLogCounts.map((item, index) => (
-            <div
-              className="health-analytics-bar-wrap"
-              key={item.label}
-              title={`${item.count} entries`}
-            >
-              <div
-                className="health-analytics-bar"
-                style={{
-                  height: `${Math.max(
-                    2,
-                    item.count / maxWeeklyLogs * 82
-                  )}px`
-                }}
-              />
+            
+{weeklyLogCounts.map(item => (
+  <div
+    className="health-analytics-bar-wrap"
+    key={item.label}
+    title={`${item.count} entries`}
+  >
+    <span className="health-analytics-bar-count">
+      {item.count}
+    </span>
 
-              <small>{index + 1}</small>
-            </div>
-          ))}
+    <div
+      className="health-analytics-bar"
+      style={{
+        height: `${Math.max(
+          2,
+          item.count / maxWeeklyLogs * 82
+        )}px`
+      }}
+    />
+
+    <small>{item.label}</small>
+  </div>
+))}
+
         </div>
 
         <p className="health-muted health-analytics-note">
