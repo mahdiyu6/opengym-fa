@@ -1021,6 +1021,106 @@ export default function HealthAnalytics() {
           </div>
         </div>
 
+      <section className="health-card health-analytics-section">
+        <h3>{tx('Training Overview', 'نمای کلی تمرین')}</h3>
+
+        <div className="health-analytics-training-summary">
+          <div>
+            <span>{tx('Workouts', 'جلسات تمرین')}</span>
+            <strong>{trainingSummary.sessions}</strong>
+          </div>
+
+          <div>
+            <span>{tx('Sessions / week', 'جلسه در هفته')}</span>
+            <strong>{fmt(trainingSummary.sessionsPerWeek)}</strong>
+          </div>
+
+          <div>
+            <span>{tx('Completed sets', 'ست تکمیل‌شده')}</span>
+            <strong>{trainingSummary.sets}</strong>
+          </div>
+
+          <div>
+            <span>{tx('Training volume', 'حجم تمرین')}</span>
+            <strong>{Math.round(trainingSummary.volume).toLocaleString()}</strong>
+          </div>
+
+          <div>
+            <span>{tx('Duration', 'مدت تمرین')}</span>
+            <strong>{Math.round(trainingSummary.duration)} min</strong>
+          </div>
+
+          <div>
+            <span>{tx('Estimated calories', 'کالری تخمینی')}</span>
+            <strong>{Math.round(trainingSummary.calories).toLocaleString()}</strong>
+          </div>
+        </div>
+
+        <p className="health-muted health-analytics-note">
+          {tx(
+            'Training volume is calculated from completed sets using logged external weight × reps. Bodyweight, timed and cardio work without external weight × reps are not included in this volume. Calories are estimates recorded by the workout system.',
+            'حجم تمرین از حاصل‌ضرب وزنه ثبت‌شده در تعداد تکرار ست‌های تکمیل‌شده محاسبه می‌شود. حرکات وزن بدن، زمان‌دار و هوازی که وزنه و تکرار خارجی ندارند در این حجم لحاظ نمی‌شوند. کالری نیز تخمین ثبت‌شده توسط سیستم تمرین است.'
+          )}
+        </p>
+
+        <h3 style={{ marginTop: 22 }}>
+          {tx('Weekly Training Trends', 'روند هفتگی تمرین')}
+        </h3>
+
+        {weeklyTraining.length === 0 ? (
+          <p className="health-muted">
+            {tx(
+              'No completed workouts in this period.',
+              'در این بازه تمرین تکمیل‌شده‌ای ثبت نشده است.'
+            )}
+          </p>
+        ) : (
+          <div className="health-analytics-charts">
+            <TrendChart
+              title={tx('Training volume', 'حجم تمرین')}
+              unit="kg × reps"
+              data={weeklyTraining.map(w => ({
+                date: w.date,
+                value: w.volume
+              }))}
+              emptyText={tx(
+                'At least two weeks of data are needed.',
+                'برای نمایش روند حداقل دو هفته داده لازم است.'
+              )}
+              fa={fa}
+            />
+
+            <TrendChart
+              title={tx('Completed sets', 'ست‌های تکمیل‌شده')}
+              unit={tx('sets', 'ست')}
+              data={weeklyTraining.map(w => ({
+                date: w.date,
+                value: w.sets
+              }))}
+              emptyText={tx(
+                'At least two weeks of data are needed.',
+                'برای نمایش روند حداقل دو هفته داده لازم است.'
+              )}
+              fa={fa}
+            />
+
+            <TrendChart
+              title={tx('Workout frequency', 'تعداد جلسات')}
+              unit={tx('sessions', 'جلسه')}
+              data={weeklyTraining.map(w => ({
+                date: w.date,
+                value: w.sessions
+              }))}
+              emptyText={tx(
+                'At least two weeks of data are needed.',
+                'برای نمایش روند حداقل دو هفته داده لازم است.'
+              )}
+              fa={fa}
+            />
+          </div>
+        )}
+      </section>
+        
         {filteredEffects.length === 0 && (
           <p className="health-muted">
             {tx(
