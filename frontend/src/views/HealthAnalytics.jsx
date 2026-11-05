@@ -264,6 +264,91 @@ export default function HealthAnalytics() {
   const filteredEffects =
     sideEffects.filter(inRange)
 
+  const filteredWorkouts = workouts.filter(
+    w => w.d && dateValue(w.d) >= cutoff
+  )
+
+  const trainingSummary = useMemo(() => {
+    const sessions = filteredWorkouts.length
+
+    const sets = filteredWorkouts.reduce(
+      (sum, w) => sum + setsDone(w),
+      0
+    )
+
+    const volume = filteredWorkouts.reduce(
+      (sum, w) => sum + workoutVolume(w),
+      0
+    )
+
+    const duration = filteredWorkouts.reduce(
+      (sum, w) => {
+        const minutes = (Number(w.end) - Number(w.start)) / 60000
+        return sum + (Number.isFinite(minutes) ? Math.max(0, minutes) : 0)
+      },
+      0
+    )
+
+    const calories = filteredWorkouts.reduce(
+      (sum, w) => sum + (Number(w.calories) || 0),
+      0
+    )
+
+    const firstDate = filteredWorkouts.length
+      ? Math.min(...filteredWorkouts.map(w => dateValue(w.d)))
+      : dateValue(localToday())
+
+    const days = range === 'all'
+      ? Math.max(1, (dateValue(localToday()) - firstDate) / DAY + 1)
+      : Number(range)
+
+    return {
+      sessions,
+      sets,
+      volume,
+      duration,
+      calories,
+      sessionsPerWeek: sessions / Math.max(1, days / 7)
+    }
+  }, [filteredWorkouts, range])
+
+  const weeklyTraining = useMemo(() => {
+    const weeks = new Map()
+
+    filteredWorkouts.forEach(w => {
+      const date = new Date(w.d + 'T12:00:00')
+      if (Number.isNaN(date.getTime())) return
+
+      const weekday = (date.getDay() + 6) % 7
+      date.setDate(date.getDate() - weekday)
+
+      const key = [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, '0'),
+        String(date.getDate()).padStart(2, '0')
+      ].join('-')
+
+      if (!weeks.has(key)) {
+        weeks.set(key, {
+          date: key,
+          volume: 0,
+          sets: 0,
+          sessions: 0
+        })
+      }
+
+      const item = weeks.get(key)
+
+      item.volume += workoutVolume(w)
+      item.sets += setsDone(w)
+      item.sessions += 1
+    })
+
+    return [...weeks.values()]
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(-12)
+  }, [filteredWorkouts])
+  
   const latest = [...sortedCheckIns].reverse()
   const current = latest[0]
   const previous = latest[1]
