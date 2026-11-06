@@ -937,32 +937,6 @@ const selectedHistory = selected
     })}
   </section>
 )}
-
-      {/* Saved reports */}
-      {reports.length > 0 && (
-        <section className="health-card">
-          <h2>{tx('Saved reports', 'گزارش‌های ذخیره‌شده')}</h2>
-
-          {reports.map(r => (
-            <div className="health-row health-report" key={r.id}>
-              <div>
-                <b>{fmtDateFull(r.date, calendar)}</b>
-
-                <p className="health-muted">
-                  {r.name} · {r.items.length} {tx('tests', 'شاخص')}
-                </p>
-              </div>
-
-              <button
-                className="health-danger"
-                onClick={() => remove(r.id)}
-              >
-                {tx('Delete', 'حذف')}
-              </button>
-            </div>
-          ))}
-        </section>
-      )}
     </main>
   )
 }
