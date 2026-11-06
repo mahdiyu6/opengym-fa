@@ -3897,3 +3897,21 @@
     font-size: 11px;
   }
 }
+
+/* Recent entries - improve compact card layout */
+
+.health-log-preview-grid .health-log-entry {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.health-log-preview-grid .health-log-entry-content {
+  width: 100%;
+  min-width: 0;
+}
+
+.health-log-preview-grid .health-log-entry .health-danger {
+  align-self: flex-end;
+  margin-top: 2px;
+}
