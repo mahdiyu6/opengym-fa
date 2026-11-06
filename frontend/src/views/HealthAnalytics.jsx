@@ -1394,8 +1394,8 @@ health-analytics-training-summary strong {
 <div className="health-analytics-range">
   {[
     ['30', tx('Month', 'ماه')],
-    ['90', tx('3 Months', '۳ ماه')],
-    ['180', tx('6 Months', '۶ ماه')],
+    ['90', tx('3 Mos', '۳ ماه')],
+    ['180', tx('6 Mos', '۶ ماه')],
     ['365', tx('1 Year', 'یک سال')],
     ['all', tx('All Time', 'همه زمان‌ها')]
   ].map(([value, label]) => (
