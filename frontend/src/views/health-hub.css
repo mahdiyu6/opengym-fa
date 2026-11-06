@@ -2385,3 +2385,138 @@
     font-size: 9px;
   }
 }
+
+/* Timeline header and weekly progress indicators */
+
+.health-timeline-cycle-heading {
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.health-timeline-protocol-title {
+  min-width: 0;
+}
+
+.health-timeline-week-progress {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  flex-shrink: 0;
+  color: var(--label-2);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.health-timeline-day-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  direction: ltr;
+}
+
+.health-timeline-day-dots i {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid var(--label-3);
+  border-radius: 50%;
+  background: transparent;
+}
+
+.health-timeline-day-dots i.filled {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.health-timeline-week-summary {
+  margin: 0 0 13px 142px;
+  color: var(--label-2);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  direction: ltr;
+  text-align: left;
+}
+
+/* Date labels below the compound bars */
+
+.health-timeline-bottom {
+  display: grid;
+  grid-template-columns: 126px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  margin-top: 15px;
+  min-height: 22px;
+  direction: ltr;
+}
+
+.health-timeline-date-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  min-height: 22px;
+  direction: ltr;
+}
+
+.health-timeline-start-date,
+.health-timeline-end-date {
+  color: var(--label-2);
+  font-size: 9px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.health-timeline-now-line {
+  background: var(--label-3);
+}
+
+.health-timeline-now-line > span {
+  background: var(--label-3);
+}
+
+.health-timeline-now-label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  color: var(--label-2);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .health-timeline-week-summary {
+    margin-left: 107px;
+    font-size: 9px;
+  }
+
+  .health-timeline-bottom {
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .health-timeline-week-progress {
+    gap: 6px;
+    font-size: 9px;
+  }
+
+  .health-timeline-day-dots {
+    gap: 3px;
+  }
+
+  .health-timeline-day-dots i {
+    width: 7px;
+    height: 7px;
+  }
+
+  .health-timeline-start-date,
+  .health-timeline-end-date {
+    font-size: 8px;
+  }
+}
