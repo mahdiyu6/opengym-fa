@@ -676,8 +676,8 @@ const selectedHistory = selected
 
   <p className="health-muted">
     {tx(
-      'Import a PDF report and review the results before saving.',
-      'گزارش PDF را وارد و نتایج را پیش از ذخیره بازبینی کن.'
+     'Import a PDF report or image and review the results before saving.',
+'گزارش PDF یا تصویر را وارد کن و نتایج را پیش از ذخیره بازبینی کن.'
     )}
   </p>
 </div>
@@ -721,8 +721,8 @@ const selectedHistory = selected
 
       <div className="health-privacy">
         {tx(
-          'Privacy: The PDF itself is not uploaded. Reviewed results are saved in app data and sync with your account when signed in and online.',
-'حریم خصوصی: خود فایل PDF بارگذاری نمی‌شود. نتایج بازبینی‌شده در اطلاعات برنامه ذخیره می‌شوند و در صورت ورود به حساب و اتصال اینترنت با حساب همگام‌سازی خواهند شد.'
+        'Privacy: PDF files and images are processed locally in your browser and are not uploaded to a processing service. Results are saved only after review and sync with your account when signed in and online.',
+'حریم خصوصی: فایل‌های PDF و تصاویر به‌صورت محلی در مرورگر پردازش می‌شوند و برای پردازش به سرویس دیگری ارسال نمی‌شوند. نتایج فقط پس از بازبینی و ذخیره‌سازی، در صورت ورود به حساب و اتصال اینترنت، همگام‌سازی می‌شوند.'
         )}
       </div>
 
@@ -852,8 +852,8 @@ const selectedHistory = selected
 
           <p>
             {tx(
-              'Select a PDF. Results are saved only after review.',
-              'PDF را انتخاب کن؛ نتایج فقط پس از بازبینی ذخیره می‌شوند.'
+             'Select a PDF or image. Results are saved only after review.',
+'یک فایل PDF یا تصویر انتخاب کن؛ نتایج فقط پس از بازبینی ذخیره می‌شوند.'
             )}
           </p>
 
