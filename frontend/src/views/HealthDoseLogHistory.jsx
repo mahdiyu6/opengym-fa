@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { getLang, useLang } from '../lib/i18n.js'
+import { fmtDateFull } from '../lib/format.js'
 import './health-hub.css'
 
 function getCompoundColor(name) {
@@ -22,6 +23,7 @@ export default function HealthDoseLogHistory() {
   const nav = useNavigate()
 
   const logs = useStore(s => s.S.healthDoseLogs || [])
+  const calendar = useStore(s => s.S?.calendar === 'jalali' ? 'jalali' : 'gregorian')
   const update = useStore(s => s.update)
 
   const [filter, setFilter] = useState({
