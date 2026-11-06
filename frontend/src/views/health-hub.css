@@ -1649,3 +1649,45 @@
 .health-protocol-compound-list {
   margin-top: 10px;
 }
+
+/* Colored compound identity in dose history */
+
+.health-log-entry-content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.health-log-compound-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.health-log-compound-name strong {
+  color: var(--compound-color);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.health-log-compound-dot {
+  width: 9px;
+  height: 9px;
+  min-width: 9px;
+  border-radius: 50%;
+  background: var(--compound-color);
+  box-shadow: 0 0 0 3px color-mix(
+    in srgb,
+    var(--compound-color) 14%,
+    transparent
+  );
+}
+
+.health-log-entry-amount {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--label);
+}
