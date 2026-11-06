@@ -944,89 +944,135 @@ const compoundCount = protocols.reduce(
         </form>
       )}
 
-      {protocols.length === 0 ? (
-        <div className="health-empty">
-          <div style={{ fontSize: 38 }}>📋</div>
-          <h2>{tx('No protocols yet', 'هنوز سابقه‌ای ثبت نشده')}</h2>
-          <p className="health-muted">{tx('Create a record and add items from the compound library.', 'یک سابقه بسازید و موارد را از کتابخانه ترکیبات اضافه کنید.')}</p>
-        </div>
-      ) : (
-        <div className="health-protocol-list">
-          {protocols.map(item => {
-            const compoundList = Array.isArray(item.compounds) ? item.compounds : []
-            return (
-              <article className="health-card" key={item.id}>
-                <div className="health-row">
-                  <div>
-                    <h2>{item.name}</h2>
-                    <span className="health-protocol-type">{item.type || 'Personal'}</span>
-                  </div>
-                  <span className={'health-protocol-status ' + item.status}>
-                    {item.status === 'active' ? tx('Active', 'فعال') : tx('Completed', 'پایان‌یافته')}
-                  </span>
-                </div>
-                {Array.isArray(item.compounds) ? (
-                  compoundList.length ? <div className="health-record-compounds">
-                    {compoundList.map(c => <div className="health-record-compound" key={c.id || c.name}>
-                      <div><strong>{c.name}</strong><small>{c.category}</small></div>
-<span>
-  {c.amount
-    ? `${c.amount} ${c.unit} · ${
-        c.amountBasis === 'per_dose'
-          ? tx('Per dose', 'در هر نوبت')
-          : tx('Per week', 'در هفته')
-      }`
-    : tx('Amount not entered', 'مقدار ثبت نشده')}
-</span>
-
-<small>
-  {tx('Frequency:', 'تناوب:')} {tx(
-    ({
-      daily: 'Daily',
-      every_other_day: 'Every other day',
-      weekly: 'Weekly',
-      selected_days: 'Selected weekdays'
-    })[c.frequency] || 'Not specified',
-    ({
-      daily: 'روزانه',
-      every_other_day: 'یک روز در میان',
-      weekly: 'هفتگی',
-      selected_days: 'روزهای انتخابی'
-    })[c.frequency] || 'نامشخص'
-  )}
-</small>
-
-{c.frequency === 'selected_days' && Array.isArray(c.days) && c.days.length > 0 && (
-  <small>
-    {tx('Days:', 'روزها:')} {c.days.map(day => {
-      const match = days.find(([key]) => key === day)
-      return match ? (fa ? match[1] : match[0]) : day
-    }).join('، ')}
-  </small>
-)}
-
-{c.concentration && (
-  <small>
-    {tx('Concentration:', 'غلظت:')} {c.concentration} {c.concentrationUnit}
-  </small>
-)}
-                    </div>)}
-                  </div> : <p className="health-protocol-detail">{tx('No compounds added.', 'ترکیبی اضافه نشده است.')}</p>
-                ) : item.compounds ? <p className="health-protocol-detail"><b>{tx('Legacy compounds:', 'ترکیبات ثبت‌شده قبلی:')}</b> {item.compounds}</p> : null}
-                <p className="health-protocol-detail">
-                  <b>{tx('Start:', 'شروع:')}</b> {item.startDate || '—'} {' · '}
-                  <b>{tx('End:', 'پایان:')}</b> {item.endDate || '—'}
-                </p>
-                {item.notes && <p className="health-protocol-detail">{item.notes}</p>}
-                <div className="health-protocol-actions">
-                  {item.status === 'active' && <button className="health-secondary" onClick={() => finishProtocol(item.id)}>{tx('Mark completed', 'ثبت پایان پروتکل')}</button>}
-                  <button className="health-danger" onClick={() => removeProtocol(item.id)}>{tx('Delete', 'حذف')}</button>
-                </div>
-              </article>
-            )
-          })}
-        </div>
+   
+{protocols.length === 0 ? (
+  <div className="health-empty">
+    <div style={{ fontSize: 38 }}>📋</div>
+    <h2>{tx('No protocols yet', 'هنوز سابقه‌ای ثبت نشده')}</h2>
+    <p className="health-muted">
+      {tx(
+        'Create a record and add items from the compound library.',
+        'یک سابقه بسازید و موارد را از کتابخانه ترکیبات اضافه کنید.'
       )}
+    </p>
+  </div>
+) : (
+  <div className="health-protocol-list">
+    {protocols.map(item => {
+      const compoundList = Array.isArray(item.compounds)
+        ? item.compounds
+        : []
+
+      const isActive = item.status === 'active'
+      const previewCompounds = compoundList.slice(0, 3)
+      const remainingCount = compoundList.length - previewCompounds.length
+
+      const protocolType = {
+        Personal: tx('Personal', 'شخصی'),
+        Prescribed: tx('Prescribed treatment', 'درمان تجویزشده'),
+        Other: tx('Other', 'سایر')
+      }[item.type] || item.type || tx('Personal', 'شخصی')
+
+      return (
+        <article
+          className="health-card health-protocol-overview"
+          key={item.id}
+        >
+          <div className="health-protocol-overview-top">
+            <div className="health-protocol-heading">
+              <span className="health-protocol-eyebrow">
+                {tx('HEALTH RECORD', 'سابقه سلامت')}
+              </span>
+              <h2>{item.name}</h2>
+              <span className="health-protocol-type">
+                {protocolType}
+              </span>
+            </div>
+
+            <span className={
+              'health-protocol-status ' +
+              (isActive ? 'active' : 'completed')
+            }>
+              <span className="health-protocol-status-dot" />
+              {isActive
+                ? tx('Active', 'فعال')
+                : tx('Completed', 'پایان‌یافته')}
+            </span>
+          </div>
+
+          <div className="health-protocol-metrics">
+            <div>
+              <span>{tx('Compounds', 'ترکیبات')}</span>
+              <strong>{compoundList.length}</strong>
+            </div>
+            <div>
+              <span>{tx('Start date', 'تاریخ شروع')}</span>
+              <strong>{item.startDate || '—'}</strong>
+            </div>
+            <div>
+              <span>{tx('End date', 'تاریخ پایان')}</span>
+              <strong>{item.endDate || (isActive
+                ? tx('Ongoing', 'در حال انجام')
+                : '—')}</strong>
+            </div>
+          </div>
+
+          <div className="health-protocol-compound-preview">
+            <div className="health-protocol-preview-heading">
+              <strong>{tx('Included compounds', 'ترکیبات این سابقه')}</strong>
+              <span>{compoundList.length}</span>
+            </div>
+
+            {previewCompounds.length > 0 ? (
+              <div className="health-protocol-chips">
+                {previewCompounds.map(c => (
+                  <span key={c.id || c.name}>
+                    {c.name}
+                  </span>
+                ))}
+                {remainingCount > 0 && (
+                  <span className="health-protocol-more">
+                    +{remainingCount}
+                  </span>
+                )}
+              </div>
+            ) : (
+              <p className="health-muted">
+                {item.compounds && !Array.isArray(item.compounds)
+                  ? item.compounds
+                  : tx('No compounds added.', 'ترکیبی اضافه نشده است.')}
+              </p>
+            )}
+          </div>
+
+          {item.notes && (
+            <p className="health-protocol-overview-notes">
+              {item.notes}
+            </p>
+          )}
+
+          <div className="health-protocol-actions">
+            {isActive && (
+              <button
+                className="health-secondary"
+                onClick={() => finishProtocol(item.id)}
+              >
+                {tx('Mark completed', 'ثبت پایان پروتکل')}
+              </button>
+            )}
+            <button
+              className="health-danger"
+              onClick={() => removeProtocol(item.id)}
+            >
+              {tx('Delete', 'حذف')}
+            </button>
+          </div>
+        </article>
+      )
+    })}
+  </div>
+)}
+
     </main>
   )
 }
