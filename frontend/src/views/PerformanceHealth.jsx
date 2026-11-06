@@ -1234,6 +1234,14 @@ const compoundCount = protocols.reduce(
                   </small>
                 )}
               </div>
+           {c.concentration && (
+  <div className="health-protocol-compound-wide">
+    <small>{tx('Concentration', 'غلظت')}</small>
+    <strong>
+      {c.concentration} {c.concentrationUnit || ''}
+    </strong>
+  </div>
+)}
             </div>
           </article>
         )
