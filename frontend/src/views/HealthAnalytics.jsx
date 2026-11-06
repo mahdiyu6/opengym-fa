@@ -1393,7 +1393,6 @@ health-analytics-training-summary strong {
 
 <div className="health-analytics-range">
   {[
-    ['7', tx('Week', 'هفته')],
     ['30', tx('Month', 'ماه')],
     ['90', tx('3 Months', '۳ ماه')],
     ['180', tx('6 Months', '۶ ماه')],
