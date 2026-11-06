@@ -50,7 +50,7 @@ function referenceRange(item) {
   return `${low} – ${high} ${item.unit || ''}`.trim()
 }
 
-function TrendChart({ points, tx }) {
+function TrendChart({ points, tx, calendar }) {
   const width = 640
   const height = 250
   const left = 54
@@ -125,7 +125,7 @@ function TrendChart({ points, tx }) {
               y={height - 22}
               textAnchor="middle"
             >
-              {(p.reportDate || '').slice(0, 10)}
+      {fmtDateFull(p.reportDate, calendar)}
             </text>
           </g>
         ))}
@@ -503,7 +503,7 @@ const selectedHistory = selected
               )}
             </p>
           ) : (
-            <TrendChart points={chartPoints} tx={tx} />
+           <TrendChart points={chartPoints} tx={tx} calendar={calendar} />
           )}
 
           {chartPoints.length > 0 && (
