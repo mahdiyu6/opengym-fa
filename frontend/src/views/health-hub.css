@@ -2520,3 +2520,49 @@
     font-size: 8px;
   }
 }
+
+/* Synchronized moving timeline marker */
+
+.health-timeline-now-marker {
+  position: absolute;
+  z-index: 5;
+  top: -18px;
+  bottom: -8px;
+  width: 1.5px;
+  background: var(--label-3);
+  pointer-events: none;
+}
+
+.health-timeline-marker-week {
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--label-2);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.health-timeline-marker-now {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--label-2);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.health-timeline-bottom {
+  margin-top: 26px;
+}
+
+@media (max-width: 520px) {
+  .health-timeline-chart {
+    --timeline-label-width: 107px;
+  }
+}
