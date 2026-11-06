@@ -415,23 +415,12 @@ export default function HealthCheckInHistory() {
                   </span>
                 )}
 
-                {entry.sleepQuality !== undefined && (
-                  <span>
-                    {tx('Sleep quality:', 'کیفیت خواب:')} {entry.sleepQuality}/5
-                  </span>
-                )}
-
                 {entry.energy !== undefined && (
                   <span>
                     {tx('Energy:', 'انرژی:')} {entry.energy}/5
                   </span>
                 )}
 
-                {entry.mood !== undefined && (
-                  <span>
-                    {tx('Well-being:', 'حال عمومی:')} {entry.mood}/5
-                  </span>
-                )}
               </div>
 
               {entry.training && (
