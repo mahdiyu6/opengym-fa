@@ -101,7 +101,7 @@ export default function HealthDoseLogHistory() {
         </div>
       </header>
 
-      <section className="health-card">
+      <section className="health-card health-dose-history-card">
         <h3>{tx('Filters', 'فیلترها')}</h3>
 
         <div className="health-history-filters">
