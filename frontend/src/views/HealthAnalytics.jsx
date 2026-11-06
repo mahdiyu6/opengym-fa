@@ -1474,6 +1474,7 @@ health-analytics-training-summary strong {
     previous={previous?.weight}
     unit="kg"
     fa={fa}
+    accent="#38bdf8"
   />
 
   <ReviewValue
@@ -1482,6 +1483,7 @@ health-analytics-training-summary strong {
     previous={previous?.waist}
     unit="cm"
     fa={fa}
+    accent="#f59e0b"
   />
 
   <ReviewValue
@@ -1490,6 +1492,7 @@ health-analytics-training-summary strong {
     previous={previous?.chest}
     unit="cm"
     fa={fa}
+    accent="#fb923c"
   />
 
   <ReviewValue
@@ -1498,6 +1501,7 @@ health-analytics-training-summary strong {
     previous={previous?.arm}
     unit="cm"
     fa={fa}
+    accent="#a78bfa"
   />
 
   <ReviewValue
@@ -1506,6 +1510,7 @@ health-analytics-training-summary strong {
     previous={previous?.leg}
     unit="cm"
     fa={fa}
+    accent="#2dd4bf"
   />
 
   <ReviewValue
@@ -1514,6 +1519,7 @@ health-analytics-training-summary strong {
     previous={previous?.sleep}
     unit="h"
     fa={fa}
+    accent="#818cf8"
   />
 
   <ReviewValue
@@ -1522,6 +1528,7 @@ health-analytics-training-summary strong {
     previous={previous?.stress}
     unit="/5"
     fa={fa}
+    accent="#f87171"
   />
 
   <ReviewValue
@@ -1530,6 +1537,7 @@ health-analytics-training-summary strong {
     previous={previous?.energy}
     unit="/5"
     fa={fa}
+    accent="#facc15"
   />
 </div>
 
