@@ -749,11 +749,6 @@ const compoundCount = protocols.reduce(
                       </p>
                     ) : (
                       <>
-                        <div className="health-timeline-week-summary">
-  {showNow
-    ? `WEEK ${currentWeek} OF ${totalWeeks}`
-    : `${totalWeeks} ${tx('WEEKS', 'هفته')}`}
-</div>
                         <div className="health-timeline-chart">
                           <div className="health-timeline-rows">
                             {compoundRanges.map(({ compound, index, start, end }) => {
@@ -791,12 +786,20 @@ const compoundCount = protocols.reduce(
                           </div>
 
                           {showNow && (
-                            <div
-                              className="health-timeline-now-line"
-                              style={{ left: `calc(142px + (100% - 142px) * ${nowPosition / 100})` }}
-                            >
-                              <span />
-                            </div>
+                     {showNow && (
+  <div
+    className="health-timeline-now-marker"
+    style={{
+      left: `calc(136px + (100% - 136px) * ${nowPosition / 100})`
+    }}
+  >
+    <span className="health-timeline-marker-week">
+      WEEK {currentWeek} OF {totalWeeks}
+    </span>
+    <i />
+    <span className="health-timeline-marker-now">NOW</span>
+  </div>
+)}
                           )}
                         </div>
 
