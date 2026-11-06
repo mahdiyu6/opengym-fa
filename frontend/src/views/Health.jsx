@@ -382,7 +382,7 @@ const selectedHistory = selected
 
           <p>
             {tx('Date: ', 'تاریخ: ')}
-            {selected.reportDate || tx('Unknown', 'نامشخص')}
+            {fmtDateFull(selected.reportDate, calendar)}
           </p>
 
           <p>
@@ -458,13 +458,13 @@ const selectedHistory = selected
                 <div>
                   <small>{tx('Previous result', 'نتیجه قبلی')}</small>
                   <b>{previousResult.numeric} {previousResult.unit}</b>
-                  <small>{previousResult.reportDate}</small>
+                  <small>{fmtDateFull(previousResult.reportDate, calendar)}</small>
                 </div>
 
                 <div>
                   <small>{tx('Latest result', 'آخرین نتیجه')}</small>
                   <b>{latestResult.numeric} {latestResult.unit}</b>
-                  <small>{latestResult.reportDate}</small>
+                <small>{fmtDateFull(latestResult.reportDate, calendar)}</small>
                 </div>
 
                 <div>
@@ -539,7 +539,7 @@ const selectedHistory = selected
                 <tbody>
                   {[...selectedHistory].reverse().map(x => (
                     <tr key={x.itemKey}>
-                      <td>{x.reportDate || '—'}</td>
+                      <td>{fmtDateFull(x.reportDate, calendar)}</td>
                       <td>
                         <b>{x.value} {x.unit}</b>
                       </td>
@@ -753,7 +753,7 @@ const selectedHistory = selected
       ) : (
         Object.entries(groups).map(([date, items]) => (
           <section className="health-group" key={date}>
-            <h2>{date}</h2>
+            <h2>{fmtDateFull(date, calendar)}</h2>
 
             <div className="health-list">
               {items.map(x => (
@@ -786,7 +786,7 @@ const selectedHistory = selected
           {reports.map(r => (
             <div className="health-row health-report" key={r.id}>
               <div>
-                <b>{r.date}</b>
+                <b>{fmtDateFull(r.date, calendar)}</b>
 
                 <p className="health-muted">
                   {r.name} · {r.items.length} {tx('tests', 'شاخص')}
