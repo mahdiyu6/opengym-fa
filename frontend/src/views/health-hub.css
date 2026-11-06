@@ -3794,3 +3794,34 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Side Effects - unified form control colors */
+
+.health-side-effects-form input,
+.health-side-effects-form select,
+.health-side-effects-form textarea,
+.health-side-effects-form .health-date-picker-trigger {
+  background: var(--surface-2) !important;
+  color: var(--label) !important;
+  border-color: var(--sep);
+  color-scheme: inherit;
+}
+
+.health-side-effects-form input::placeholder,
+.health-side-effects-form textarea::placeholder {
+  color: var(--label-3);
+}
+
+.health-side-effects-form .health-date-picker-trigger {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--sep);
+  border-radius: 11px;
+  font-size: 13px;
+  text-align: start;
+}
