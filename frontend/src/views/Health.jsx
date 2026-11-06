@@ -8,7 +8,10 @@ import { getLabInfo } from '../lib/lab-info.js'
 import { useNavigate } from 'react-router-dom'
 import HealthDatePicker from '../components/HealthDatePicker.jsx'
 import { fmtDateFull, todayISO } from '../lib/format.js'
-import { extractPdfTextWithOcr } from '../lib/lab-ocr.js'
+import {
+  extractPdfTextWithOcr,
+  extractImageTextWithOcr
+} from '../lib/lab-ocr.js'
 
 const KEY = 'opengym.health.reports.v1'
 
@@ -269,6 +272,72 @@ async function importPdf(file) {
   }
 }
 
+  async function importImage(file) {
+  if (!file) return
+
+  setError('')
+  setNotice('')
+
+  const supportedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp'
+  ]
+
+  if (!supportedTypes.includes(file.type)) {
+    setError(tx(
+      'Please select a JPG, PNG or WEBP image.',
+      'لطفاً یک تصویر JPG، PNG یا WEBP انتخاب کن.'
+    ))
+    return
+  }
+
+  if (file.size > 20 * 1024 * 1024) {
+    setError(tx(
+      'Image size exceeds 20 MB.',
+      'حجم تصویر بیشتر از ۲۰ مگابایت است.'
+    ))
+    return
+  }
+
+  setBusy(true)
+
+  try {
+    const text = await extractImageTextWithOcr(file)
+    const parsed = parseLabReportText(text)
+
+    setDraft({
+      id: 'r-' + Date.now(),
+      name: file.name,
+      date: parsed.date || todayISO(),
+      items: parsed.items,
+      rawText: text.slice(0, 30000),
+      warnings: parsed.warnings
+    })
+
+    setNotice(
+      parsed.items.length
+        ? tx(
+            `${parsed.items.length} preliminary rows found using image OCR. Review every row against the original image before saving.`,
+            `${parsed.items.length} ردیف با OCR تصویر استخراج شد؛ پیش از ذخیره، همه ردیف‌ها را با عکس اصلی تطبیق بده.`
+          )
+        : tx(
+            'No readable lab results were found in this image. Nothing has been saved.',
+            'نتیجه آزمایش قابل‌خواندن در تصویر پیدا نشد. هیچ اطلاعاتی ذخیره نشده است.'
+          )
+    )
+  } catch (e) {
+    setError(
+      tx(
+        'Could not read image: ',
+        'خواندن تصویر ناموفق بود: '
+      ) + (e?.message || tx('Unknown error', 'خطای نامشخص'))
+    )
+  } finally {
+    setBusy(false)
+  }
+}
+  
   function edit(i, k, v) {
     setDraft(d => ({
       ...d,
