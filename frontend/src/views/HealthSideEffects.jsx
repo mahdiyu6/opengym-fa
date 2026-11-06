@@ -87,27 +87,6 @@ export default function HealthSideEffects() {
 
   return (
     <section className="health-card health-side-effects-section">
-      <style>{`
-        .health-side-effects-section { margin-top: 16px; }
-        .health-side-effects-summary { display:flex; flex-wrap:wrap; gap:10px 18px; margin:0 0 14px; color:var(--label-2); font-size:12px; }
-        .health-side-effects-summary strong { color:var(--label); }
-        .health-side-effects-form { display:flex; flex-direction:column; gap:12px; }
-        .health-side-effects-form label { display:flex; flex-direction:column; gap:7px; color:var(--label-2); font-size:13px; min-width:0; }
-        .health-side-effects-form input, .health-side-effects-form select, .health-side-effects-form textarea { width:100%; min-width:0; border:1px solid var(--sep); border-radius:12px; padding:11px 12px; background:var(--bg); color:var(--label); font:inherit; font-size:14px; }
-        .health-side-effects-form textarea { resize:vertical; line-height:1.7; }
-        .health-side-effects-history { margin-top:20px; }
-        .health-side-effect-entry { border:1px solid var(--sep); border-radius:14px; padding:12px; margin-top:9px; min-width:0; }
-        .health-side-effect-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
-        .health-side-effect-heading strong, .health-side-effect-heading small { display:block; overflow-wrap:anywhere; }
-        .health-side-effect-heading small { color:var(--label-3); font-size:11px; margin-top:4px; }
-        .health-side-effect-status { flex-shrink:0; border-radius:20px; padding:4px 8px; font-size:10px; background:var(--surface-2); color:var(--label-2); }
-        .health-side-effect-status.active { color:var(--orange, #d58b35); }
-        .health-side-effect-status.resolved { color:var(--green); }
-        .health-side-effect-entry p { color:var(--label-2); font-size:12px; line-height:1.6; margin:8px 0 0; overflow-wrap:anywhere; }
-        .health-side-effect-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:8px; margin-top:12px; }
-        .health-side-effects-note { margin-top:14px; font-size:11px; line-height:1.6; }
-        @media(max-width:380px) { .health-side-effects-form .health-form-row { grid-template-columns:1fr; } }
-      `}</style>
 
       <div className="health-picker-heading">
         <h3>{tx('Side effects', 'عوارض جانبی')}</h3>
