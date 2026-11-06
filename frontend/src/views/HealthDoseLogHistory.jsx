@@ -4,6 +4,16 @@ import { useStore } from '../store/useStore.js'
 import { getLang, useLang } from '../lib/i18n.js'
 import './health-hub.css'
 
+function getCompoundColor(name) {
+  let hash = 0
+
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash * 31 + name.charCodeAt(i)) >>> 0
+  }
+
+  return `hsl(${hash % 360} 72% 46%)`
+}
+
 const PAGE_SIZE = 20
 
 export default function HealthDoseLogHistory() {
@@ -151,13 +161,24 @@ export default function HealthDoseLogHistory() {
           </p>
         ) : (
           visible.map(entry => (
-            <article className="health-log-entry" key={entry.id}>
-              <div>
-                <strong>{entry.compoundName}</strong>
-                <small>{entry.protocolName} · {entry.date}</small>
-                <span>{entry.amount} {entry.unit}</span>
-                {entry.notes && <small>{entry.notes}</small>}
-              </div>
+<article className="health-log-entry" key={entry.id}>
+  <div className="health-log-entry-content">
+    <div
+      className="health-log-compound-name"
+      style={{ '--compound-color': getCompoundColor(entry.compoundName) }}
+    >
+      <span className="health-log-compound-dot" />
+      <strong>{entry.compoundName}</strong>
+    </div>
+
+    <small>{entry.protocolName} · {entry.date}</small>
+
+    <span className="health-log-entry-amount">
+      {entry.amount} {entry.unit}
+    </span>
+
+    {entry.notes && <small>{entry.notes}</small>}
+  </div>
 
               <button
                 type="button"
