@@ -1425,3 +1425,61 @@
 .health-catalog-chip:active {
   transform: scale(0.97);
 }
+
+/* Consistent compound identity colors across Health */
+
+.health-compound-editor {
+  border-color: color-mix(
+    in srgb,
+    var(--compound-color) 38%,
+    var(--sep)
+  );
+  border-inline-start: 3px solid var(--compound-color);
+}
+
+.health-compound-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.health-compound-color-dot {
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  border-radius: 50%;
+  background: var(--compound-color);
+  box-shadow: 0 0 0 4px color-mix(
+    in srgb,
+    var(--compound-color) 14%,
+    transparent
+  );
+}
+
+.health-protocol-chips .health-protocol-compound-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--compound-color) 40%,
+    var(--sep)
+  );
+  background: color-mix(
+    in srgb,
+    var(--compound-color) 12%,
+    var(--surface)
+  );
+  color: var(--compound-color);
+  font-weight: 650;
+}
+
+.health-protocol-compound-chip i {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  min-width: 7px;
+  border-radius: 50%;
+  background: var(--compound-color);
+}
