@@ -2843,3 +2843,341 @@
     font-size: 22px;
   }
 }
+
+
+/* =========================================
+   Modern Weekly Check-in
+========================================= */
+
+.health-checkin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 20px 0 24px;
+}
+
+.health-checkin-eyebrow {
+  display: inline-block;
+  margin-bottom: 7px;
+  color: var(--green);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.5px;
+}
+
+.health-checkin-header-icon {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: var(--surface-2);
+  color: var(--green);
+  font-size: 27px;
+}
+
+.health-checkin-section {
+  padding: 18px;
+  border-radius: 20px;
+}
+
+.health-checkin-form {
+  gap: 22px;
+}
+
+.health-checkin-date-block {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--sep);
+}
+
+.health-checkin-date-block label {
+  max-width: 100%;
+}
+
+.health-checkin-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--sep);
+  min-width: 0;
+}
+
+.health-checkin-group-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.health-checkin-group-icon {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--green);
+  font-size: 20px;
+}
+
+.health-checkin-group-heading h4 {
+  margin: 0;
+  color: var(--label);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.health-checkin-group-heading p {
+  margin: 4px 0 0;
+  color: var(--label-3);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.health-checkin-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.health-checkin-grid label:last-child {
+  grid-column: auto;
+}
+
+.health-checkin-measurement {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--sep);
+  border-radius: 13px;
+  background: var(--surface-2);
+  gap: 5px !important;
+}
+
+.health-checkin-field-title {
+  color: var(--label);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.health-checkin-measurement > small {
+  color: var(--label-3);
+  font-size: 9px;
+}
+
+.health-checkin-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 5px;
+}
+
+.health-checkin-input-wrap input {
+  min-width: 0;
+  min-height: 38px;
+  padding: 7px 9px;
+  border-radius: 9px;
+  background: var(--bg);
+  font-size: 15px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.health-checkin-input-wrap > span {
+  flex: 0 0 auto;
+  color: var(--label-3);
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.health-checkin-scales {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.health-checkin-scale {
+  padding: 14px;
+  border: 1px solid var(--sep);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.health-checkin-scale-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.health-checkin-scale-heading strong,
+.health-checkin-scale-heading small {
+  display: block;
+}
+
+.health-checkin-scale-heading strong {
+  color: var(--label);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.health-checkin-scale-heading small {
+  margin-top: 4px;
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-checkin-scale-value {
+  color: var(--green);
+  font-size: 15px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+
+.health-checkin-scale-options {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.health-checkin-scale-options button {
+  min-width: 0;
+  min-height: 39px;
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--label-2);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.health-checkin-scale-options button.active {
+  border-color: var(--green);
+  background: var(--green);
+  color: #fff;
+}
+
+.health-checkin-scale-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--label-3);
+  font-size: 9px;
+}
+
+.health-checkin-notes-group {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.health-checkin-submit {
+  min-height: 48px;
+  border-radius: 13px;
+  font-weight: 800;
+}
+
+.health-checkin-history-card {
+  margin-top: 22px;
+  border-radius: 20px;
+}
+
+.health-checkin-entry {
+  padding: 15px;
+  margin-top: 12px;
+  border-radius: 15px;
+  background: var(--surface-2);
+}
+
+.health-checkin-entry-heading {
+  align-items: center;
+}
+
+.health-checkin-entry-heading > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.health-checkin-entry-label {
+  color: var(--green);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1px;
+}
+
+.health-checkin-entry-heading strong {
+  color: var(--label);
+  font-size: 13px;
+}
+
+.health-checkin-values {
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.health-checkin-values span {
+  padding: 9px;
+  border: 1px solid var(--sep);
+  border-radius: 9px;
+  background: var(--surface);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.health-checkin-empty {
+  padding: 30px 15px;
+  text-align: center;
+}
+
+.health-checkin-empty > span {
+  display: block;
+  color: var(--label-3);
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.health-checkin-empty strong {
+  display: block;
+  color: var(--label);
+  font-size: 13px;
+}
+
+.health-checkin-empty p {
+  margin: 7px 0 0;
+  color: var(--label-3);
+  font-size: 11px;
+}
+
+@media (max-width: 380px) {
+  .health-checkin-section {
+    padding: 13px;
+  }
+
+  .health-checkin-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .health-checkin-measurement {
+    padding: 10px;
+  }
+
+  .health-checkin-scale {
+    padding: 11px;
+  }
+
+  .health-checkin-scale-options {
+    gap: 5px;
+  }
+
+  .health-checkin-scale-options button {
+    min-height: 36px;
+  }
+}
+
