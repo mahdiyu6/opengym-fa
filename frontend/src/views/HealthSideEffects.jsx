@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { getLang, useLang } from '../lib/i18n.js'
 
-const today = () => new Date().toISOString().slice(0, 10)
+const today = () => todayISO()
 const blankForm = () => ({
   date: today(),
   symptom: '',
@@ -15,6 +15,7 @@ const blankForm = () => ({
 export default function HealthSideEffects() {
   useLang()
   const fa = getLang() === 'fa'
+  const calendar = useStore(s => s.S?.calendar === 'jalali' ? 'jalali' : 'gregorian')
   const tx = (en, faText) => fa ? faText : en
   const entries = useStore(s => Array.isArray(s.S.healthSideEffects) ? s.S.healthSideEffects : [])
   const protocols = useStore(s => Array.isArray(s.S.healthProtocols) ? s.S.healthProtocols : [])
@@ -130,8 +131,13 @@ export default function HealthSideEffects() {
         <div className="health-form-row">
           <label>
             {tx('Date observed', 'تاریخ مشاهده')}
-            <input type="date" value={form.date}
-              onChange={e => setForm(old => ({ ...old, date: e.target.value }))} required />
+           <HealthDatePicker
+  value={form.date}
+  onChange={value => setForm(old => ({
+    ...old,
+    date: value
+  }))}
+/>
           </label>
           <label>
             {tx('Severity', 'شدت')}
@@ -193,7 +199,7 @@ export default function HealthSideEffects() {
             <div className="health-side-effect-heading">
               <div>
                 <strong>{entry.symptom || tx('Unspecified symptom', 'علامت نامشخص')}</strong>
-                <small>{entry.date || '—'} · {severityLabel(entry.severity)}</small>
+                <small>{fmtDateFull(entry.date, calendar)} · {severityLabel(entry.severity)}</small>
               </div>
               <span className={'health-side-effect-status ' + (entry.status === 'resolved' ? 'resolved' : 'active')}>
                 {entry.status === 'resolved' ? tx('Resolved', 'برطرف‌شده') : tx('Ongoing', 'فعال')}
