@@ -3898,20 +3898,75 @@
   }
 }
 
-/* Recent entries - improve compact card layout */
+
+/* Recent entries - centered dose and bottom metadata */
 
 .health-log-preview-grid .health-log-entry {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(44px, 1fr) auto auto;
+  align-items: center;
+  min-height: 145px;
+  gap: 6px 8px;
+  position: relative;
 }
 
 .health-log-preview-grid .health-log-entry-content {
-  width: 100%;
+  display: contents;
+}
+
+.health-log-preview-grid .health-log-compound-name {
+  grid-column: 1 / -1;
+  grid-row: 1;
   min-width: 0;
 }
 
+.health-log-preview-grid .health-log-compound-name strong {
+  overflow-wrap: anywhere;
+}
+
+.health-log-preview-grid .health-log-entry-amount {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-self: stretch;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 850;
+}
+
+.health-log-preview-grid .health-log-entry-content > small:first-of-type {
+  grid-column: 1;
+  grid-row: 3;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  align-self: center;
+}
+
 .health-log-preview-grid .health-log-entry .health-danger {
-  align-self: flex-end;
-  margin-top: 2px;
+  grid-column: 2;
+  grid-row: 3;
+  align-self: center;
+  justify-self: end;
+  margin: 0;
+}
+
+.health-log-preview-grid .health-log-entry-content > small:not(:first-of-type) {
+  grid-column: 1 / -1;
+  grid-row: 4;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 520px) {
+  .health-log-preview-grid .health-log-entry {
+    min-height: 140px;
+    gap: 6px;
+  }
 }
