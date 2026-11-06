@@ -504,15 +504,13 @@ const compoundCount = protocols.reduce(
     <div className="health-form-row">
       <label>
         {tx('Record date', 'تاریخ ثبت')}
-        <input
-          type="date"
-          value={logForm.date}
-          onChange={e => setLogForm(old => ({
-            ...old,
-            date: e.target.value
-          }))}
-          required
-        />
+<HealthDatePicker
+  value={logForm.date}
+  onChange={value => setLogForm(old => ({
+    ...old,
+    date: value
+  }))}
+/>
       </label>
 
       <label>
@@ -649,15 +647,13 @@ const compoundCount = protocols.reduce(
   <form className="health-checkin-form" onSubmit={saveCheckIn}>
     <label>
       {tx('Assessment date', 'تاریخ ارزیابی')}
-      <input
-        type="date"
-        value={checkInForm.date}
-        onChange={e => setCheckInForm(old => ({
-          ...old,
-          date: e.target.value
-        }))}
-        required
-      />
+<HealthDatePicker
+  value={checkInForm.date}
+  onChange={value => setCheckInForm(old => ({
+    ...old,
+    date: value
+  }))}
+/>
     </label>
 
     <div className="health-checkin-grid">
@@ -891,7 +887,10 @@ const compoundCount = protocols.reduce(
             </label>
             <label>
               {tx('Start date', 'تاریخ شروع')}
-              <input type="date" value={form.startDate} onChange={e => change('startDate', e.target.value)} />
+              <HealthDatePicker
+  value={form.startDate}
+  onChange={value => change('startDate', value)}
+/>
             </label>
           </div>
 
@@ -1098,7 +1097,10 @@ const compoundCount = protocols.reduce(
 
           <div className="health-form-row">
             <label>{tx('End date (optional)', 'تاریخ پایان (اختیاری)')}
-              <input type="date" value={form.endDate} onChange={e => change('endDate', e.target.value)} />
+              <HealthDatePicker
+  value={form.endDate}
+  onChange={value => change('endDate', value)}
+/>
             </label>
             <label>{tx('Notes', 'توضیحات')}
               <input value={form.notes} onChange={e => change('notes', e.target.value)} />
