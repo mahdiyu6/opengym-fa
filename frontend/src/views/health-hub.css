@@ -3585,3 +3585,212 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Performance - Side Effects */
+
+.health-side-effects-section {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(145deg,
+    color-mix(in srgb, #f59e0b 5%, var(--surface)),
+    var(--surface) 65%);
+}
+
+.health-side-effects-section > .health-picker-heading {
+  padding-bottom: 15px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--sep);
+}
+
+.health-side-effects-section .health-picker-heading h3 {
+  font-size: 17px;
+  font-weight: 850;
+}
+
+.health-side-effects-section .health-picker-heading span {
+  font-size: 10px;
+  color: var(--label-3);
+}
+
+.health-side-effects-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+.health-side-effects-summary span {
+  padding: 9px 12px;
+  border: 1px solid var(--sep);
+  border-radius: 11px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 11px;
+}
+
+.health-side-effects-summary strong {
+  color: var(--label);
+  font-size: 14px;
+  margin-inline-start: 4px;
+}
+
+.health-side-effects-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 12px;
+}
+
+.health-side-effects-form > label,
+.health-side-effects-form > .health-form-row {
+  min-width: 0;
+}
+
+.health-side-effects-form > label:first-child,
+.health-side-effects-form > label:nth-last-child(2),
+.health-side-effects-form > button {
+  grid-column: 1 / -1;
+}
+
+.health-side-effects-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--label-2);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.health-side-effects-form input,
+.health-side-effects-form select,
+.health-side-effects-form textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--sep);
+  border-radius: 11px;
+  background: var(--bg);
+  color: var(--label);
+  font: inherit;
+  font-size: 13px;
+}
+
+.health-side-effects-form textarea {
+  min-height: 75px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.health-side-effects-form input:focus,
+.health-side-effects-form select:focus,
+.health-side-effects-form textarea:focus {
+  outline: none;
+  border-color: var(--green);
+}
+
+.health-side-effects-form > .health-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.health-side-effects-form > button {
+  min-height: 47px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.health-side-effects-history {
+  margin-top: 23px;
+  padding-top: 18px;
+  border-top: 1px solid var(--sep);
+}
+
+.health-side-effects-history .health-history-title-row {
+  margin-bottom: 13px;
+}
+
+.health-side-effects-history h4 {
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.health-side-effect-entry {
+  padding: 14px;
+  margin-top: 10px;
+  border: 1px solid var(--sep);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.health-side-effect-heading strong {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.health-side-effect-heading small {
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.health-side-effect-status {
+  padding: 6px 9px;
+  border-radius: 8px;
+  font-weight: 750;
+}
+
+.health-side-effect-status.active {
+  background: color-mix(in srgb, #f59e0b 13%, var(--surface));
+}
+
+.health-side-effect-status.resolved {
+  background: color-mix(in srgb, var(--green) 12%, var(--surface));
+}
+
+.health-side-effect-entry p {
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.health-side-effect-actions {
+  gap: 8px;
+}
+
+.health-side-effect-actions button {
+  min-height: 35px;
+  padding: 7px 11px;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.health-side-effects-note {
+  padding: 11px 12px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+@media (max-width: 520px) {
+  .health-side-effects-section {
+    padding: 14px;
+  }
+
+  .health-side-effects-form {
+    grid-template-columns: 1fr;
+  }
+
+  .health-side-effects-form > label,
+  .health-side-effects-form > .health-form-row,
+  .health-side-effects-form > button {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .health-side-effects-form > .health-form-row {
+    grid-template-columns: 1fr;
+  }
+}
