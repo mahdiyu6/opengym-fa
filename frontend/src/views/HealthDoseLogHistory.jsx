@@ -173,7 +173,7 @@ export default function HealthDoseLogHistory() {
       <strong>{entry.compoundName}</strong>
     </div>
 
-    <small>{entry.protocolName} · {entry.date}</small>
+    <small>{entry.protocolName} · {fmtDateFull(entry.date, calendar)}</small>
 
     <span className="health-log-entry-amount">
       {entry.amount} {entry.unit}
