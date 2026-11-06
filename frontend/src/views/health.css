@@ -255,3 +255,364 @@
   box-shadow: none !important;
   padding: 6px 0;
 }
+
+/* =========================================
+   TEST LABS — Modern PeakDose-inspired UI
+========================================= */
+
+.health-page {
+  max-width: 760px;
+  padding: 22px 16px calc(125px + var(--sab, 0px));
+}
+
+/* Header */
+.health-header {
+  align-items: center;
+  margin: 10px 0 22px;
+  gap: 16px;
+}
+
+.health-header h1 {
+  font-size: clamp(27px, 6vw, 34px);
+  font-weight: 850;
+  letter-spacing: -1px;
+  line-height: 1.2;
+}
+
+.health-kicker {
+  color: var(--green);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.8px;
+  margin-bottom: 11px;
+}
+
+.health-header .health-muted {
+  font-size: 12px;
+  margin-top: 9px;
+}
+
+.health-header .health-primary {
+  min-height: 45px;
+  padding: 12px 17px;
+  border-radius: 13px;
+  background: var(--green);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 5px 16px color-mix(in srgb, var(--green) 18%, transparent);
+}
+
+/* Privacy information */
+.health-privacy {
+  padding: 13px 15px;
+  margin: 16px 0 22px;
+  border: 1px solid var(--sep);
+  border-radius: 15px;
+  background: var(--surface-2);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+/* Search field */
+.health-search {
+  height: 50px;
+  margin: 20px 0 24px;
+  padding: 0 15px;
+  border: 1px solid var(--sep);
+  border-radius: 15px;
+  background: var(--surface);
+  box-shadow: 0 3px 12px rgba(0,0,0,.025);
+}
+
+.health-search span {
+  font-size: 22px;
+  color: var(--label-3);
+}
+
+.health-search input {
+  font-size: 13px;
+}
+
+/* Date groups */
+.health-group {
+  margin: 25px 0;
+}
+
+.health-group > h2 {
+  margin: 0 4px 11px;
+  color: var(--label-3);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .3px;
+}
+
+/* Result list */
+.health-list {
+  padding: 4px 14px;
+  border: 1px solid var(--sep);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 5px 20px rgba(0,0,0,.025);
+}
+
+.health-item {
+  min-height: 67px;
+  gap: 11px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--sep);
+}
+
+.health-item-name {
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.health-item-value {
+  font-size: 12px;
+  font-weight: 750;
+  color: var(--label);
+  font-variant-numeric: tabular-nums;
+}
+
+.health-dot {
+  width: 8px;
+  height: 8px;
+  flex-basis: 8px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.health-dot.normal {
+  background: var(--green);
+}
+
+.health-dot.high,
+.health-dot.low {
+  background: var(--orange);
+}
+
+.health-dot.unknown {
+  background: var(--label-3);
+}
+
+/* Empty state */
+.health-empty {
+  padding: 35px 20px;
+  border: 1px dashed var(--sep);
+  border-radius: 20px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.health-empty h2 {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.health-empty p {
+  font-size: 12px;
+  margin: 10px 0 18px;
+}
+
+.health-empty .health-primary {
+  background: var(--green);
+  color: white;
+}
+
+/* General cards */
+.health-card {
+  margin: 15px 0;
+  padding: 18px;
+  border: 1px solid var(--sep);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 5px 20px rgba(0,0,0,.025);
+}
+
+.health-card > h2,
+.health-card .health-row h2 {
+  font-size: 15px;
+  font-weight: 850;
+  letter-spacing: -.2px;
+  margin: 0 0 14px;
+}
+
+/* Test detail value */
+.health-value {
+  margin: 15px 0 12px;
+  font-size: clamp(38px, 10vw, 52px);
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+}
+
+.health-value small {
+  font-size: 16px;
+  font-weight: 650;
+}
+
+/* Status badges */
+.health-badge {
+  padding: 7px 12px;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.health-badge.normal {
+  background: color-mix(in srgb, var(--green) 15%, var(--surface));
+  color: var(--green);
+}
+
+.health-badge.high,
+.health-badge.low {
+  background: color-mix(in srgb, var(--orange) 15%, var(--surface));
+  color: var(--orange);
+}
+
+.health-badge.unknown {
+  background: var(--surface-2);
+  color: var(--label-2);
+}
+
+/* Trend summary */
+.health-trend-summary {
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.health-trend-summary > div {
+  padding: 13px;
+  border: 1px solid var(--sep);
+  border-radius: 13px;
+  background: var(--surface-2);
+}
+
+.health-trend-summary small {
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.health-trend-summary b {
+  font-size: 16px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Trend chart */
+.health-chart-wrap {
+  margin: 18px 0;
+  padding: 10px 4px;
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.health-chart-line {
+  stroke: var(--green);
+  stroke-width: 3.5;
+}
+
+.health-chart-point {
+  fill: var(--green);
+  stroke: var(--surface);
+  stroke-width: 3;
+}
+
+/* Information section */
+.health-info {
+  margin-top: 22px;
+  padding: 16px;
+  border: 1px solid var(--sep);
+  border-radius: 16px;
+  background: var(--surface-2);
+}
+
+.health-info > h2 {
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.health-info-block {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--sep);
+}
+
+.health-info-block h3 {
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.health-info-block p {
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+/* Saved reports */
+.health-report {
+  padding: 14px 0;
+}
+
+.health-report b {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.health-report .health-muted {
+  font-size: 10px;
+}
+
+/* Back navigation */
+.health-back {
+  font-size: 11px;
+  font-weight: 750;
+}
+
+/* Responsive */
+@media (max-width: 560px) {
+  .health-page {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .health-header {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .health-header > div {
+    min-width: 0;
+  }
+
+  .health-header .health-primary {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .health-title-row h1 {
+    font-size: 25px;
+  }
+
+  .health-card {
+    padding: 15px;
+    border-radius: 18px;
+  }
+
+  .health-trend-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .health-trend-summary > div {
+    padding: 10px 8px;
+  }
+
+  .health-trend-summary b {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 370px) {
+  .health-trend-summary {
+    grid-template-columns: 1fr;
+  }
+}
