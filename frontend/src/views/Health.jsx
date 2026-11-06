@@ -6,6 +6,8 @@ import './health.css'
 import { useStore } from '../store/useStore.js'
 import { getLabInfo } from '../lib/lab-info.js'
 import { useNavigate } from 'react-router-dom'
+import HealthDatePicker from '../components/HealthDatePicker.jsx'
+import { fmtDateFull, todayISO } from '../lib/format.js'
 
 const KEY = 'opengym.health.reports.v1'
 
@@ -138,6 +140,7 @@ export default function Health() {
   const lang = getLang()
   const dir = directionFor(lang)
   const isFa = lang === 'fa'
+  const calendar = useStore(s => s.S?.calendar === 'jalali' ? 'jalali' : 'gregorian')
   const nav = useNavigate()
 
   // Persian text for this page; other languages use the app translation system.
