@@ -1243,6 +1243,11 @@ const compoundCount = protocols.reduce(
   </div>
 )}
             </div>
+            {c.notes && (
+  <p className="health-protocol-compound-notes">
+    {c.notes}
+  </p>
+)}
           </article>
         )
       })}
