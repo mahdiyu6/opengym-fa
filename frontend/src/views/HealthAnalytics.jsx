@@ -525,12 +525,31 @@ const maxWeeklyLogs = Math.max(
   ...weeklyLogCounts.map(item => item.count)
 )
 
-  
-  const activeEffects =
-    sideEffects.filter(item => item.status !== 'resolved')
+const activeEffects =
+  filteredEffects.filter(item => item.status !== 'resolved')
 
-  const severeEffects =
-    activeEffects.filter(item => item.severity === 'severe').length
+const resolvedEffects =
+  filteredEffects.filter(item => item.status === 'resolved')
+
+const severeEffects =
+  activeEffects.filter(item => item.severity === 'severe').length
+
+const effectSeverityCounts = {
+  mild: filteredEffects.filter(item => item.severity === 'mild').length,
+  moderate: filteredEffects.filter(item => item.severity === 'moderate').length,
+  severe: filteredEffects.filter(item => item.severity === 'severe').length,
+  other: filteredEffects.filter(item =>
+    !['mild', 'moderate', 'severe'].includes(item.severity)
+  ).length
+}
+
+const recentEffects = [...filteredEffects]
+  .sort((a, b) =>
+    (b.date || '').localeCompare(a.date || '') ||
+    (b.createdAt || '').localeCompare(a.createdAt || '')
+  )
+  .slice(0, 4)
+
 
   const activeProtocols =
     protocols.filter(item => item.status === 'active').length
