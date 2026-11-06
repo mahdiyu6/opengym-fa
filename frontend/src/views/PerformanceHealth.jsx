@@ -99,6 +99,27 @@ const CATALOG = [
     ]
   }
 ]
+const CATALOG_COLOR_MAP = new Map(
+  CATALOG
+    .flatMap(group => group.groups.flatMap(subgroup => subgroup.items))
+    .map((name, index) => [
+      name,
+      `hsl(${Math.round((index * 137.508) % 360)} 72% 46%)`
+    ])
+)
+
+function getCompoundColor(name) {
+  if (CATALOG_COLOR_MAP.has(name)) {
+    return CATALOG_COLOR_MAP.get(name)
+  }
+
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash * 31 + name.charCodeAt(i)) >>> 0
+  }
+
+  return `hsl(${hash % 360} 72% 46%)`
+}
 
 const emptyForm = {
   name: '',
