@@ -582,7 +582,178 @@ const compoundCount = protocols.reduce(
        </section>
       
        <HealthSideEffects />
-     
+
+
+      {/* Protocol Timeline */}
+      <section className="health-timeline-section">
+        <div className="health-section-heading">
+          <div>
+            <h2>{tx('Protocol Timeline', 'خط زمانی پروتکل‌ها')}</h2>
+            <p className="health-muted">
+              {tx(
+                'Chronological history of your protocols and recorded entries.',
+                'نمای زمانی پروتکل‌ها و سوابق ثبت‌شده'
+              )}
+            </p>
+          </div>
+          <span className="health-timeline-count">{protocols.length}</span>
+        </div>
+
+        {protocols.length === 0 ? (
+          <div className="health-card health-timeline-empty">
+            <div className="health-timeline-empty-icon">◷</div>
+            <strong>{tx('No timeline yet', 'هنوز تاریخچه‌ای وجود ندارد')}</strong>
+            <p className="health-muted">
+              {tx(
+                'Your protocol history will appear here.',
+                'تاریخچه پروتکل‌های شما در این بخش نمایش داده می‌شود.'
+              )}
+            </p>
+          </div>
+        ) : (
+          <div className="health-timeline-list">
+            {[...protocols]
+              .sort((a, b) =>
+                (b.startDate || '').localeCompare(a.startDate || '')
+              )
+              .map(protocol => {
+                const compounds = Array.isArray(protocol.compounds)
+                  ? protocol.compounds
+                  : []
+
+                const events = [
+                  ...(protocol.startDate ? [{
+                    id: 'start',
+                    date: protocol.startDate,
+                    type: 'start',
+                    title: tx('Protocol started', 'شروع پروتکل')
+                  }] : []),
+
+                  ...(protocol.endDate ? [{
+                    id: 'planned-end',
+                    date: protocol.endDate,
+                    type: 'planned',
+                    title: tx('Planned end date', 'تاریخ پایان برنامه‌ریزی‌شده')
+                  }] : []),
+
+                  ...(protocol.completedAt ? [{
+                    id: 'completed',
+                    date: String(protocol.completedAt).slice(0, 10),
+                    type: 'completed',
+                    title: tx('Marked as completed', 'ثبت وضعیت تکمیل')
+                  }] : []),
+
+                  ...doseLogs
+                    .filter(log => log.protocolId === protocol.id)
+                    .map(log => ({
+                      id: log.id,
+                      date: log.date,
+                      type: 'log',
+                      title: log.compoundName || tx('Recorded entry', 'ثبت روزانه'),
+                      amount: log.amount,
+                      unit: log.unit,
+                      notes: log.notes
+                    }))
+                ]
+                  .filter(event => event.date)
+                  .sort((a, b) => a.date.localeCompare(b.date))
+
+                return (
+                  <article className="health-card health-timeline-card" key={protocol.id}>
+                    <div className="health-timeline-card-header">
+                      <div>
+                        <h3>{protocol.name || tx('Untitled protocol', 'پروتکل بدون نام')}</h3>
+                        <span className={`health-timeline-status ${protocol.status || 'archived'}`}>
+                          {protocol.status === 'active'
+                            ? tx('Active', 'فعال')
+                            : protocol.status === 'completed'
+                              ? tx('Completed', 'تکمیل‌شده')
+                              : tx('Archived', 'بایگانی‌شده')}
+                        </span>
+                      </div>
+
+                      <div className="health-timeline-period">
+                        <span>
+                          {tx('Start', 'شروع')}: {fmtDateFull(protocol.startDate, calendar)}
+                        </span>
+                        {protocol.endDate && (
+                          <span>
+                            {tx('End', 'پایان')}: {fmtDateFull(protocol.endDate, calendar)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {compounds.length > 0 && (
+                      <div className="health-timeline-compounds">
+                        {compounds.map((compound, index) => (
+                          <span
+                            className="health-timeline-compound"
+                            key={compound.id || `${compound.name}-${index}`}
+                            style={{ '--compound-color': getCompoundColor(compound.name) }}
+                          >
+                            <i />
+                            {compound.name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="health-timeline-events">
+                      {events.length === 0 ? (
+                        <p className="health-muted">
+                          {tx('No recorded events.', 'رویدادی ثبت نشده است.')}
+                        </p>
+                      ) : (
+                        events.map(event => (
+                          <div
+                            className={`health-timeline-event ${event.type}`}
+                            key={event.id}
+                          >
+                            <span className="health-timeline-event-marker" />
+                            <div className="health-timeline-event-content">
+                              <div className="health-timeline-event-top">
+                                <strong>{event.title}</strong>
+                                <time>{fmtDateFull(event.date, calendar)}</time>
+                              </div>
+
+                              {event.type === 'log' && (
+                                <>
+                                  {(event.amount || event.unit) && (
+                                    <span className="health-timeline-log-amount">
+                                      {[event.amount, event.unit].filter(Boolean).join(' ')}
+                                    </span>
+                                  )}
+                                  {event.notes && (
+                                    <p className="health-timeline-event-notes">
+                                      {event.notes}
+                                    </p>
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    <div className="health-timeline-footer">
+                      <span>
+                        {events.filter(event => event.type === 'log').length}{' '}
+                        {tx('recorded entries', 'ثبت روزانه')}
+                      </span>
+                      <span>
+                        {compounds.length} {tx('compounds', 'ترکیب')}
+                      </span>
+                    </div>
+                  </article>
+                )
+              })}
+          </div>
+        )}
+      </section>
+
+      
           <div className="health-section-heading">
         <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
         <button className="health-primary" onClick={() => setShowForm(v => !v)}>
