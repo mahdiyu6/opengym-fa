@@ -3181,3 +3181,84 @@
   }
 }
 
+/* Weekly check-in - fix 1-to-5 scale buttons */
+
+.health-checkin-scales {
+  display: flex !important;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.health-checkin-scale {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.health-checkin-scale-options {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  direction: ltr;
+  gap: 8px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.health-checkin-scale-options button {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--sep);
+  border-radius: 11px;
+  background: var(--bg);
+  color: var(--label-2);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.health-checkin-scale-options button.active {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+.health-checkin-scale-caption {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  direction: ltr;
+  width: 100%;
+  margin-top: 10px;
+  gap: 8px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.health-checkin-scale-caption span {
+  display: block;
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  .health-checkin-scale-options {
+    gap: 6px;
+  }
+
+  .health-checkin-scale-options button {
+    height: 40px;
+    min-height: 40px;
+  }
+}
