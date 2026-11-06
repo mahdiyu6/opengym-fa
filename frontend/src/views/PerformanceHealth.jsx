@@ -580,9 +580,6 @@ const compoundCount = protocols.reduce(
   )}
 </div>
        </section>
-      
-       <HealthSideEffects />
-
 
       {/* Protocol Timeline */}
       <section className="health-timeline-section">
@@ -591,8 +588,8 @@ const compoundCount = protocols.reduce(
             <h2>{tx('Protocol Timeline', 'خط زمانی پروتکل‌ها')}</h2>
             <p className="health-muted">
               {tx(
-                'Chronological history of your protocols and recorded entries.',
-                'نمای زمانی پروتکل‌ها و سوابق ثبت‌شده'
+                'Explore your protocol history on a chronological timeline.',
+                'مشاهده تاریخچه پروتکل‌ها روی محور زمان'
               )}
             </p>
           </div>
@@ -633,14 +630,14 @@ const compoundCount = protocols.reduce(
                     id: 'planned-end',
                     date: protocol.endDate,
                     type: 'planned',
-                    title: tx('Planned end date', 'تاریخ پایان برنامه‌ریزی‌شده')
+                    title: tx('Planned end date', 'پایان برنامه‌ریزی‌شده')
                   }] : []),
 
                   ...(protocol.completedAt ? [{
                     id: 'completed',
                     date: String(protocol.completedAt).slice(0, 10),
                     type: 'completed',
-                    title: tx('Marked as completed', 'ثبت وضعیت تکمیل')
+                    title: tx('Marked as completed', 'ثبت تکمیل پروتکل')
                   }] : []),
 
                   ...doseLogs
@@ -655,14 +652,29 @@ const compoundCount = protocols.reduce(
                       notes: log.notes
                     }))
                 ]
-                  .filter(event => event.date)
+                  .filter(event =>
+                    event.date && /^\d{4}-\d{2}-\d{2}$/.test(event.date)
+                  )
                   .sort((a, b) => a.date.localeCompare(b.date))
 
+                const timestamps = events.map(event =>
+                  new Date(`${event.date}T12:00:00`).getTime()
+                )
+
+                const minTime = Math.min(...timestamps)
+                const maxTime = Math.max(...timestamps)
+                const duration = Math.max(maxTime - minTime, 1)
+
                 return (
-                  <article className="health-card health-timeline-card" key={protocol.id}>
+                  <article
+                    className="health-card health-timeline-card"
+                    key={protocol.id}
+                  >
                     <div className="health-timeline-card-header">
                       <div>
-                        <h3>{protocol.name || tx('Untitled protocol', 'پروتکل بدون نام')}</h3>
+                        <h3>
+                          {protocol.name || tx('Untitled protocol', 'پروتکل بدون نام')}
+                        </h3>
                         <span className={`health-timeline-status ${protocol.status || 'archived'}`}>
                           {protocol.status === 'active'
                             ? tx('Active', 'فعال')
@@ -690,7 +702,9 @@ const compoundCount = protocols.reduce(
                           <span
                             className="health-timeline-compound"
                             key={compound.id || `${compound.name}-${index}`}
-                            style={{ '--compound-color': getCompoundColor(compound.name) }}
+                            style={{
+                              '--compound-color': getCompoundColor(compound.name)
+                            }}
                           >
                             <i />
                             {compound.name}
@@ -699,43 +713,91 @@ const compoundCount = protocols.reduce(
                       </div>
                     )}
 
-                    <div className="health-timeline-events">
-                      {events.length === 0 ? (
-                        <p className="health-muted">
-                          {tx('No recorded events.', 'رویدادی ثبت نشده است.')}
-                        </p>
-                      ) : (
-                        events.map(event => (
-                          <div
-                            className={`health-timeline-event ${event.type}`}
-                            key={event.id}
-                          >
-                            <span className="health-timeline-event-marker" />
-                            <div className="health-timeline-event-content">
-                              <div className="health-timeline-event-top">
-                                <strong>{event.title}</strong>
-                                <time>{fmtDateFull(event.date, calendar)}</time>
-                              </div>
+                    {events.length === 0 ? (
+                      <p className="health-muted">
+                        {tx('No recorded events.', 'رویدادی ثبت نشده است.')}
+                      </p>
+                    ) : (
+                      <div className="health-timeline-scroll">
+                        <div
+                          className="health-timeline-axis"
+                          style={{
+                            minWidth: `${Math.max(680, events.length * 170)}px`
+                          }}
+                        >
+                          <div className="health-timeline-axis-line" />
 
-                              {event.type === 'log' && (
-                                <>
-                                  {(event.amount || event.unit) && (
-                                    <span className="health-timeline-log-amount">
-                                      {[event.amount, event.unit].filter(Boolean).join(' ')}
-                                    </span>
+                          {events.length > 1 && (
+                            <>
+                              <span className="health-timeline-axis-date first">
+                                {fmtDateFull(events[0].date, calendar)}
+                              </span>
+                              <span className="health-timeline-axis-date last">
+                                {fmtDateFull(events[events.length - 1].date, calendar)}
+                              </span>
+                            </>
+                          )}
+
+                          {events.map(event => {
+                            const timestamp = new Date(
+                              `${event.date}T12:00:00`
+                            ).getTime()
+
+                            const position = events.length === 1
+                              ? 50
+                              : 4 + ((timestamp - minTime) / duration) * 92
+
+                            const compoundColor = event.type === 'log'
+                              ? getCompoundColor(event.title)
+                              : null
+
+                            return (
+                              <div
+                                className={`health-timeline-axis-event ${event.type}`}
+                                key={event.id}
+                                style={{
+                                  left: `${position}%`,
+                                  '--event-color': compoundColor || (
+                                    event.type === 'start'
+                                      ? '#16a36a'
+                                      : event.type === 'planned'
+                                        ? '#d69b38'
+                                        : event.type === 'completed'
+                                          ? '#8b7bd8'
+                                          : 'var(--accent)'
+                                  )
+                                }}
+                              >
+                                <span className="health-timeline-axis-marker" />
+
+                                <div className="health-timeline-axis-content">
+                                  <strong>{event.title}</strong>
+                                  <time>{fmtDateFull(event.date, calendar)}</time>
+
+                                  {event.type === 'log' && (
+                                    <>
+                                      {(event.amount || event.unit) && (
+                                        <span className="health-timeline-log-amount">
+                                          {[event.amount, event.unit]
+                                            .filter(Boolean)
+                                            .join(' ')}
+                                        </span>
+                                      )}
+
+                                      {event.notes && (
+                                        <p className="health-timeline-event-notes">
+                                          {event.notes}
+                                        </p>
+                                      )}
+                                    </>
                                   )}
-                                  {event.notes && (
-                                    <p className="health-timeline-event-notes">
-                                      {event.notes}
-                                    </p>
-                                  )}
-                                </>
-                              )}
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
 
                     <div className="health-timeline-footer">
                       <span>
@@ -752,8 +814,9 @@ const compoundCount = protocols.reduce(
           </div>
         )}
       </section>
-
       
+       <HealthSideEffects />
+
           <div className="health-section-heading">
         <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
         <button className="health-primary" onClick={() => setShowForm(v => !v)}>
