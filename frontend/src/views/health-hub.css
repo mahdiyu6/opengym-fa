@@ -3825,3 +3825,75 @@
   font-size: 13px;
   text-align: start;
 }
+
+/* Daily Log History - modern record cards */
+
+.health-dose-history-card > .health-log-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+  margin-top: 10px;
+  padding: 16px;
+  border: 1px solid var(--sep);
+  border-radius: 14px;
+  background: var(--surface-2);
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.health-dose-history-card > .health-log-entry:active {
+  border-color: var(--green);
+}
+
+.health-dose-history-card .health-log-entry-content {
+  flex: 1;
+  min-width: 0;
+  gap: 8px;
+}
+
+.health-dose-history-card .health-log-compound-name {
+  gap: 9px;
+}
+
+.health-dose-history-card .health-log-compound-name strong {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--label);
+  overflow-wrap: anywhere;
+}
+
+.health-dose-history-card .health-log-entry-content > small {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--label-3);
+  overflow-wrap: anywhere;
+}
+
+.health-dose-history-card .health-log-entry-amount {
+  font-size: 14px;
+  font-weight: 850;
+  color: var(--label);
+}
+
+.health-dose-history-card .health-danger {
+  flex-shrink: 0;
+  border-radius: 9px;
+  padding: 8px 11px;
+}
+
+@media (max-width: 520px) {
+  .health-dose-history-card > .health-log-entry {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .health-dose-history-card .health-log-compound-name strong {
+    font-size: 13px;
+  }
+
+  .health-dose-history-card .health-danger {
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+}
