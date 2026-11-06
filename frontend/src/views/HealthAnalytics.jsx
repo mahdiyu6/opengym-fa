@@ -1382,51 +1382,162 @@ const recentEffects = [...filteredEffects]
         </p>
       </section>
 
-      <section className="health-card health-analytics-section">
-        <h3>{tx('Side-effect overview', 'نمای کلی عوارض جانبی')}</h3>
+    
+<section className="health-card health-analytics-section">
+  <h3>{tx('Side-effect overview', 'نمای کلی عوارض جانبی')}</h3>
 
-        <div className="health-analytics-summary">
-          <div>
-            <span>{tx('In selected period', 'در بازه انتخابی')}</span>
-            <strong>{filteredEffects.length}</strong>
-          </div>
+  <div className="health-analytics-effects-summary">
+    <div>
+      <span>{tx('Active', 'فعال')}</span>
+      <strong>{activeEffects.length}</strong>
+    </div>
 
-          <div>
-            <span>{tx('Mild', 'خفیف')}</span>
-            <strong>
-              {filteredEffects.filter(x => x.severity === 'mild').length}
-            </strong>
-          </div>
+    <div>
+      <span>{tx('Resolved', 'برطرف‌شده')}</span>
+      <strong>{resolvedEffects.length}</strong>
+    </div>
 
-          <div>
-            <span>{tx('Moderate', 'متوسط')}</span>
-            <strong>
-              {filteredEffects.filter(x => x.severity === 'moderate').length}
-            </strong>
-          </div>
+    <div>
+      <span>{tx('Severe ongoing', 'شدید و فعال')}</span>
+      <strong>{severeEffects}</strong>
+    </div>
+  </div>
 
-          <div>
-            <span>{tx('Severe ongoing', 'شدید و فعال')}</span>
-            <strong>{severeEffects}</strong>
-          </div>
+  <div className="health-analytics-effects-breakdown">
+    <div className="health-analytics-effects-heading">
+      <strong>{tx('Severity distribution', 'توزیع شدت عوارض')}</strong>
+      <span>{filteredEffects.length} {tx('records', 'ثبت')}</span>
+    </div>
+
+    {filteredEffects.length > 0 ? (
+      <>
+        <div className="health-analytics-effects-bar">
+          {effectSeverityCounts.mild > 0 && (
+            <div
+              className="mild"
+              style={{
+                width: `${effectSeverityCounts.mild / filteredEffects.length * 100}%`
+              }}
+            />
+          )}
+
+          {effectSeverityCounts.moderate > 0 && (
+            <div
+              className="moderate"
+              style={{
+                width: `${effectSeverityCounts.moderate / filteredEffects.length * 100}%`
+              }}
+            />
+          )}
+
+          {effectSeverityCounts.severe > 0 && (
+            <div
+              className="severe"
+              style={{
+                width: `${effectSeverityCounts.severe / filteredEffects.length * 100}%`
+              }}
+            />
+          )}
+
+          {effectSeverityCounts.other > 0 && (
+            <div
+              className="other"
+              style={{
+                width: `${effectSeverityCounts.other / filteredEffects.length * 100}%`
+              }}
+            />
+          )}
         </div>
 
-        {filteredEffects.length === 0 && (
-          <p className="health-muted">
-            {tx(
-              'No side-effect records in this period.',
-              'در این بازه عارضه‌ای ثبت نشده است.'
-            )}
-          </p>
-        )}
+        <div className="health-analytics-effects-legend">
+          <span>
+            <i className="mild" />
+            {tx('Mild', 'خفیف')}
+            <strong>{effectSeverityCounts.mild}</strong>
+          </span>
 
-        <p className="health-muted health-analytics-note">
-          {tx(
-            'Recorded symptoms are not proof of a connection to a protocol or compound. Seek professional medical assessment for concerning symptoms.',
-            'ثبت هم‌زمان یک علامت و پروتکل، اثبات‌کننده رابطه علت و معلولی نیست. برای علائم نگران‌کننده ارزیابی پزشکی دریافت کنید.'
+          <span>
+            <i className="moderate" />
+            {tx('Moderate', 'متوسط')}
+            <strong>{effectSeverityCounts.moderate}</strong>
+          </span>
+
+          <span>
+            <i className="severe" />
+            {tx('Severe', 'شدید')}
+            <strong>{effectSeverityCounts.severe}</strong>
+          </span>
+
+          {effectSeverityCounts.other > 0 && (
+            <span>
+              <i className="other" />
+              {tx('Other / unspecified', 'سایر / نامشخص')}
+              <strong>{effectSeverityCounts.other}</strong>
+            </span>
           )}
-        </p>
-      </section>
+        </div>
+      </>
+    ) : (
+      <p className="health-muted">
+        {tx('No records to classify.', 'موردی برای دسته‌بندی وجود ندارد.')}
+      </p>
+    )}
+  </div>
+
+  <div className="health-analytics-effects-recent">
+    <div className="health-analytics-effects-heading">
+      <strong>{tx('Recent records', 'آخرین عوارض ثبت‌شده')}</strong>
+    </div>
+
+    {recentEffects.length === 0 ? (
+      <p className="health-muted">
+        {tx(
+          'No side-effect records in this period.',
+          'در این بازه عارضه‌ای ثبت نشده است.'
+        )}
+      </p>
+    ) : (
+      recentEffects.map(item => (
+        <div
+          className="health-analytics-effect-row"
+          key={item.id}
+        >
+          <div>
+            <strong>{item.symptom || tx('Unspecified symptom', 'علامت نامشخص')}</strong>
+
+            <small>
+              {item.date || '—'}
+              {item.compoundName ? ` · ${item.compoundName}` : ''}
+            </small>
+          </div>
+
+          <div className="health-analytics-effect-tags">
+            <span className={`severity-${item.severity || 'other'}`}>
+              {{
+                mild: tx('Mild', 'خفیف'),
+                moderate: tx('Moderate', 'متوسط'),
+                severe: tx('Severe', 'شدید')
+              }[item.severity] || tx('Unspecified', 'نامشخص')}
+            </span>
+
+            <span className={item.status === 'resolved' ? 'resolved' : 'active'}>
+              {item.status === 'resolved'
+                ? tx('Resolved', 'برطرف‌شده')
+                : tx('Active', 'فعال')}
+            </span>
+          </div>
+        </div>
+      ))
+    )}
+  </div>
+
+  <p className="health-muted health-analytics-note">
+    {tx(
+      'Recorded symptoms do not establish a causal relationship with any protocol or compound. Seek professional medical assessment for concerning symptoms.',
+      'ثبت علائم، رابطه علت و معلولی با هیچ پروتکل یا ترکیبی را اثبات نمی‌کند. برای علائم نگران‌کننده ارزیابی پزشکی دریافت کنید.'
+    )}
+  </p>
+</section>
 
       <section className="health-card health-analytics-section">
         <h3>{tx('Training Overview', 'نمای کلی تمرین')}</h3>
