@@ -381,24 +381,40 @@ const compoundCount = protocols.reduce(
       </header>
 
 <div className="health-stats-grid">
-  <div className="health-stat-card">
-    <span>{tx('Active records', 'سوابق فعال')}</span>
+  <div className="health-stat-card stat-active">
+    <div className="health-stat-top">
+      <span>{tx('Active records', 'سوابق فعال')}</span>
+      <i aria-hidden="true">◉</i>
+    </div>
     <strong>{activeCount}</strong>
+    <small>{tx('Currently in progress', 'در حال اجرا')}</small>
   </div>
 
-  <div className="health-stat-card">
-    <span>{tx('Completed', 'پایان‌یافته')}</span>
+  <div className="health-stat-card stat-completed">
+    <div className="health-stat-top">
+      <span>{tx('Completed', 'پایان‌یافته')}</span>
+      <i aria-hidden="true">✓</i>
+    </div>
     <strong>{completedCount}</strong>
+    <small>{tx('Finished records', 'سوابق تکمیل‌شده')}</small>
   </div>
 
-  <div className="health-stat-card">
-    <span>{tx('Recorded compounds', 'ترکیبات ثبت‌شده')}</span>
+  <div className="health-stat-card stat-compounds">
+    <div className="health-stat-top">
+      <span>{tx('Recorded compounds', 'ترکیبات ثبت‌شده')}</span>
+      <i aria-hidden="true">◇</i>
+    </div>
     <strong>{compoundCount}</strong>
+    <small>{tx('Across all records', 'در تمام سوابق')}</small>
   </div>
 
-  <div className="health-stat-card">
-    <span>{tx('Total records', 'کل سوابق')}</span>
+  <div className="health-stat-card stat-total">
+    <div className="health-stat-top">
+      <span>{tx('Total records', 'کل سوابق')}</span>
+      <i aria-hidden="true">▤</i>
+    </div>
     <strong>{protocols.length}</strong>
+    <small>{tx('All personal records', 'تمام سوابق شخصی')}</small>
   </div>
 </div>
       <section className="health-card health-log-section">
