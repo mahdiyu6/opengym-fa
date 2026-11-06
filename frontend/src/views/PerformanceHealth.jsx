@@ -130,10 +130,12 @@ const emptyForm = {
   notes: ''
 }
 
-const makeCompound = (name, category) => ({
+const makeCompound = (name, category, subcategory = '') => ({
   id: 'hc-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
   name,
   category,
+  subcategory,
+  color: getCompoundColor(name),
   amount: '',
   unit: 'mg',
   concentration: '',
