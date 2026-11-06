@@ -1691,3 +1691,74 @@
   font-weight: 700;
   color: var(--label);
 }
+
+
+/* Shared Gregorian / Jalali date picker */
+.health-date-picker {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.health-date-picker-trigger {
+  width: 100%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--label);
+  font: inherit;
+  font-size: 13px;
+  text-align: start;
+  cursor: pointer;
+}
+
+.health-date-picker-icon {
+  color: var(--label-2);
+  flex-shrink: 0;
+}
+
+.health-date-picker-popover {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 7px);
+  inset-inline: 0;
+  min-width: 280px;
+  padding: 12px;
+  border: 1px solid var(--sep);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.health-date-picker-popover .health-calendar-navigation {
+  margin: 0 0 12px;
+}
+
+.health-date-picker-popover .health-calendar-grid {
+  gap: 4px;
+}
+
+.health-date-picker-popover .health-calendar-day {
+  min-height: 38px;
+}
+
+.health-date-picker-popover .health-calendar-day:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.health-date-picker-actions {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--sep);
+}
