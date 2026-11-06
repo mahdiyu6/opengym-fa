@@ -13,10 +13,12 @@ const emptyForm = () => ({
   date: todayISO(),
   weight: '',
   waist: '',
+  chest: '',
+  arm: '',
+  leg: '',
   sleep: '',
-  sleepQuality: '3',
+  stress: '3',
   energy: '3',
-  mood: '3',
   training: '',
   notes: ''
 })
@@ -98,6 +100,91 @@ export default function HealthCheckInHistory() {
     return item ? tx(item[0], item[1]) : value
   }
 
+  function scaleLabel(value, type) {
+    const labels = type === 'stress'
+      ? {
+          1: ['Very low', 'خیلی کم'],
+          2: ['Low', 'کم'],
+          3: ['Moderate', 'متوسط'],
+          4: ['High', 'زیاد'],
+          5: ['Very high', 'خیلی زیاد']
+        }
+      : {
+          1: ['Very low', 'خیلی ضعیف'],
+          2: ['Low', 'ضعیف'],
+          3: ['Moderate', 'متوسط'],
+          4: ['Good', 'خوب'],
+          5: ['Very good', 'خیلی خوب']
+        }
+
+    const item = labels[value]
+    return item ? tx(item[0], item[1]) : value
+  }
+
+  function MeasurementField({ field, title, subtitle, unit = 'cm', step = '0.1' }) {
+    return (
+      <label className="health-checkin-measurement">
+        <span className="health-checkin-field-title">{title}</span>
+        <small>{subtitle}</small>
+        <div className="health-checkin-input-wrap">
+          <input
+            type="number"
+            inputMode="decimal"
+            min="0"
+            step={step}
+            value={form[field]}
+            onChange={e => change(field, e.target.value)}
+            placeholder="—"
+          />
+          <span>{unit}</span>
+        </div>
+      </label>
+    )
+  }
+
+  function ScaleField({ field, title, subtitle, type = 'normal' }) {
+    const value = Number(form[field] || 3)
+
+    return (
+      <div className="health-checkin-scale">
+        <div className="health-checkin-scale-heading">
+          <div>
+            <strong>{title}</strong>
+            <small>{subtitle}</small>
+          </div>
+          <span className="health-checkin-scale-value">{value}/5</span>
+        </div>
+
+        <div className="health-checkin-scale-options">
+          {[1, 2, 3, 4, 5].map(number => (
+            <button
+              key={number}
+              type="button"
+              className={value === number ? 'active' : ''}
+              onClick={() => change(field, String(number))}
+              aria-pressed={value === number}
+            >
+              {number}
+            </button>
+          ))}
+        </div>
+
+        <div className="health-checkin-scale-caption">
+          <span>
+            {type === 'stress'
+              ? tx('Very low', 'خیلی کم')
+              : tx('Very low', 'خیلی ضعیف')}
+          </span>
+          <span>
+            {type === 'stress'
+              ? tx('Very high', 'خیلی زیاد')
+              : tx('Very good', 'خیلی خوب')}
+          </span>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <main className="health-page" dir={fa ? 'rtl' : 'ltr'}>
       <button
@@ -107,128 +194,166 @@ export default function HealthCheckInHistory() {
         {tx('‹ Back to Health', '‹ بازگشت به سلامت')}
       </button>
 
-      <header className="health-header">
+      <header className="health-header health-checkin-header">
         <div>
+          <span className="health-checkin-eyebrow">
+            {tx('PERSONAL TRACKING', 'پایش شخصی')}
+          </span>
           <h1>{tx('Weekly Check-in', 'ارزیابی هفتگی')}</h1>
           <p className="health-muted">
             {tx(
-              'Track your personal progress and weekly wellbeing.',
-              'وزن، دور کمر، خواب، انرژی و وضعیت هفتگی خود را ثبت و پیگیری کن.'
+              'Track body measurements, recovery and training progress.',
+              'اندازه‌های بدن، وضعیت ریکاوری و روند تمرین خود را دنبال کن.'
             )}
           </p>
         </div>
+        <div className="health-checkin-header-icon">◉</div>
       </header>
 
       <section className="health-card health-checkin-section">
         <div className="health-picker-heading">
           <h3>{tx('New weekly check-in', 'ثبت ارزیابی جدید')}</h3>
-          <span>
-            {tx('Record your current status', 'وضعیت فعلی خود را ثبت کن')}
-          </span>
+          <span>{tx('Your weekly snapshot', 'نمای کلی وضعیت این هفته')}</span>
         </div>
 
         <form className="health-checkin-form" onSubmit={saveCheckIn}>
-          <label>
-            {tx('Assessment date', 'تاریخ ارزیابی')}
-            <HealthDatePicker
-              value={form.date}
-              onChange={value => change('date', value)}
-            />
-          </label>
-
-          <div className="health-checkin-grid">
+          <div className="health-checkin-date-block">
             <label>
-              {tx('Body weight (kg)', 'وزن بدن (کیلوگرم)')}
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                value={form.weight}
-                onChange={e => change('weight', e.target.value)}
-                placeholder="—"
-              />
-            </label>
-
-            <label>
-              {tx('Waist (cm)', 'دور کمر (سانتی‌متر)')}
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                value={form.waist}
-                onChange={e => change('waist', e.target.value)}
-                placeholder="—"
-              />
-            </label>
-
-            <label>
-              {tx('Average sleep (hours)', 'میانگین خواب (ساعت)')}
-              <input
-                type="number"
-                step="0.5"
-                min="0"
-                max="24"
-                value={form.sleep}
-                onChange={e => change('sleep', e.target.value)}
-                placeholder="—"
+              {tx('Assessment date', 'تاریخ ارزیابی')}
+              <HealthDatePicker
+                value={form.date}
+                onChange={value => change('date', value)}
               />
             </label>
           </div>
 
-          {[
-            ['sleepQuality', 'Sleep quality', 'کیفیت خواب'],
-            ['energy', 'Energy level', 'سطح انرژی'],
-            ['mood', 'General well-being', 'حال عمومی']
-          ].map(([key, en, faText]) => (
-            <label key={key}>
-              {tx(en, faText)}
+          <section className="health-checkin-group">
+            <div className="health-checkin-group-heading">
+              <span className="health-checkin-group-icon">↗</span>
+              <div>
+                <h4>{tx('Body measurements', 'اندازه‌گیری بدن')}</h4>
+                <p>{tx('Track physical changes over time', 'تغییرات اندازه‌های بدن را دنبال کن')}</p>
+              </div>
+            </div>
+
+            <div className="health-checkin-grid">
+              <MeasurementField
+                field="weight"
+                title={tx('Body weight', 'وزن بدن')}
+                subtitle={tx('Current weight', 'وزن فعلی')}
+                unit="kg"
+              />
+              <MeasurementField
+                field="waist"
+                title={tx('Waist', 'دور کمر')}
+                subtitle={tx('Waist circumference', 'اندازه دور کمر')}
+              />
+              <MeasurementField
+                field="chest"
+                title={tx('Chest', 'دور سینه')}
+                subtitle={tx('Chest circumference', 'اندازه دور سینه')}
+              />
+              <MeasurementField
+                field="arm"
+                title={tx('Arm', 'دور بازو')}
+                subtitle={tx('Arm circumference', 'اندازه دور بازو')}
+              />
+              <MeasurementField
+                field="leg"
+                title={tx('Leg', 'دور پا')}
+                subtitle={tx('Leg circumference', 'اندازه دور پا')}
+              />
+            </div>
+          </section>
+
+          <section className="health-checkin-group">
+            <div className="health-checkin-group-heading">
+              <span className="health-checkin-group-icon">◷</span>
+              <div>
+                <h4>{tx('Recovery & stress', 'ریکاوری و استرس')}</h4>
+                <p>{tx('Monitor sleep, stress and energy', 'خواب، استرس و انرژی خود را ارزیابی کن')}</p>
+              </div>
+            </div>
+
+            <div className="health-checkin-grid">
+              <MeasurementField
+                field="sleep"
+                title={tx('Average sleep', 'میانگین خواب')}
+                subtitle={tx('Hours per night', 'ساعت در شب')}
+                unit="h"
+                step="0.5"
+              />
+            </div>
+
+            <div className="health-checkin-scales">
+              <ScaleField
+                field="stress"
+                title={tx('Stress level', 'سطح استرس')}
+                subtitle={tx('How stressed did you feel this week?', 'این هفته چقدر استرس داشتی؟')}
+                type="stress"
+              />
+              <ScaleField
+                field="energy"
+                title={tx('Energy level', 'سطح انرژی')}
+                subtitle={tx('Your overall energy this week', 'میزان انرژی کلی این هفته')}
+              />
+            </div>
+          </section>
+
+          <section className="health-checkin-group">
+            <div className="health-checkin-group-heading">
+              <span className="health-checkin-group-icon">⌁</span>
+              <div>
+                <h4>{tx('Training', 'تمرین')}</h4>
+                <p>{tx('Your overall training performance', 'وضعیت کلی عملکرد تمرینی')}</p>
+              </div>
+            </div>
+
+            <label>
+              {tx('Training status', 'وضعیت تمرین')}
               <select
-                value={form[key]}
-                onChange={e => change(key, e.target.value)}
+                value={form.training}
+                onChange={e => change('training', e.target.value)}
               >
-                <option value="1">{tx('1 - Very low', '۱ - خیلی ضعیف')}</option>
-                <option value="2">{tx('2 - Low', '۲ - ضعیف')}</option>
-                <option value="3">{tx('3 - متوسط', '۳ - متوسط')}</option>
-                <option value="4">{tx('4 - Good', '۴ - خوب')}</option>
-                <option value="5">{tx('5 - Very good', '۵ - خیلی خوب')}</option>
+                <option value="">{tx('Not specified', 'مشخص نشده')}</option>
+                <option value="excellent">{tx('Excellent', 'عالی')}</option>
+                <option value="good">{tx('Good', 'خوب')}</option>
+                <option value="average">{tx('Average', 'متوسط')}</option>
+                <option value="poor">{tx('Poor', 'ضعیف')}</option>
               </select>
             </label>
-          ))}
+          </section>
 
-          <label>
-            {tx('Training status', 'وضعیت تمرین')}
-            <select
-              value={form.training}
-              onChange={e => change('training', e.target.value)}
-            >
-              <option value="">{tx('Not specified', 'مشخص نشده')}</option>
-              <option value="excellent">{tx('Excellent', 'عالی')}</option>
-              <option value="good">{tx('Good', 'خوب')}</option>
-              <option value="average">{tx('Average', 'متوسط')}</option>
-              <option value="poor">{tx('Poor', 'ضعیف')}</option>
-            </select>
-          </label>
+          <section className="health-checkin-group health-checkin-notes-group">
+            <div className="health-checkin-group-heading">
+              <span className="health-checkin-group-icon">✎</span>
+              <div>
+                <h4>{tx('Weekly notes', 'یادداشت هفتگی')}</h4>
+                <p>{tx('Anything worth remembering?', 'نکته‌ای برای ثبت و یادآوری داری؟')}</p>
+              </div>
+            </div>
 
-          <label>
-            {tx('Notes', 'توضیحات')}
-            <textarea
-              rows="3"
-              value={form.notes}
-              onChange={e => change('notes', e.target.value)}
-              placeholder={tx(
-                'Any observations about this week...',
-                'هر نکته‌ای درباره وضعیت این هفته...'
-              )}
-            />
-          </label>
+            <label>
+              {tx('Notes', 'توضیحات')}
+              <textarea
+                rows="3"
+                value={form.notes}
+                onChange={e => change('notes', e.target.value)}
+                placeholder={tx(
+                  'Any observations about this week...',
+                  'هر نکته‌ای درباره وضعیت این هفته...'
+                )}
+              />
+            </label>
+          </section>
 
-          <button className="health-primary" type="submit">
+          <button className="health-primary health-checkin-submit" type="submit">
             {tx('Save weekly check-in', 'ذخیره ارزیابی هفتگی')}
           </button>
         </form>
       </section>
 
-      <section className="health-card">
+      <section className="health-card health-checkin-history-card">
         <div className="health-history-title-row">
           <div>
             <h3>{tx('Check-in history', 'تاریخچه ارزیابی‌ها')}</h3>
@@ -239,14 +364,21 @@ export default function HealthCheckInHistory() {
         </div>
 
         {visible.length === 0 ? (
-          <p className="health-muted">
-            {tx('No weekly check-ins yet.', 'هنوز ارزیابی هفتگی ثبت نشده است.')}
-          </p>
+          <div className="health-checkin-empty">
+            <span>◷</span>
+            <strong>{tx('No weekly check-ins yet', 'هنوز ارزیابی هفتگی ثبت نشده است')}</strong>
+            <p>{tx('Your saved check-ins will appear here.', 'ارزیابی‌های ذخیره‌شده در اینجا نمایش داده می‌شوند.')}</p>
+          </div>
         ) : (
           visible.map(entry => (
             <article className="health-checkin-entry" key={entry.id}>
               <div className="health-checkin-entry-heading">
-                <strong>{fmtDateFull(entry.date, calendar)}</strong>
+                <div>
+                  <span className="health-checkin-entry-label">
+                    {tx('WEEKLY RECORD', 'ثبت هفتگی')}
+                  </span>
+                  <strong>{fmtDateFull(entry.date, calendar)}</strong>
+                </div>
 
                 <button
                   type="button"
@@ -258,29 +390,45 @@ export default function HealthCheckInHistory() {
               </div>
 
               <div className="health-checkin-values">
-                {entry.weight && (
-                  <span>{tx('Weight:', 'وزن:')} {entry.weight} kg</span>
+                {[
+                  ['weight', 'Weight', 'وزن', 'kg'],
+                  ['waist', 'Waist', 'دور کمر', 'cm'],
+                  ['chest', 'Chest', 'دور سینه', 'cm'],
+                  ['arm', 'Arm', 'دور بازو', 'cm'],
+                  ['leg', 'Leg', 'دور پا', 'cm'],
+                  ['sleep', 'Sleep', 'خواب', 'h']
+                ].map(([key, en, faText, unit]) => (
+                  entry[key] !== undefined && entry[key] !== '' && (
+                    <span key={key}>
+                      {tx(en, faText)}: {entry[key]} {unit}
+                    </span>
+                  )
+                ))}
+
+                {entry.stress !== undefined && (
+                  <span>
+                    {tx('Stress:', 'استرس:')} {scaleLabel(entry.stress, 'stress')}
+                    {' '}({entry.stress}/5)
+                  </span>
                 )}
 
-                {entry.waist && (
-                  <span>{tx('Waist:', 'دور کمر:')} {entry.waist} cm</span>
+                {entry.sleepQuality !== undefined && (
+                  <span>
+                    {tx('Sleep quality:', 'کیفیت خواب:')} {entry.sleepQuality}/5
+                  </span>
                 )}
 
-                {entry.sleep && (
-                  <span>{tx('Sleep:', 'خواب:')} {entry.sleep} h</span>
+                {entry.energy !== undefined && (
+                  <span>
+                    {tx('Energy:', 'انرژی:')} {entry.energy}/5
+                  </span>
                 )}
 
-                <span>
-                  {tx('Sleep quality:', 'کیفیت خواب:')} {entry.sleepQuality}/5
-                </span>
-
-                <span>
-                  {tx('Energy:', 'انرژی:')} {entry.energy}/5
-                </span>
-
-                <span>
-                  {tx('Well-being:', 'حال عمومی:')} {entry.mood}/5
-                </span>
+                {entry.mood !== undefined && (
+                  <span>
+                    {tx('Well-being:', 'حال عمومی:')} {entry.mood}/5
+                  </span>
+                )}
               </div>
 
               {entry.training && (
