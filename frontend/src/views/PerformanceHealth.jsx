@@ -693,6 +693,8 @@ const compoundCount = protocols.reduce(
                   )
                 )
 
+                const currentWeekday = ((new Date().getDay() + 1) % 7) + 1
+                
                 const nowPosition = Math.max(
                   0,
                   Math.min(
