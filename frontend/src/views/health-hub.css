@@ -3566,9 +3566,9 @@
     grid-column: auto;
   }
 
-  .health-log-history > .health-log-preview-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.health-log-history > .health-log-preview-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 
   .health-log-preview-grid .health-log-entry {
     min-height: 86px;
