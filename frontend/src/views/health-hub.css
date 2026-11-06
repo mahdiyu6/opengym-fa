@@ -3385,3 +3385,203 @@
     font-size: 27px;
   }
 }
+
+/* Performance - modern Daily Log section */
+
+.health-log-section {
+  margin: 20px 0;
+  padding: 18px;
+  border: 1px solid var(--sep);
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--green) 5%, var(--surface)),
+      var(--surface) 55%
+    );
+  overflow: hidden;
+}
+
+.health-log-section > .health-picker-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--sep);
+}
+
+.health-log-section > .health-picker-heading h3 {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.health-log-section > .health-picker-heading span {
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* Form layout */
+
+.health-page .health-log-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px 12px;
+}
+
+.health-page .health-log-form > label,
+.health-page .health-log-form > .health-form-row {
+  min-width: 0;
+}
+
+.health-page .health-log-form > .health-form-row,
+.health-page .health-log-form > button {
+  grid-column: 1 / -1;
+}
+
+.health-page .health-log-form label {
+  gap: 8px;
+  color: var(--label-2);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.health-page .health-log-form input,
+.health-page .health-log-form select {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--sep);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--label);
+  font-size: 13px;
+  transition: border-color 150ms ease;
+}
+
+.health-page .health-log-form input:focus,
+.health-page .health-log-form select:focus {
+  border-color: var(--green);
+  outline: none;
+}
+
+.health-page .health-log-form > .health-form-row {
+  gap: 12px;
+}
+
+.health-page .health-log-form > button {
+  min-height: 47px;
+  margin-top: 2px;
+  border-radius: 13px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* Recent entries */
+
+.health-log-history {
+  margin-top: 24px;
+  padding-top: 19px;
+  border-top: 1px solid var(--sep);
+}
+
+.health-history-title-row {
+  margin-bottom: 14px;
+}
+
+.health-history-title-row h3 {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.health-view-all-link {
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: var(--surface-2);
+  font-size: 10px;
+}
+
+.health-log-history > .health-log-preview-grid {
+  gap: 9px;
+}
+
+.health-log-preview-grid .health-log-entry {
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid var(--sep);
+  border-radius: 14px;
+  background: var(--surface-2);
+  align-items: center;
+  transition: border-color 150ms ease;
+}
+
+.health-log-preview-grid .health-log-entry:active {
+  border-color: var(--green);
+}
+
+.health-log-preview-grid .health-log-entry-content {
+  gap: 7px;
+}
+
+.health-log-preview-grid .health-log-entry .health-log-compound-name strong {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.health-log-preview-grid .health-log-entry small {
+  color: var(--label-3);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.health-log-preview-grid .health-log-entry .health-log-entry-amount {
+  color: var(--label);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.health-log-preview-grid .health-log-entry .health-danger {
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+/* Small screens */
+
+@media (max-width: 520px) {
+  .health-log-section {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .health-page .health-log-form {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 13px;
+  }
+
+  .health-page .health-log-form > .health-form-row,
+  .health-page .health-log-form > button {
+    grid-column: auto;
+  }
+
+  .health-log-history > .health-log-preview-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .health-log-preview-grid .health-log-entry {
+    min-height: 86px;
+  }
+}
+
+@media (max-width: 380px) {
+  .health-log-section > .health-picker-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .health-page .health-log-form > .health-form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
