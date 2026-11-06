@@ -899,6 +899,209 @@ const recentEffects = [...filteredEffects]
           margin-top: 12px;
         }
 
+.health-analytics-effects-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin: 12px 0 18px;
+}
+
+.health-analytics-effects-summary > div {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid var(--sep);
+  border-radius: 13px;
+  background: var(--surface-2);
+}
+
+.health-analytics-effects-summary span {
+  display: block;
+  color: var(--label-3);
+  font-size: 11px;
+}
+
+.health-analytics-effects-summary strong {
+  display: block;
+  margin-top: 7px;
+  color: var(--label);
+  font-size: 23px;
+}
+
+.health-analytics-effects-breakdown {
+  padding: 14px;
+  border: 1px solid var(--sep);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.health-analytics-effects-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+.health-analytics-effects-heading strong {
+  color: var(--label);
+  font-size: 12px;
+}
+
+.health-analytics-effects-heading > span {
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-analytics-effects-bar {
+  display: flex;
+  width: 100%;
+  height: 11px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--bg);
+}
+
+.health-analytics-effects-bar > div {
+  min-width: 2px;
+  transition: width .25s ease;
+}
+
+.health-analytics-effects-bar .mild,
+.health-analytics-effects-legend i.mild {
+  background: #38bdf8;
+}
+
+.health-analytics-effects-bar .moderate,
+.health-analytics-effects-legend i.moderate {
+  background: #f59e0b;
+}
+
+.health-analytics-effects-bar .severe,
+.health-analytics-effects-legend i.severe {
+  background: #ef4444;
+}
+
+.health-analytics-effects-bar .other,
+.health-analytics-effects-legend i.other {
+  background: #94a3b8;
+}
+
+.health-analytics-effects-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin-top: 13px;
+}
+
+.health-analytics-effects-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--label-2);
+  font-size: 10px;
+}
+
+.health-analytics-effects-legend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.health-analytics-effects-legend strong {
+  color: var(--label);
+}
+
+.health-analytics-effects-recent {
+  margin-top: 20px;
+}
+
+.health-analytics-effect-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--sep);
+}
+
+.health-analytics-effect-row > div:first-child {
+  min-width: 0;
+}
+
+.health-analytics-effect-row > div:first-child strong,
+.health-analytics-effect-row > div:first-child small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.health-analytics-effect-row > div:first-child strong {
+  color: var(--label);
+  font-size: 12px;
+}
+
+.health-analytics-effect-row > div:first-child small {
+  margin-top: 5px;
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-analytics-effect-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.health-analytics-effect-tags span {
+  padding: 4px 7px;
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--label-2);
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.health-analytics-effect-tags .severity-mild {
+  color: #38bdf8;
+}
+
+.health-analytics-effect-tags .severity-moderate {
+  color: #d99a28;
+}
+
+.health-analytics-effect-tags .severity-severe {
+  color: #ef4444;
+}
+
+.health-analytics-effect-tags .active {
+  color: var(--orange, #d58b35);
+}
+
+.health-analytics-effect-tags .resolved {
+  color: var(--green);
+}
+
+@media(max-width:600px) {
+  .health-analytics-effects-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .health-analytics-effect-row {
+    align-items: flex-start;
+  }
+}
+
+@media(max-width:380px) {
+  .health-analytics-effect-row {
+    flex-direction: column;
+  }
+
+  .health-analytics-effect-tags {
+    justify-content: flex-start;
+  }
+}
+
 .health-analytics-trend-card {
   min-width: 0;
   overflow: hidden;
