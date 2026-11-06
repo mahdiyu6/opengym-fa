@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { getLang, useLang } from '../lib/i18n.js'
+import { fmtDateFull } from '../lib/format.js'
 import './health-hub.css'
 
 const PAGE_SIZE = 20
@@ -12,6 +13,7 @@ export default function HealthCheckInHistory() {
   const nav = useNavigate()
 
   const checkIns = useStore(s => s.S.healthCheckIns || [])
+  const calendar = useStore(s => s.S?.calendar === 'jalali' ? 'jalali' : 'gregorian')
   const update = useStore(s => s.update)
 
   const [page, setPage] = useState(1)
@@ -91,7 +93,7 @@ export default function HealthCheckInHistory() {
           visible.map(entry => (
             <article className="health-checkin-entry" key={entry.id}>
               <div className="health-checkin-entry-heading">
-                <strong>{entry.date}</strong>
+               <strong>{fmtDateFull(entry.date, calendar)}</strong>
 
                 <button
                   type="button"
