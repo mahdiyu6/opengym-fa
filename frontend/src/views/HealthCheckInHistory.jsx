@@ -237,32 +237,35 @@ export default function HealthCheckInHistory() {
             </div>
 
             <div className="health-checkin-grid">
-              <MeasurementField
-                field="weight"
-                title={tx('Body weight', 'وزن بدن')}
-                subtitle={tx('Current weight', 'وزن فعلی')}
-                unit="kg"
-              />
-              <MeasurementField
-                field="waist"
-                title={tx('Waist', 'دور کمر')}
-                subtitle={tx('Waist circumference', 'اندازه دور کمر')}
-              />
-              <MeasurementField
-                field="chest"
-                title={tx('Chest', 'دور سینه')}
-                subtitle={tx('Chest circumference', 'اندازه دور سینه')}
-              />
-              <MeasurementField
-                field="arm"
-                title={tx('Arm', 'دور بازو')}
-                subtitle={tx('Arm circumference', 'اندازه دور بازو')}
-              />
-              <MeasurementField
-                field="leg"
-                title={tx('Leg', 'دور پا')}
-                subtitle={tx('Leg circumference', 'اندازه دور پا')}
-              />
+{MeasurementField({
+  field: 'weight',
+  title: tx('Body weight', 'وزن بدن'),
+  subtitle: tx('Current weight', 'وزن فعلی'),
+  unit: 'kg'
+})}
+{MeasurementField({
+  field: 'waist',
+  title: tx('Waist', 'دور کمر'),
+  subtitle: tx('Waist circumference', 'اندازه دور کمر')
+})}
+
+{MeasurementField({
+  field: 'chest',
+  title: tx('Chest', 'دور سینه'),
+  subtitle: tx('Chest circumference', 'اندازه دور سینه')
+})}
+
+{MeasurementField({
+  field: 'arm',
+  title: tx('Arm', 'دور بازو'),
+  subtitle: tx('Arm circumference', 'اندازه دور بازو')
+})}
+
+{MeasurementField({
+  field: 'leg',
+  title: tx('Leg', 'دور پا'),
+  subtitle: tx('Leg circumference', 'اندازه دور پا')
+})}
             </div>
           </section>
 
@@ -276,13 +279,13 @@ export default function HealthCheckInHistory() {
             </div>
 
             <div className="health-checkin-grid">
-              <MeasurementField
-                field="sleep"
-                title={tx('Average sleep', 'میانگین خواب')}
-                subtitle={tx('Hours per night', 'ساعت در شب')}
-                unit="h"
-                step="0.5"
-              />
+{MeasurementField({
+  field: 'sleep',
+  title: tx('Average sleep', 'میانگین خواب'),
+  subtitle: tx('Hours per night', 'ساعت در شب'),
+  unit: 'h',
+  step: '0.5'
+})}
             </div>
 
             <div className="health-checkin-scales">
