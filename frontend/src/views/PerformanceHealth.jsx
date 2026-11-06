@@ -785,12 +785,11 @@ const compoundCount = protocols.reduce(
                             })}
                           </div>
 
-                          {showNow && (
-                     {showNow && (
+                      {showNow && (
   <div
     className="health-timeline-now-marker"
     style={{
-      left: `calc(136px + (100% - 136px) * ${nowPosition / 100})`
+      left: `calc(var(--timeline-label-width, 136px) + (100% - var(--timeline-label-width, 136px)) * ${nowPosition / 100})`
     }}
   >
     <span className="health-timeline-marker-week">
@@ -800,7 +799,6 @@ const compoundCount = protocols.reduce(
     <span className="health-timeline-marker-now">NOW</span>
   </div>
 )}
-                          )}
                         </div>
 
 <div className="health-timeline-bottom">
@@ -810,15 +808,6 @@ const compoundCount = protocols.reduce(
     <span className="health-timeline-start-date">
       {fmtDateFull(startDate, calendar)}
     </span>
-
-    {showNow && (
-      <span
-        className="health-timeline-now-label"
-        style={{ left: `${nowPosition}%` }}
-      >
-        NOW
-      </span>
-    )}
 
     <span className="health-timeline-end-date">
       {fmtDateFull(
