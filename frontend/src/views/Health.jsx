@@ -692,16 +692,28 @@ const selectedHistory = selected
             : tx('+ Upload PDF', '+ بارگذاری PDF')}
         </button>
 
-        <input
-          ref={input}
-          type="file"
-          accept="application/pdf,.pdf"
-          hidden
-          onChange={e => {
-            importPdf(e.target.files?.[0])
-            e.target.value = ''
-          }}
-        />
+<input
+  ref={input}
+  type="file"
+  accept="application/pdf,.pdf,image/jpeg,image/png,image/webp"
+  hidden
+  onChange={e => {
+    const file = e.target.files?.[0]
+
+    if (file) {
+      if (
+        file.type === 'application/pdf' ||
+        /\.pdf$/i.test(file.name)
+      ) {
+        importPdf(file)
+      } else {
+        importImage(file)
+      }
+    }
+
+    e.target.value = ''
+  }}
+/>
       </header>
 
       <div className="health-privacy">
