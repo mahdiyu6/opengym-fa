@@ -1375,8 +1375,8 @@ health-analytics-training-summary strong {
         <div>
           <h1>
             {tx(
-              'Analytics & Weekly Review',
-              'تحلیل و مرور هفتگی'
+              'Analytics & Insights',
+              'تحلیل و بینش ها '
             )}
           </h1>
 
