@@ -214,7 +214,7 @@ export default function Health() {
       setDraft({
         id: 'r-' + Date.now(),
         name: file.name,
-        date: parsed.date || new Date().toISOString().slice(0, 10),
+        date: parsed.date || todayISO(),
         items: parsed.items,
         rawText: text.slice(0, 30000),
         warnings: parsed.warnings
@@ -280,7 +280,7 @@ export default function Health() {
     const r = {
       id: draft.id,
       name: draft.name,
-      date: draft.date || new Date().toISOString().slice(0, 10),
+      date: draft.date || todayISO(),
       createdAt: new Date().toISOString(),
       items: draft.items.map(x => ({
         ...x,
@@ -633,11 +633,13 @@ const selectedHistory = selected
 
           <label>
             {tx('Report date ', 'تاریخ گزارش ')}
-            <input
-              type="date"
-              value={draft.date}
-              onChange={e => setDraft({ ...draft, date: e.target.value })}
-            />
+<HealthDatePicker
+  value={draft.date}
+  onChange={value => setDraft(old => ({
+    ...old,
+    date: value
+  }))}
+/>
           </label>
 
           <p className="health-warning">
