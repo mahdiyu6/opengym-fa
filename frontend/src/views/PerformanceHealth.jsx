@@ -1177,11 +1177,16 @@ const compoundCount = protocols.reduce(
 
             {previewCompounds.length > 0 ? (
               <div className="health-protocol-chips">
-                {previewCompounds.map(c => (
-                  <span key={c.id || c.name}>
-                    {c.name}
-                  </span>
-                ))}
+{previewCompounds.map(c => (
+  <span
+    key={c.id || c.name}
+    className="health-protocol-compound-chip"
+    style={{ '--compound-color': getCompoundColor(c.name) }}
+  >
+    <i />
+    {c.name}
+  </span>
+))}
                 {remainingCount > 0 && (
                   <span className="health-protocol-more">
                     +{remainingCount}
