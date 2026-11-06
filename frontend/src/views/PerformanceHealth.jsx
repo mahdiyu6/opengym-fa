@@ -889,26 +889,54 @@ const compoundCount = protocols.reduce(
             </div>
             <input value={query} onChange={e => setQuery(e.target.value)}
               placeholder={tx('Search compounds and supplements…', 'جست‌وجوی ترکیبات و مکمل‌ها…')} />
-            <div className="health-catalog-groups">
-              {filteredCatalog.map(group => (
-                <div className="health-catalog-group" key={group.category}>
-                  <h4>{fa ? group.fa : group.category}</h4>
-                  <div className="health-catalog-items">
-                    {group.items.map(name => {
-                      const selected = form.compounds.some(c => c.name.toLowerCase() === name.toLowerCase())
-                      return <button type="button" key={name}
-                        className={'health-catalog-chip' + (selected ? ' selected' : '')}
-                        onClick={() => selected
-                          ? change('compounds', form.compounds.filter(c => c.name.toLowerCase() !== name.toLowerCase()))
-                          : addCompound(name, group.category)}>
-                        {selected ? '✓ ' : '+ '}{name}
-                      </button>
-                    })}
-                  </div>
-                </div>
-              ))}
-              {!filteredCatalog.length && <p className="health-muted">{tx('No catalog match. Add it below as a custom item.', 'موردی پیدا نشد؛ می‌توانید آن را به‌صورت دستی اضافه کنید.')}</p>}
-            </div>
+<div className="health-catalog-groups">
+  {filteredCatalog.map(group => (
+    <div className="health-catalog-group" key={group.category}>
+      <h4>{fa ? group.fa : group.category}</h4>
+
+      {group.groups.map(subgroup => (
+        <div className="health-catalog-subgroup" key={subgroup.name || group.category}>
+          {subgroup.name && <h5>{subgroup.name}</h5>}
+
+          <div className="health-catalog-items">
+            {subgroup.items.map(name => {
+              const selected = form.compounds.some(
+                c => c.name.toLowerCase() === name.toLowerCase()
+              )
+
+              return (
+                <button
+                  type="button"
+                  key={name}
+                  className={'health-catalog-chip' + (selected ? ' selected' : '')}
+                  style={{ '--compound-color': getCompoundColor(name) }}
+                  onClick={() => selected
+                    ? change('compounds', form.compounds.filter(
+                        c => c.name.toLowerCase() !== name.toLowerCase()
+                      ))
+                    : addCompound(name, group.category, subgroup.name)
+                  }
+                >
+                  <span className="health-catalog-color-dot" />
+                  {name}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  ))}
+
+  {!filteredCatalog.length && (
+    <p className="health-muted">
+      {tx(
+        'No catalog match. Add it below as a custom item.',
+        'موردی پیدا نشد؛ می‌توانید آن را به‌صورت دستی اضافه کنید.'
+      )}
+    </p>
+  )}
+</div>
             <div className="health-custom-compound">
               <input value={customName} onChange={e => setCustomName(e.target.value)}
                 placeholder={tx('Add a custom compound or supplement', 'افزودن ترکیب یا مکمل دلخواه')} />
