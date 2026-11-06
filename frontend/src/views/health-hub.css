@@ -1371,3 +1371,57 @@
     font-size: 11px;
   }
 }
+
+/* PeakDose-style compound catalog */
+
+.health-catalog-group h4 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  margin: 0 0 12px;
+}
+
+.health-catalog-subgroup {
+  margin-bottom: 14px;
+}
+
+.health-catalog-subgroup h5 {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--label-2);
+  margin: 0 0 8px;
+}
+
+.health-catalog-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid color-mix(in srgb, var(--compound-color) 45%, var(--sep));
+  border-radius: 18px;
+  padding: 7px 10px;
+  background: color-mix(in srgb, var(--compound-color) 10%, var(--surface));
+  color: var(--compound-color);
+  font: inherit;
+  font-size: 11px;
+  text-align: start;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.health-catalog-chip.selected {
+  border-color: var(--compound-color);
+  background: color-mix(in srgb, var(--compound-color) 20%, var(--surface));
+  color: var(--compound-color);
+  font-weight: 700;
+}
+
+.health-catalog-color-dot {
+  width: 7px;
+  height: 7px;
+  min-width: 7px;
+  border-radius: 50%;
+  background: var(--compound-color);
+}
+
+.health-catalog-chip:active {
+  transform: scale(0.97);
+}
