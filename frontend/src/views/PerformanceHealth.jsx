@@ -1170,37 +1170,81 @@ const compoundCount = protocols.reduce(
           </div>
 
           <div className="health-protocol-compound-preview">
-            <div className="health-protocol-preview-heading">
-              <strong>{tx('Included compounds', 'ترکیبات این سابقه')}</strong>
-              <span>{compoundList.length}</span>
+  <div className="health-protocol-preview-heading">
+    <strong>{tx('Compound details', 'جزئیات ترکیبات')}</strong>
+    <span>{compoundList.length}</span>
+  </div>
+
+  {compoundList.length > 0 ? (
+    <div className="health-protocol-compound-list">
+      {compoundList.map(c => {
+        const frequency = {
+          daily: tx('Daily', 'روزانه'),
+          every_other_day: tx('Every other day', 'یک روز در میان'),
+          selected_days: tx('Selected days', 'روزهای انتخابی')
+        }[c.frequency] || tx('Not specified', 'مشخص نشده')
+
+        const amountBasis = c.amountBasis === 'per_dose'
+          ? tx('Per dose', 'در هر نوبت')
+          : tx('Per week', 'در هفته')
+
+        const dayNames = {
+          Mon: 'دوشنبه',
+          Tue: 'سه‌شنبه',
+          Wed: 'چهارشنبه',
+          Thu: 'پنجشنبه',
+          Fri: 'جمعه',
+          Sat: 'شنبه',
+          Sun: 'یکشنبه'
+        }
+
+        return (
+          <article
+            className="health-protocol-compound-row"
+            key={c.id || c.name}
+            style={{ '--compound-color': getCompoundColor(c.name) }}
+          >
+            <div className="health-protocol-compound-name">
+              <span />
+              <div>
+                <strong>{c.name}</strong>
+                <small>{c.subcategory || c.category || tx('Custom item', 'مورد دلخواه')}</small>
+              </div>
             </div>
 
-            {previewCompounds.length > 0 ? (
-              <div className="health-protocol-chips">
-{previewCompounds.map(c => (
-  <span
-    key={c.id || c.name}
-    className="health-protocol-compound-chip"
-    style={{ '--compound-color': getCompoundColor(c.name) }}
-  >
-    <i />
-    {c.name}
-  </span>
-))}
-                {remainingCount > 0 && (
-                  <span className="health-protocol-more">
-                    +{remainingCount}
-                  </span>
+            <div className="health-protocol-compound-meta">
+              <div>
+                <small>{tx('Recorded amount', 'مقدار ثبت‌شده')}</small>
+                <strong>
+                  {c.amount
+                    ? `${c.amount} ${c.unit || ''}`
+                    : tx('Not recorded', 'ثبت نشده')}
+                </strong>
+                {c.amount && <small>{amountBasis}</small>}
+              </div>
+
+              <div>
+                <small>{tx('Frequency', 'تناوب')}</small>
+                <strong>{frequency}</strong>
+                {c.frequency === 'selected_days' && (
+                  <small>
+                    {(c.days || []).map(day =>
+                      fa ? dayNames[day] || day : day
+                    ).join('، ') || '—'}
+                  </small>
                 )}
               </div>
-            ) : (
-              <p className="health-muted">
-                {item.compounds && !Array.isArray(item.compounds)
-                  ? item.compounds
-                  : tx('No compounds added.', 'ترکیبی اضافه نشده است.')}
-              </p>
-            )}
-          </div>
+            </div>
+          </article>
+        )
+      })}
+    </div>
+  ) : (
+    <p className="health-muted">
+      {tx('No compounds added.', 'ترکیبی اضافه نشده است.')}
+    </p>
+  )}
+</div>
 
           {item.notes && (
             <p className="health-protocol-overview-notes">
