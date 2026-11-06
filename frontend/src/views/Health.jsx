@@ -846,52 +846,97 @@ const selectedHistory = selected
         />
       </label>
 
-      {/* Saved results */}
-      {!Object.keys(groups).length ? (
-        <section className="health-empty">
-          <h2>{tx('No lab tests yet', 'هنوز آزمایشی ثبت نشده')}</h2>
+   {/* Saved results */}
+{!reports.length ? (
+  <section className="health-empty">
+    <h2>{tx('No lab tests yet', 'هنوز آزمایشی ثبت نشده')}</h2>
 
-          <p>
-            {tx(
-             'Select a PDF or image. Results are saved only after review.',
-'یک فایل PDF یا تصویر انتخاب کن؛ نتایج فقط پس از بازبینی ذخیره می‌شوند.'
-            )}
-          </p>
-
-          <button
-            className="health-primary"
-            onClick={() => input.current?.click()}
-          >
-         tx('Choose file', 'انتخاب فایل')
-          </button>
-        </section>
-      ) : (
-        Object.entries(groups).map(([date, items]) => (
-          <section className="health-group" key={date}>
-            <h2>{fmtDateFull(date, calendar)}</h2>
-
-            <div className="health-list">
-              {items.map(x => (
-                <button
-                  className="health-item"
-                  key={x.itemKey}
-                  onClick={() => setSelected(x)}
-                >
-                  <span className={'health-dot ' + statusOf(x)} />
-
-                  <b className="health-item-name">{x.name}</b>
-
-                  <span className="health-item-value">
-                    {x.value} {x.unit}
-                  </span>
-
-                  <span>›</span>
-                </button>
-              ))}
-            </div>
-          </section>
-        ))
+    <p>
+      {tx(
+        'Select a PDF or image. Results are saved only after review.',
+        'یک فایل PDF یا تصویر انتخاب کن؛ نتایج فقط پس از بازبینی ذخیره می‌شوند.'
       )}
+    </p>
+
+    <button
+      className="health-primary"
+      onClick={() => input.current?.click()}
+    >
+      {tx('Choose file', 'انتخاب فایل')}
+    </button>
+  </section>
+) : (
+  <section className="health-report-list">
+    {reports.map(r => {
+      const isExpanded = expandedReportId === r.id
+
+      return (
+        <section className="health-report-card" key={r.id}>
+          <div className="health-report-header">
+            <button
+              className="health-report-toggle"
+              onClick={() =>
+                setExpandedReportId(isExpanded ? null : r.id)
+              }
+              aria-expanded={isExpanded}
+            >
+              <span className="health-report-date">
+                {fmtDateFull(r.date, calendar)}
+              </span>
+
+              <span className="health-report-count">
+                {r.items.length} {tx('tests', 'شاخص')}
+              </span>
+
+              <span className="health-report-chevron">
+                {isExpanded ? '⌃' : '⌄'}
+              </span>
+            </button>
+
+            <button
+              className="health-danger"
+              onClick={() => remove(r.id)}
+            >
+              {tx('Delete', 'حذف')}
+            </button>
+          </div>
+
+          {isExpanded && (
+            <div className="health-list">
+              {(r.items || []).map((item, index) => {
+                const x = {
+                  ...item,
+                  reportId: r.id,
+                  reportDate: r.date,
+                  reportName: r.name,
+                  itemKey: r.id + '-' + index
+                }
+
+                return (
+                  <button
+                    className="health-item"
+                    key={x.itemKey}
+                    onClick={() => setSelected(x)}
+                  >
+                    <span className={'health-dot ' + statusOf(x)} />
+
+                    <b className="health-item-name">{x.name}</b>
+
+                    <span className="health-item-value">
+                      {x.value} {x.unit}
+                    </span>
+
+                    <span>›</span>
+                  </button>
+                )
+              })}
+            </div>
+          )}
+        </section>
+      )
+    })}
+  </section>
+)}
 
       {/* Saved reports */}
       {reports.length > 0 && (
