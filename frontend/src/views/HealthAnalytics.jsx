@@ -452,46 +452,57 @@ export default function HealthAnalytics() {
   const current = latest[0]
   const previous = latest[1]
 
-
-  const metrics = [
-    {
-      key: 'weight',
-      title: tx('Body weight', 'وزن بدن'),
-      unit: 'kg',
-      accent: '#38bdf8'
-    },
-    {
-      key: 'waist',
-      title: tx('Waist', 'دور کمر'),
-      unit: 'cm',
-      accent: '#f59e0b'
-    },
-    {
-      key: 'sleep',
-      title: tx('Average sleep', 'میانگین خواب'),
-      unit: 'h',
-      accent: '#a78bfa'
-    },
-    {
-      key: 'sleepQuality',
-      title: tx('Sleep quality', 'کیفیت خواب'),
-      unit: '/5',
-      accent: '#2dd4bf'
-    },
-    {
-      key: 'energy',
-      title: tx('Energy', 'انرژی'),
-      unit: '/5',
-      accent: '#facc15'
-    },
-    {
-      key: 'mood',
-      title: tx('Well-being', 'حال عمومی'),
-      unit: '/5',
-      accent: '#fb7185'
-    }
-  ]
-
+ const metrics = [
+  {
+    key: 'weight',
+    title: tx('Body weight', 'وزن بدن'),
+    unit: 'kg',
+    accent: '#38bdf8'
+  },
+  {
+    key: 'waist',
+    title: tx('Waist', 'دور کمر'),
+    unit: 'cm',
+    accent: '#f59e0b'
+  },
+  {
+    key: 'chest',
+    title: tx('Chest circumference', 'دور سینه'),
+    unit: 'cm',
+    accent: '#fb923c'
+  },
+  {
+    key: 'arm',
+    title: tx('Arm circumference', 'دور بازو'),
+    unit: 'cm',
+    accent: '#a78bfa'
+  },
+  {
+    key: 'leg',
+    title: tx('Leg circumference', 'دور پا'),
+    unit: 'cm',
+    accent: '#2dd4bf'
+  },
+  {
+    key: 'sleep',
+    title: tx('Average sleep', 'میانگین خواب'),
+    unit: 'h',
+    accent: '#818cf8'
+  },
+  {
+    key: 'stress',
+    title: tx('Stress level', 'سطح استرس'),
+    unit: '/5',
+    accent: '#f87171'
+  },
+  {
+    key: 'energy',
+    title: tx('Energy', 'انرژی'),
+    unit: '/5',
+    accent: '#facc15'
+  }
+]
+ 
 const weeklyLogCounts = useMemo(() => {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -561,31 +572,35 @@ const recentEffects = [...filteredEffects]
     protocols.filter(item => item.status === 'active').length
 
   const exportCsv = () => {
-    const headers = [
-      'date',
-      'weight_kg',
-      'waist_cm',
-      'sleep_hours',
-      'sleep_quality',
-      'energy',
-      'wellbeing',
-      'training',
-      'notes'
-    ]
+const headers = [
+  'date',
+  'weight_kg',
+  'waist_cm',
+  'chest_cm',
+  'arm_cm',
+  'leg_cm',
+  'sleep_hours',
+  'stress',
+  'energy',
+  'training',
+  'notes'
+]
 
     const rows = filteredCheckIns.map(item =>
       headers.map(key => {
-        const value = ({
-          date: item.date,
-          weight_kg: item.weight,
-          waist_cm: item.waist,
-          sleep_hours: item.sleep,
-          sleep_quality: item.sleepQuality,
-          energy: item.energy,
-          wellbeing: item.mood,
-          training: item.training,
-          notes: item.notes
-        })[key] ?? ''
+const value = ({
+  date: item.date,
+  weight_kg: item.weight,
+  waist_cm: item.waist,
+  chest_cm: item.chest,
+  arm_cm: item.arm,
+  leg_cm: item.leg,
+  sleep_hours: item.sleep,
+  stress: item.stress,
+  energy: item.energy,
+  training: item.training,
+  notes: item.notes
+})[key] ?? ''
 
         return `"${String(value).replaceAll('"', '""')}"`
       })
@@ -1445,56 +1460,71 @@ health-analytics-training-summary strong {
                 : ''}
             </p>
 
-            <div className="health-analytics-review-grid">
-              <ReviewValue
-                label={tx('Body weight', 'وزن بدن')}
-                current={current.weight}
-                previous={previous?.weight}
-                unit="kg"
-                fa={fa}
-              />
+<div className="health-analytics-review-grid">
+  <ReviewValue
+    label={tx('Body weight', 'وزن بدن')}
+    current={current.weight}
+    previous={previous?.weight}
+    unit="kg"
+    fa={fa}
+  />
 
-              <ReviewValue
-                label={tx('Waist', 'دور کمر')}
-                current={current.waist}
-                previous={previous?.waist}
-                unit="cm"
-                lowerIsBetter
-                fa={fa}
-              />
+  <ReviewValue
+    label={tx('Waist', 'دور کمر')}
+    current={current.waist}
+    previous={previous?.waist}
+    unit="cm"
+    fa={fa}
+  />
 
-              <ReviewValue
-                label={tx('Average sleep', 'میانگین خواب')}
-                current={current.sleep}
-                previous={previous?.sleep}
-                unit="h"
-                fa={fa}
-              />
+  <ReviewValue
+    label={tx('Chest', 'دور سینه')}
+    current={current.chest}
+    previous={previous?.chest}
+    unit="cm"
+    fa={fa}
+  />
 
-              <ReviewValue
-                label={tx('Sleep quality', 'کیفیت خواب')}
-                current={current.sleepQuality}
-                previous={previous?.sleepQuality}
-                unit="/5"
-                fa={fa}
-              />
+  <ReviewValue
+    label={tx('Arm', 'دور بازو')}
+    current={current.arm}
+    previous={previous?.arm}
+    unit="cm"
+    fa={fa}
+  />
 
-              <ReviewValue
-                label={tx('Energy', 'انرژی')}
-                current={current.energy}
-                previous={previous?.energy}
-                unit="/5"
-                fa={fa}
-              />
+  <ReviewValue
+    label={tx('Leg', 'دور پا')}
+    current={current.leg}
+    previous={previous?.leg}
+    unit="cm"
+    fa={fa}
+  />
 
-              <ReviewValue
-                label={tx('Well-being', 'حال عمومی')}
-                current={current.mood}
-                previous={previous?.mood}
-                unit="/5"
-                fa={fa}
-              />
-            </div>
+  <ReviewValue
+    label={tx('Average sleep', 'میانگین خواب')}
+    current={current.sleep}
+    previous={previous?.sleep}
+    unit="h"
+    fa={fa}
+  />
+
+  <ReviewValue
+    label={tx('Stress', 'استرس')}
+    current={current.stress}
+    previous={previous?.stress}
+    unit="/5"
+    fa={fa}
+  />
+
+  <ReviewValue
+    label={tx('Energy', 'انرژی')}
+    current={current.energy}
+    previous={previous?.energy}
+    unit="/5"
+    fa={fa}
+  />
+</div>
 
             {current.training && (
               <p className="health-muted health-analytics-note">
