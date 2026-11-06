@@ -1762,3 +1762,284 @@
   padding-top: 10px;
   border-top: 1px solid var(--sep);
 }
+
+
+/* =========================================
+   Protocol Timeline
+========================================= */
+
+.health-timeline-section {
+  margin: 28px 0;
+}
+
+.health-timeline-count {
+  min-width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 9px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--label);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.health-timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.health-timeline-card {
+  padding: 17px;
+  overflow: hidden;
+}
+
+.health-timeline-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.health-timeline-card-header h3 {
+  margin: 0 0 8px;
+  color: var(--label);
+  font-size: 16px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.health-timeline-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.health-timeline-status.active {
+  color: #16a36a;
+  background: rgba(22, 163, 106, 0.11);
+}
+
+.health-timeline-status.completed {
+  color: #8b7bd8;
+  background: rgba(139, 123, 216, 0.12);
+}
+
+.health-timeline-period {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--label-2);
+  font-size: 11px;
+  text-align: end;
+}
+
+.health-timeline-compounds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--sep);
+}
+
+.health-timeline-compound {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 6px 9px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--compound-color) 28%,
+    transparent
+  );
+  border-radius: 8px;
+  background: color-mix(
+    in srgb,
+    var(--compound-color) 9%,
+    transparent
+  );
+  color: var(--compound-color);
+  font-size: 10px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.health-timeline-compound i {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--compound-color);
+}
+
+.health-timeline-events {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 17px;
+  padding-inline-start: 5px;
+}
+
+.health-timeline-event {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+  padding-bottom: 19px;
+}
+
+.health-timeline-event:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  bottom: 0;
+  inset-inline-start: 5px;
+  width: 1px;
+  background: var(--sep);
+}
+
+.health-timeline-event-marker {
+  position: relative;
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+  margin-top: 3px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.health-timeline-event.start .health-timeline-event-marker {
+  border-color: #16a36a;
+  background: #16a36a;
+}
+
+.health-timeline-event.planned .health-timeline-event-marker {
+  border-color: #d69b38;
+}
+
+.health-timeline-event.completed .health-timeline-event-marker {
+  border-color: #8b7bd8;
+  background: #8b7bd8;
+}
+
+.health-timeline-event.log .health-timeline-event-marker {
+  border-color: var(--accent);
+}
+
+.health-timeline-event-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.health-timeline-event-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.health-timeline-event-top strong {
+  color: var(--label);
+  font-size: 12px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.health-timeline-event-top time {
+  flex-shrink: 0;
+  color: var(--label-2);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.health-timeline-log-amount {
+  display: inline-block;
+  margin-top: 7px;
+  padding: 5px 8px;
+  border-radius: 7px;
+  background: var(--surface-2);
+  color: var(--label);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.health-timeline-event-notes {
+  margin: 7px 0 0;
+  color: var(--label-2);
+  font-size: 11px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.health-timeline-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sep);
+  color: var(--label-2);
+  font-size: 10px;
+}
+
+.health-timeline-empty {
+  margin-top: 14px;
+  padding: 25px 16px;
+  text-align: center;
+}
+
+.health-timeline-empty-icon {
+  margin-bottom: 10px;
+  color: var(--label-2);
+  font-size: 30px;
+}
+
+.health-timeline-empty strong {
+  display: block;
+  color: var(--label);
+  font-size: 14px;
+}
+
+.health-timeline-empty p {
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+
+@media (max-width: 520px) {
+  .health-timeline-card {
+    padding: 14px;
+  }
+
+  .health-timeline-card-header {
+    flex-direction: column;
+  }
+
+  .health-timeline-period {
+    flex-direction: row;
+    flex-wrap: wrap;
+    text-align: start;
+  }
+
+  .health-timeline-event-top {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .health-timeline-event-top time {
+    white-space: normal;
+  }
+}
