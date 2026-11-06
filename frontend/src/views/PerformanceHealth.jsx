@@ -958,12 +958,19 @@ const compoundCount = protocols.reduce(
                 <span>{form.compounds.length}</span>
               </div>
               {form.compounds.map(compound => (
-                <article className="health-compound-editor" key={compound.id}>
-                  <div className="health-row">
-                    <div>
-                      <strong>{compound.name}</strong>
-                      <small>{compound.category}</small>
-                    </div>
+                <article
+  className="health-compound-editor"
+  key={compound.id}
+  style={{ '--compound-color': getCompoundColor(compound.name) }}
+>
+  <div className="health-row">
+    <div className="health-compound-title">
+      <span className="health-compound-color-dot" />
+      <div>
+        <strong>{compound.name}</strong>
+        <small>{compound.category}</small>
+      </div>
+    </div>
                     <button type="button" className="health-danger"
                       onClick={() => change('compounds', form.compounds.filter(c => c.id !== compound.id))}>
                       {tx('Remove', 'حذف')}
