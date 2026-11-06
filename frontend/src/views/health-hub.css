@@ -2113,3 +2113,275 @@
     white-space: normal;
   }
 }
+
+/* PeakDose-inspired compound timeline */
+
+.health-timeline-section {
+  margin: 28px 0;
+  min-width: 0;
+}
+
+.health-timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 18px;
+  min-width: 0;
+}
+
+.health-timeline-cycle {
+  position: relative;
+  min-width: 0;
+  padding: 8px 0 16px;
+  overflow: hidden;
+}
+
+.health-timeline-cycle-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.health-timeline-cycle-heading h3 {
+  margin: 0 0 7px;
+  color: var(--label);
+  font-size: 16px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.health-timeline-cycle-dates {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  color: var(--label-2);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.health-timeline-chart {
+  position: relative;
+  min-width: 0;
+  direction: ltr;
+}
+
+.health-timeline-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-width: 0;
+}
+
+.health-timeline-row {
+  display: grid;
+  grid-template-columns: 126px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 22px;
+  min-width: 0;
+}
+
+.health-timeline-row-name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  direction: ltr;
+  overflow: hidden;
+}
+
+.health-timeline-row-name i {
+  display: block;
+  width: 7px;
+  height: 7px;
+  min-width: 7px;
+  border-radius: 50%;
+}
+
+.health-timeline-row-name span {
+  color: var(--label);
+  font-size: 10px;
+  font-weight: 650;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.health-timeline-track {
+  position: relative;
+  height: 13px;
+  min-width: 0;
+  border-radius: 4px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.health-timeline-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  min-width: 3px;
+  border-radius: 4px;
+  opacity: 0.88;
+}
+
+.health-timeline-now-line {
+  position: absolute;
+  z-index: 4;
+  top: -8px;
+  bottom: -8px;
+  width: 1.5px;
+  background: #f04452;
+  pointer-events: none;
+}
+
+.health-timeline-now-line > span {
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f04452;
+  transform: translateX(-50%);
+}
+
+.health-timeline-week-axis {
+  display: grid;
+  grid-template-columns: 126px minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+  direction: ltr;
+}
+
+.health-timeline-week-label {
+  display: flex;
+  align-items: center;
+  color: var(--label-3);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+}
+
+.health-timeline-week-track {
+  position: relative;
+  height: 22px;
+  border-top: 1px solid var(--sep);
+}
+
+.health-timeline-week-tick {
+  position: absolute;
+  top: 5px;
+  transform: translateX(-50%);
+  color: var(--label-3);
+  font-size: 9px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.health-timeline-week-tick:first-child {
+  transform: none;
+}
+
+.health-timeline-bottom {
+  position: relative;
+  display: grid;
+  grid-template-columns: 126px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-height: 27px;
+  margin-top: 3px;
+  direction: ltr;
+}
+
+.health-timeline-start-label {
+  grid-column: 1;
+  color: var(--label-3);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.6px;
+}
+
+.health-timeline-now-label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  color: #f04452;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.health-timeline-end-label {
+  grid-column: 2;
+  justify-self: end;
+  color: var(--label-3);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.6px;
+}
+
+.health-timeline-duration {
+  grid-column: 2;
+  justify-self: center;
+  color: var(--label);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+}
+
+.health-timeline-empty {
+  margin-top: 14px;
+  padding: 25px 16px;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .health-timeline-cycle {
+    padding-inline: 0;
+  }
+
+  .health-timeline-cycle-heading {
+    margin-bottom: 18px;
+  }
+
+  .health-timeline-cycle-heading h3 {
+    font-size: 14px;
+  }
+
+  .health-timeline-row,
+  .health-timeline-week-axis,
+  .health-timeline-bottom {
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .health-timeline-row-name {
+    gap: 5px;
+  }
+
+  .health-timeline-row-name span {
+    font-size: 9px;
+  }
+
+  .health-timeline-rows {
+    gap: 12px;
+  }
+
+  .health-timeline-track {
+    height: 12px;
+  }
+
+  .health-timeline-now-line {
+    left: auto;
+  }
+
+  .health-timeline-duration {
+    font-size: 9px;
+  }
+}
