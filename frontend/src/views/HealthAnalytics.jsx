@@ -250,7 +250,8 @@ function ReviewValue({
   current,
   previous,
   unit = '',
-  fa
+  fa,
+  accent = '#8b5cf6'
 }) {
   const hasBoth = numeric(current) && numeric(previous)
 
@@ -259,7 +260,13 @@ function ReviewValue({
     : null
 
   return (
-    <div className="health-analytics-review-value">
+    <div
+      className="health-analytics-review-value"
+      style={{
+        background: `color-mix(in srgb, ${accent} 16%, var(--surface-2))`,
+        borderColor: `color-mix(in srgb, ${accent} 45%, var(--sep))`
+      }}
+    >
       <div className="health-analytics-review-top">
         <span>{label}</span>
 
