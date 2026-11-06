@@ -616,3 +616,112 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Lab report accordion */
+.health-report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-top: 18px;
+}
+
+.health-report-card {
+  overflow: hidden;
+  border: 1px solid var(--sep);
+  border-radius: 17px;
+  background: var(--surface);
+  transition: border-color .2s ease;
+}
+
+.health-report-card:has(.health-report-toggle[aria-expanded="true"]) {
+  border-color: color-mix(in srgb, var(--green) 45%, var(--sep));
+}
+
+.health-report-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px;
+}
+
+.health-report-toggle {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 10px;
+  min-height: 58px;
+  padding: 8px 2px;
+  background: transparent;
+  color: var(--label);
+  text-align: start;
+}
+
+.health-report-date {
+  font-size: 13px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+
+.health-report-count {
+  margin-inline-start: auto;
+  padding: 5px 9px;
+  border-radius: 9px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.health-report-chevron {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 17px;
+  transition: transform .2s ease;
+}
+
+.health-report-toggle[aria-expanded="true"] .health-report-chevron {
+  color: var(--green);
+}
+
+.health-report-header .health-danger {
+  flex-shrink: 0;
+  padding: 7px 10px;
+  border-radius: 9px;
+  font-size: 10px;
+}
+
+.health-report-card > .health-list {
+  margin: 0 11px 11px;
+  border-radius: 13px;
+  background: var(--surface-2);
+}
+
+@media (max-width: 380px) {
+  .health-report-header {
+    gap: 6px;
+    padding-inline: 9px;
+  }
+
+  .health-report-toggle {
+    gap: 7px;
+  }
+
+  .health-report-date {
+    font-size: 11px;
+  }
+
+  .health-report-count {
+    padding: 4px 6px;
+    font-size: 9px;
+  }
+
+  .health-report-header .health-danger {
+    padding: 6px 8px;
+  }
+}
