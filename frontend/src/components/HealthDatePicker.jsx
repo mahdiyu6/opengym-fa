@@ -8,7 +8,8 @@ import {
   calendarParts,
   calendarMonthStart,
   calendarMonthDays,
-  calendarMonthLabel
+  calendarMonthLabel,
+  formatDateNoEra
 } from '../lib/format.js'
 import '../views/health-hub.css'
 
@@ -62,19 +63,18 @@ export default function HealthDatePicker({
     ? (fa ? 'fa-IR-u-ca-persian' : 'en-US-u-ca-persian')
     : dateLocale()
 
-const monthTitle = formatDateNoEra(monthStart, locale, {
-  month: 'long',
-  year: 'numeric'
-})
-    : calendarMonthLabel(monthStart, calendar)
-
-function displayDate(date) {
-  return formatDateNoEra(date, locale, {
-    year: 'numeric',
+  const monthTitle = formatDateNoEra(monthStart, locale, {
     month: 'long',
-    day: 'numeric'
+    year: 'numeric'
   })
-}
+
+  function displayDate(date) {
+    return formatDateNoEra(date, locale, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
 
   function changeMonth(amount) {
     const anchor = new Date(monthStart)
