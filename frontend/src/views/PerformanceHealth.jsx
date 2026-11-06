@@ -713,27 +713,35 @@ const compoundCount = protocols.reduce(
                     className="health-timeline-cycle"
                     key={protocol.id}
                   >
-                    <div className="health-timeline-cycle-heading">
-                      <div>
-                        <h3>
-                          {protocol.name ||
-                            tx('Untitled protocol', 'پروتکل بدون نام')}
-                        </h3>
-                        <span className={`health-timeline-status ${protocol.status || 'archived'}`}>
-                          {protocol.status === 'active'
-                            ? tx('Active', 'فعال')
-                            : protocol.status === 'completed'
-                              ? tx('Completed', 'تکمیل‌شده')
-                              : tx('Archived', 'بایگانی‌شده')}
-                        </span>
-                      </div>
+                  <div className="health-timeline-cycle-heading">
+  <div className="health-timeline-protocol-title">
+    <h3>
+      {protocol.name ||
+        tx('Untitled protocol', 'پروتکل بدون نام')}
+    </h3>
+    <span className={`health-timeline-status ${protocol.status || 'archived'}`}>
+      {protocol.status === 'active'
+        ? tx('Active', 'فعال')
+        : protocol.status === 'completed'
+          ? tx('Completed', 'تکمیل‌شده')
+          : tx('Archived', 'بایگانی‌شده')}
+    </span>
+  </div>
 
-                      <span className="health-timeline-cycle-dates">
-                        {fmtDateFull(startDate, calendar)}
-                        <span>—</span>
-                        {fmtDateFull(new Date(endTime).toISOString().slice(0, 10), calendar)}
-                      </span>
-                    </div>
+  <div className="health-timeline-week-progress">
+    <div className="health-timeline-day-dots">
+      {Array.from({ length: 7 }, (_, index) => (
+        <i
+          key={index}
+          className={index < currentWeekday ? 'filled' : ''}
+        />
+      ))}
+    </div>
+    <span>
+      {tx(`WEEK ${currentWeek}`, `هفته ${currentWeek}`)}
+    </span>
+  </div>
+</div>
 
                     {compounds.length === 0 ? (
                       <p className="health-muted">
@@ -741,6 +749,11 @@ const compoundCount = protocols.reduce(
                       </p>
                     ) : (
                       <>
+                        <div className="health-timeline-week-summary">
+  {showNow
+    ? `WEEK ${currentWeek} OF ${totalWeeks}`
+    : `${totalWeeks} ${tx('WEEKS', 'هفته')}`}
+</div>
                         <div className="health-timeline-chart">
                           <div className="health-timeline-rows">
                             {compoundRanges.map(({ compound, index, start, end }) => {
@@ -787,53 +800,31 @@ const compoundCount = protocols.reduce(
                           )}
                         </div>
 
-                        <div className="health-timeline-week-axis">
-                          <div className="health-timeline-week-label">
-                            <span>{tx('WEEK', 'هفته')}</span>
-                          </div>
-                          <div className="health-timeline-week-track">
-                            {weekMarkers.map(week => (
-                              <span
-                                className="health-timeline-week-tick"
-                                key={week}
-                                style={{
-                                  left: `${(week / totalWeeks) * 100}%`
-                                }}
-                              >
-                                {week < totalWeeks ? week + 1 : ''}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+<div className="health-timeline-bottom">
+  <div className="health-timeline-date-spacer" />
 
-                        <div className="health-timeline-bottom">
-                          <span className="health-timeline-start-label">
-                            {tx('START', 'شروع')}
-                          </span>
+  <div className="health-timeline-date-track">
+    <span className="health-timeline-start-date">
+      {fmtDateFull(startDate, calendar)}
+    </span>
 
-                          {showNow ? (
-                            <span
-                              className="health-timeline-now-label"
-                              style={{
-                                left: `calc(142px + (100% - 142px) * ${nowPosition / 100})`
-                              }}
-                            >
-                              NOW
-                            </span>
-                          ) : (
-                            <span className="health-timeline-end-label">
-                              {protocol.status === 'completed'
-                                ? tx('COMPLETED', 'تکمیل‌شده')
-                                : tx('END', 'پایان')}
-                            </span>
-                          )}
+    {showNow && (
+      <span
+        className="health-timeline-now-label"
+        style={{ left: `${nowPosition}%` }}
+      >
+        NOW
+      </span>
+    )}
 
-                          <span className="health-timeline-duration">
-                            {showNow
-                              ? `WEEK ${currentWeek} OF ${totalWeeks}`
-                              : `${totalWeeks} ${tx('WEEKS', 'هفته')}`}
-                          </span>
-                        </div>
+    <span className="health-timeline-end-date">
+      {fmtDateFull(
+        new Date(endTime).toISOString().slice(0, 10),
+        calendar
+      )}
+    </span>
+  </div>
+</div>
                       </>
                     )}
                   </article>
