@@ -261,18 +261,28 @@ function goToCalendarToday() {
 }
   const tx = (en, faText) => fa ? faText : en
   const filteredCatalog = useMemo(() => CATALOG.map(group => ({
-    ...group,
-    items: group.items.filter(name => name.toLowerCase().includes(query.trim().toLowerCase()))
-  })).filter(group => group.items.length), [query])
-
+  ...group,
+  groups: group.groups.map(subgroup => ({
+    ...subgroup,
+    items: subgroup.items.filter(name =>
+      name.toLowerCase().includes(query.trim().toLowerCase())
+    )
+  })).filter(subgroup => subgroup.items.length)
+})).filter(group => group.groups.length), [query])
   function change(key, value) {
     setForm(old => ({ ...old, [key]: value }))
   }
 
-  function addCompound(name, category) {
-    if (form.compounds.some(c => c.name.toLowerCase() === name.toLowerCase())) return
-    change('compounds', [...form.compounds, makeCompound(name, category)])
-  }
+  function addCompound(name, category, subcategory = '') {
+  if (form.compounds.some(c =>
+    c.name.toLowerCase() === name.toLowerCase()
+  )) return
+
+  change('compounds', [
+    ...form.compounds,
+    makeCompound(name, category, subcategory)
+  ])
+}
 
   function updateCompound(id, key, value) {
     change('compounds', form.compounds.map(c => c.id === id ? { ...c, [key]: value } : c))
