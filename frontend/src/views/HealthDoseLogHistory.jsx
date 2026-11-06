@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { getLang, useLang } from '../lib/i18n.js'
 import { fmtDateFull } from '../lib/format.js'
+import HealthDatePicker from '../components/HealthDatePicker.jsx'
 import './health-hub.css'
 
 function getCompoundColor(name) {
@@ -120,26 +121,24 @@ export default function HealthDoseLogHistory() {
             </select>
           </label>
 
-          <div className="health-history-date-filters">
-            <label>
-              {tx('From date', 'از تاریخ')}
-              <input
-                type="date"
-                value={filter.from}
-                onChange={e => changeFilter('from', e.target.value)}
-              />
-            </label>
+<div className="health-history-date-filters">
+  <label>
+    {tx('From date', 'از تاریخ')}
+    <HealthDatePicker
+      value={filter.from}
+      onChange={value => changeFilter('from', value)}
+    />
+  </label>
 
-            <label>
-              {tx('To date', 'تا تاریخ')}
-              <input
-                type="date"
-                value={filter.to}
-                min={filter.from || undefined}
-                onChange={e => changeFilter('to', e.target.value)}
-              />
-            </label>
-          </div>
+  <label>
+    {tx('To date', 'تا تاریخ')}
+    <HealthDatePicker
+      value={filter.to}
+      onChange={value => changeFilter('to', value)}
+      min={filter.from || undefined}
+    />
+  </label>
+</div>
 
           <button
             type="button"
