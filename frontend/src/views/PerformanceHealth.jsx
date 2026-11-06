@@ -825,8 +825,6 @@ const compoundCount = protocols.reduce(
           </div>
         )}
       </section>
-      
-       <HealthSideEffects />
 
           <div className="health-section-heading">
         <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
@@ -1270,7 +1268,9 @@ const compoundCount = protocols.reduce(
     })}
   </div>
 )}
-
+      
+<HealthSideEffects />
+      
     </main>
   )
 }
