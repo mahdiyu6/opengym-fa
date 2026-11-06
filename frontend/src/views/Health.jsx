@@ -163,6 +163,7 @@ export default function Health() {
   const updateStore = useStore(s => s.update)
   const [draft, setDraft] = useState(null)
   const [selected, setSelected] = useState(null)
+  const [expandedReportId, setExpandedReportId] = useState(null)
   const info = selected ? getLabInfo(selected.name, lang) : null
   const [query, setQuery] = useState('')
   const [busy, setBusy] = useState(false)
