@@ -1,5 +1,14 @@
 // Formatting + date helpers (ported from the vanilla app, unit taken from the store where needed).
 import { dateLocale, t } from './i18n.js'
+
+export function formatDateNoEra(date, locale, options) {
+  return new Intl.DateTimeFormat(locale, options)
+    .formatToParts(date)
+    .filter(part => part.type !== 'era')
+    .map(part => part.value)
+    .join('')
+}
+
 export const todayISO = () => {
   const d = new Date()
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
@@ -19,19 +28,20 @@ export function fmtDate(iso, long, calendar = 'gregorian') {
     ? 'fa-IR-u-ca-persian'
     : dateLocale()
 
-  return d.toLocaleDateString(
-    locale,
-    long
-      ? {
-          weekday: 'short',
-          day: 'numeric',
-          month: 'short'
-        }
-      : {
-          day: 'numeric',
-          month: 'short'
-        }
-  )
+return formatDateNoEra(
+  d,
+  locale,
+  long
+    ? {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short'
+      }
+    : {
+        day: 'numeric',
+        month: 'short'
+      }
+)
 }
 export function fmtDateFull(iso, calendar = 'gregorian') {
   if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '—'
@@ -43,11 +53,11 @@ export function fmtDateFull(iso, calendar = 'gregorian') {
     ? `${dateLocale()}-u-ca-persian`
     : dateLocale()
 
-  return date.toLocaleDateString(locale, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
+return formatDateNoEra(date, locale, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+})
 }
 export function fmtDur(ms) {
   const m = Math.floor(ms / 60000)
@@ -123,15 +133,16 @@ export function calendarMonthStart(date, calendar = 'gregorian') {
 export function calendarMonthLabel(date, calendar = 'gregorian') {
   const d = calendarMonthStart(date, calendar)
 
-  return d.toLocaleDateString(
-    calendar === 'jalali'
-      ? 'fa-IR-u-ca-persian'
-      : dateLocale(),
-    {
-      month: 'long',
-      year: 'numeric'
-    }
-  )
+return formatDateNoEra(
+  d,
+  calendar === 'jalali'
+    ? 'fa-IR-u-ca-persian'
+    : dateLocale(),
+  {
+    month: 'long',
+    year: 'numeric'
+  }
+)
 }
 
 export function calendarMonthDays(monthStart, calendar = 'gregorian') {
