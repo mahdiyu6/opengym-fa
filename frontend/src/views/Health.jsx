@@ -861,7 +861,7 @@ const selectedHistory = selected
             className="health-primary"
             onClick={() => input.current?.click()}
           >
-            {tx('Choose PDF', 'انتخاب PDF')}
+         tx('Choose file', 'انتخاب فایل')
           </button>
         </section>
       ) : (
