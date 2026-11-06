@@ -1789,12 +1789,12 @@
 .health-timeline-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   margin-top: 16px;
 }
 
 .health-timeline-card {
-  padding: 17px;
+  padding: 18px;
   overflow: hidden;
 }
 
@@ -1884,105 +1884,151 @@
   background: var(--compound-color);
 }
 
-.health-timeline-events {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin-top: 17px;
-  padding-inline-start: 5px;
+/* Horizontal timeline */
+.health-timeline-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-top: 22px;
+  padding: 8px 4px 18px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--sep) transparent;
+  -webkit-overflow-scrolling: touch;
 }
 
-.health-timeline-event {
+.health-timeline-axis {
   position: relative;
-  display: flex;
-  gap: 12px;
-  min-width: 0;
-  padding-bottom: 19px;
+  height: 245px;
+  direction: ltr;
+  isolation: isolate;
 }
 
-.health-timeline-event:not(:last-child)::before {
-  content: '';
+.health-timeline-axis-line {
   position: absolute;
-  top: 15px;
-  bottom: 0;
-  inset-inline-start: 5px;
-  width: 1px;
+  top: 30px;
+  left: 4%;
+  right: 4%;
+  height: 3px;
+  border-radius: 4px;
   background: var(--sep);
 }
 
-.health-timeline-event-marker {
-  position: relative;
-  z-index: 1;
-  width: 11px;
-  height: 11px;
-  flex: 0 0 11px;
-  margin-top: 3px;
-  border: 2px solid var(--accent);
+.health-timeline-axis-date {
+  position: absolute;
+  top: 0;
+  color: var(--label-2);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.health-timeline-axis-date.first {
+  left: 4%;
+}
+
+.health-timeline-axis-date.last {
+  right: 4%;
+}
+
+.health-timeline-axis-event {
+  position: absolute;
+  top: 0;
+  width: 150px;
+  height: 100%;
+  transform: translateX(-50%);
+  color: var(--label);
+}
+
+.health-timeline-axis-marker {
+  position: absolute;
+  z-index: 2;
+  top: 23px;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translateX(-50%);
+  border: 3px solid var(--event-color);
   border-radius: 50%;
   background: var(--surface);
+  box-shadow: 0 0 0 4px color-mix(
+    in srgb,
+    var(--event-color) 13%,
+    transparent
+  );
 }
 
-.health-timeline-event.start .health-timeline-event-marker {
-  border-color: #16a36a;
-  background: #16a36a;
+.health-timeline-axis-event.start .health-timeline-axis-marker,
+.health-timeline-axis-event.completed .health-timeline-axis-marker {
+  background: var(--event-color);
 }
 
-.health-timeline-event.planned .health-timeline-event-marker {
-  border-color: #d69b38;
-}
-
-.health-timeline-event.completed .health-timeline-event-marker {
-  border-color: #8b7bd8;
-  background: #8b7bd8;
-}
-
-.health-timeline-event.log .health-timeline-event-marker {
-  border-color: var(--accent);
-}
-
-.health-timeline-event-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.health-timeline-event-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.health-timeline-event-top strong {
-  color: var(--label);
-  font-size: 12px;
-  font-weight: 750;
+.health-timeline-axis-content {
+  position: absolute;
+  top: 58px;
+  left: 50%;
+  width: 142px;
+  min-height: 105px;
+  padding: 10px;
+  transform: translateX(-50%);
+  border: 1px solid color-mix(
+    in srgb,
+    var(--event-color) 30%,
+    var(--sep)
+  );
+  border-radius: 11px;
+  background: var(--surface-2);
+  text-align: center;
+  direction: inherit;
   overflow-wrap: anywhere;
 }
 
-.health-timeline-event-top time {
-  flex-shrink: 0;
+.health-timeline-axis-content::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -13px;
+  width: 1px;
+  height: 12px;
+  background: var(--event-color);
+  opacity: 0.65;
+}
+
+.health-timeline-axis-content strong {
+  display: block;
+  color: var(--label);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.health-timeline-axis-content time {
+  display: block;
+  margin-top: 5px;
   color: var(--label-2);
   font-size: 10px;
-  white-space: nowrap;
+  line-height: 1.5;
 }
 
 .health-timeline-log-amount {
   display: inline-block;
   margin-top: 7px;
-  padding: 5px 8px;
-  border-radius: 7px;
-  background: var(--surface-2);
-  color: var(--label);
-  font-size: 11px;
-  font-weight: 750;
+  padding: 4px 7px;
+  border-radius: 6px;
+  background: color-mix(
+    in srgb,
+    var(--event-color) 12%,
+    var(--surface)
+  );
+  color: var(--event-color);
+  font-size: 10px;
+  font-weight: 800;
 }
 
 .health-timeline-event-notes {
-  margin: 7px 0 0;
+  margin: 6px 0 0;
   color: var(--label-2);
-  font-size: 11px;
-  line-height: 1.7;
+  font-size: 10px;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
@@ -1994,6 +2040,30 @@
   border-top: 1px solid var(--sep);
   color: var(--label-2);
   font-size: 10px;
+}
+
+@media (max-width: 520px) {
+  .health-timeline-card {
+    padding: 14px;
+  }
+
+  .health-timeline-card-header {
+    flex-direction: column;
+  }
+
+  .health-timeline-period {
+    flex-direction: row;
+    flex-wrap: wrap;
+    text-align: start;
+  }
+
+  .health-timeline-axis-event {
+    width: 140px;
+  }
+
+  .health-timeline-axis-content {
+    width: 132px;
+  }
 }
 
 .health-timeline-empty {
