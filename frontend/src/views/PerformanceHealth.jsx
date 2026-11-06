@@ -596,13 +596,25 @@ const compoundCount = protocols.reduce(
       className="health-log-entry health-log-entry-compact"
       key={entry.id}
     >
-      <div>
-        <strong>{entry.compoundName}</strong>
-        <small>{entry.protocolName} · {entry.date}</small>
-        <span>{entry.amount} {entry.unit}</span>
-        {entry.notes && <small>{entry.notes}</small>}
-      </div>
 
+<div className="health-log-entry-content">
+  <div
+    className="health-log-compound-name"
+    style={{ '--compound-color': getCompoundColor(entry.compoundName) }}
+  >
+    <span className="health-log-compound-dot" />
+    <strong>{entry.compoundName}</strong>
+  </div>
+
+  <small>{entry.protocolName} · {entry.date}</small>
+
+  <span className="health-log-entry-amount">
+    {entry.amount} {entry.unit}
+  </span>
+
+  {entry.notes && <small>{entry.notes}</small>}
+</div>
+      
       <button
         type="button"
         className="health-danger"
