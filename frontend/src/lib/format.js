@@ -33,6 +33,22 @@ export function fmtDate(iso, long, calendar = 'gregorian') {
         }
   )
 }
+export function fmtDateFull(iso, calendar = 'gregorian') {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '—'
+
+  const [year, month, day] = iso.split('-').map(Number)
+  const date = new Date(year, month - 1, day, 12)
+
+  const locale = calendar === 'jalali'
+    ? `${dateLocale()}-u-ca-persian`
+    : dateLocale()
+
+  return date.toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
 export function fmtDur(ms) {
   const m = Math.floor(ms / 60000)
   return m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm' : m + ' min'
