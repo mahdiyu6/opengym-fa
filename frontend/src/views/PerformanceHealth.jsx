@@ -9,11 +9,95 @@ import './health-hub.css'
 const today = () => new Date().toISOString().slice(0, 10)
 
 const CATALOG = [
-  { category: 'Anabolic & hormonal', fa: 'آنابولیک و هورمونی', items: ['Testosterone', 'Testosterone cypionate', 'Testosterone enanthate', 'Testosterone propionate', 'Sustanon', 'Nandrolone', 'Boldenone', 'Trenbolone', 'Drostanolone', 'Methenolone (Primobolan)', 'Oxandrolone', 'Stanozolol', 'Methandienone', 'Oxymetholone', 'Fluoxymesterone', 'Clomiphene', 'Enclomiphene', 'Tamoxifen', 'Anastrozole', 'Exemestane', 'Letrozole', 'hCG', 'hMG', 'DHEA'] },
-  { category: 'Peptides & related', fa: 'پپتیدها و ترکیبات مرتبط', items: ['BPC-157', 'TB-500', 'CJC-1295', 'Ipamorelin', 'GHRP-2', 'GHRP-6', 'Tesamorelin', 'Sermorelin', 'IGF-1 LR3', 'MK-677 (Ibutamoren)', 'AOD-9604', 'GHK-Cu', 'Melanotan II', 'PT-141'] },
-  { category: 'Ancillaries', fa: 'داروهای کمکی', items: ['Cabergoline', 'Pramipexole', 'Finasteride', 'Dutasteride', 'Proviron (Mesterolone)', 'Raloxifene', 'Aromasin (Exemestane)', 'Arimidex (Anastrozole)', 'Nolvadex (Tamoxifen)'] },
-  { category: 'Health support', fa: 'حمایت از سلامت', items: ['Omega-3', 'Vitamin D3', 'Vitamin K2', 'Magnesium', 'Zinc', 'CoQ10', 'NAC', 'TUDCA', 'Milk thistle', 'Psyllium', 'Electrolytes', 'Fiber'] },
-  { category: 'Supplements', fa: 'مکمل‌ها', items: ['Whey protein', 'Creatine monohydrate', 'Casein protein', 'EAAs', 'BCAAs', 'Beta-alanine', 'Citrulline', 'Caffeine', 'L-Carnitine', 'Ashwagandha', 'Multivitamin', 'Collagen'] }
+  {
+    category: 'Androstanes',
+    fa: 'آندروستان‌ها',
+    groups: [
+      {
+        name: 'Boldenone',
+        items: ['Boldenone Cypionate', 'EQ']
+      },
+      {
+        name: 'testosterone',
+        items: ['sustanon', 'test c', 'test E', 'test p', 'test u', 'TNE', 'TPP']
+      }
+    ]
+  },
+  {
+    category: '19-NORS',
+    fa: '۱۹ نورها',
+    groups: [
+      { name: 'Trestolone', items: ['Ment'] },
+      { name: 'Nandrolone', items: ['Nandrolone (Deca)', 'NPP'] },
+      { name: 'Trenbolone', items: ['Parabolan', 'Tren A', 'Tren E'] }
+    ]
+  },
+  {
+    category: 'DHT DERIVATIVES',
+    fa: 'مشتقات DHT',
+    groups: [
+      { name: 'Dihydroboldenone', items: ['DHB'] },
+      { name: 'Drostanolone', items: ['Masteron Enanthate', 'Masteron propionate'] },
+      { name: 'Methenolone', items: ['Primobolan Inj', 'Primobolan Oral'] },
+      { name: 'Stanozolol', items: ['Winstrol Inj'] }
+    ]
+  },
+  {
+    category: 'ORALS',
+    fa: 'ترکیبات خوراکی',
+    groups: [
+      {
+        name: 'DHT-based orals',
+        items: [
+          'Anadrol', 'Anavar', 'Dianabol', 'Epistane',
+          'Halotestin', 'M1T', 'Proviron', 'Superdrol',
+          'Turinabol', 'Winstrol'
+        ]
+      }
+    ]
+  },
+  {
+    category: 'Ancillaries',
+    fa: 'داروهای کمکی',
+    groups: [
+      {
+        name: '',
+        items: [
+          'Arimidex', 'Aromasin', 'Cabergoline', 'Cagrilintide',
+          'CJC-1295 (NO DAC)', 'CJC-1295 (with DAC)',
+          'Clenbuterol', 'Clomid', 'Enclomiphene', 'Ephedrine',
+          'GHRP-2', 'GHRP-6', 'Gonadorelin', 'Growth Hormone',
+          'HCG', 'HGH Frag 176-191', 'HMG', 'Humalog',
+          'IGF-1 LR3', 'Ipamorelin', 'Lantus', 'Letrozole',
+          'Levemir', 'Liraglutide', 'Melanotan II', 'MK-677',
+          'Nolvadex', 'Novorapid', 'Pramipexole', 'PT-141',
+          'Raloxifene', 'Retatrutide', 'Semaglutide', 'Sermorelin',
+          'SLU-PP-332', 'T3', 'T4', 'Tesamorelin',
+          'Tirzepatide', 'Toremifene', 'Yohimbine HCL'
+        ]
+      }
+    ]
+  },
+  {
+    category: 'Health Support',
+    fa: 'حمایت از سلامت',
+    groups: [
+      {
+        name: '',
+        items: [
+          'Atorvastatin', 'Berberine', 'BPC-157', 'Carvedilol',
+          'DHEA', 'DSIP', 'Dutasteride', 'Epithalon',
+          'Ezetimibe', 'Finasteride', 'GHK-Cu', 'Glutathione',
+          'Injectable L-Carnitine', 'Isotretinoin', 'Lisinopril',
+          'Mediphorm', 'Metformin', 'Minoxidil Oral', 'MOTS-c',
+          'NAC', 'NAD+', 'Nebivolol', 'Pregnenolone',
+          'Rosuvastatin', 'Selank', 'Semax', 'Sildenafil',
+          'SS-31', 'Tadalafil', 'TB-500', 'Telmisartan',
+          'Thymosin Alpha-1', 'TUDCA'
+        ]
+      }
+    ]
+  }
 ]
 
 const emptyForm = {
