@@ -1,9 +1,9 @@
-
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { workoutVolume, setsDone } from '../lib/history.js'
 import { getLang, useLang } from '../lib/i18n.js'
+import { fmtDateFull } from '../lib/format.js'
 import './health-hub.css'
 
 const DAY = 24 * 60 * 60 * 1000
@@ -40,6 +40,7 @@ function TrendChart({
   data,
   emptyText,
   fa,
+  calendar,
   accent = '#8b5cf6'
 }) {
   const points = data
@@ -137,7 +138,7 @@ function TrendChart({
         <div className="health-analytics-trend-footer">
           <span>
             {last
-              ? `${fa ? 'آخرین ثبت' : 'Latest'}: ${last.date}`
+              ? `${fa ? 'آخرین ثبت' : 'Latest'}: ${fmtDateFull(last.date, calendar)}`
               : (fa ? 'بدون داده' : 'No data')}
           </span>
 
@@ -155,13 +156,13 @@ function TrendChart({
               <div>
                 <span>{fa ? 'اولین مقدار' : 'First value'}</span>
                 <strong>{fmt(Number(first.value))} {unit}</strong>
-                <small>{first.date}</small>
+                <small>{fmtDateFull(first.date, calendar)}</small>
               </div>
 
               <div>
                 <span>{fa ? 'آخرین مقدار' : 'Latest value'}</span>
                 <strong>{fmt(Number(last.value))} {unit}</strong>
-                <small>{last.date}</small>
+                <small>{fmtDateFull(last.date, calendar)}</small>
               </div>
             </div>
 
@@ -212,7 +213,7 @@ function TrendChart({
                   fill="var(--trend-accent)"
                 >
                   <title>
-                    {item.date}: {fmt(Number(item.value))} {unit}
+                    {fmtDateFull(item.date, calendar)}: {fmt(Number(item.value))} {unit}
                   </title>
                 </circle>
               ))}
@@ -225,7 +226,7 @@ function TrendChart({
 
               {history.map((item, index) => (
                 <div key={`${item.date}-${index}`}>
-                  <span>{item.date}</span>
+                  <span>{fmtDateFull(item.date, calendar)}</span>
                   <strong>{fmt(Number(item.value))} {unit}</strong>
                 </div>
               ))}
@@ -297,6 +298,7 @@ export default function HealthAnalytics() {
   useLang()
 
   const fa = getLang() === 'fa'
+  const calendar = useStore(s => s.S?.calendar === 'jalali' ? 'jalali' : 'gregorian')
   const nav = useNavigate()
 
   const checkIns = useStore(s =>
@@ -322,13 +324,13 @@ export default function HealthAnalytics() {
       ? s.S.healthProtocols
       : []
   )
-  
+
   const workouts = useStore(s =>
     Array.isArray(s.S.workouts)
       ? s.S.workouts
       : []
   )
-  
+
   const [range, setRange] = useState('90')
 
   const tx = (en, faText) =>
@@ -450,7 +452,7 @@ export default function HealthAnalytics() {
   const current = latest[0]
   const previous = latest[1]
 
-  
+
   const metrics = [
     {
       key: 'weight',
@@ -508,8 +510,12 @@ const weeklyLogCounts = useMemo(() => {
     }).length
 
     const date = new Date(start)
-    const label =
-      `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
+    const dateISO = [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, '0'),
+      String(date.getDate()).padStart(2, '0')
+    ].join('-')
+    const label = fmtDateFull(dateISO, calendar)
 
     return {
       label,
@@ -518,7 +524,7 @@ const weeklyLogCounts = useMemo(() => {
       end
     }
   })
-}, [doseLogs])
+}, [doseLogs, calendar])
 
 const maxWeeklyLogs = Math.max(
   1,
@@ -774,7 +780,7 @@ const recentEffects = [...filteredEffects]
           gap: 8px;
         }
 
-     
+
 .health-analytics-review-value {
   min-width: 0;
   padding: 14px;
@@ -885,7 +891,7 @@ const recentEffects = [...filteredEffects]
   transition: height .25s ease;
 }
 
-.health-analytics-bar-wrap small {
+health-analytics-bar-wrap small {
   color: var(--label-3);
   font-size: 8px;
   font-variant-numeric: tabular-nums;
@@ -927,14 +933,14 @@ const recentEffects = [...filteredEffects]
   font-size: 23px;
 }
 
-.health-analytics-effects-breakdown {
+health-analytics-effects-breakdown {
   padding: 14px;
   border: 1px solid var(--sep);
   border-radius: 14px;
   background: var(--surface-2);
 }
 
-.health-analytics-effects-heading {
+health-analytics-effects-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -942,17 +948,17 @@ const recentEffects = [...filteredEffects]
   margin-bottom: 13px;
 }
 
-.health-analytics-effects-heading strong {
+health-analytics-effects-heading strong {
   color: var(--label);
   font-size: 12px;
 }
 
-.health-analytics-effects-heading > span {
+health-analytics-effects-heading > span {
   color: var(--label-3);
   font-size: 10px;
 }
 
-.health-analytics-effects-bar {
+health-analytics-effects-bar {
   display: flex;
   width: 100%;
   height: 11px;
@@ -961,39 +967,39 @@ const recentEffects = [...filteredEffects]
   background: var(--bg);
 }
 
-.health-analytics-effects-bar > div {
+health-analytics-effects-bar > div {
   min-width: 2px;
   transition: width .25s ease;
 }
 
-.health-analytics-effects-bar .mild,
-.health-analytics-effects-legend i.mild {
+health-analytics-effects-bar .mild,
+health-analytics-effects-legend i.mild {
   background: #38bdf8;
 }
 
-.health-analytics-effects-bar .moderate,
-.health-analytics-effects-legend i.moderate {
+health-analytics-effects-bar .moderate,
+health-analytics-effects-legend i.moderate {
   background: #f59e0b;
 }
 
-.health-analytics-effects-bar .severe,
-.health-analytics-effects-legend i.severe {
+health-analytics-effects-bar .severe,
+health-analytics-effects-legend i.severe {
   background: #ef4444;
 }
 
-.health-analytics-effects-bar .other,
-.health-analytics-effects-legend i.other {
+health-analytics-effects-bar .other,
+health-analytics-effects-legend i.other {
   background: #94a3b8;
 }
 
-.health-analytics-effects-legend {
+health-analytics-effects-legend {
   display: flex;
   flex-wrap: wrap;
   gap: 12px 18px;
   margin-top: 13px;
 }
 
-.health-analytics-effects-legend span {
+health-analytics-effects-legend span {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1001,21 +1007,21 @@ const recentEffects = [...filteredEffects]
   font-size: 10px;
 }
 
-.health-analytics-effects-legend i {
+health-analytics-effects-legend i {
   width: 8px;
   height: 8px;
   border-radius: 50%;
 }
 
-.health-analytics-effects-legend strong {
+health-analytics-effects-legend strong {
   color: var(--label);
 }
 
-.health-analytics-effects-recent {
+health-analytics-effects-recent {
   margin-top: 20px;
 }
 
-.health-analytics-effect-row {
+health-analytics-effect-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1024,11 +1030,11 @@ const recentEffects = [...filteredEffects]
   border-bottom: 1px solid var(--sep);
 }
 
-.health-analytics-effect-row > div:first-child {
+health-analytics-effect-row > div:first-child {
   min-width: 0;
 }
 
-.health-analytics-effect-row > div:first-child strong,
+health-analytics-effect-row > div:first-child strong,
 .health-analytics-effect-row > div:first-child small {
   display: block;
   overflow-wrap: anywhere;
@@ -1194,14 +1200,14 @@ const recentEffects = [...filteredEffects]
   font-size: 11px;
 }
 
-.health-analytics-trend-footer {
+health-analytics-trend-footer {
   padding-top: 9px;
   border-top: 1px solid var(--sep);
   color: var(--label-3);
   font-size: 10px;
 }
 
-.health-analytics-trend-expand {
+health-analytics-trend-expand {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -1210,29 +1216,29 @@ const recentEffects = [...filteredEffects]
   white-space: nowrap;
 }
 
-.health-analytics-trend-chevron {
+health-analytics-trend-chevron {
   display: inline-block;
   font-size: 15px;
   transition: transform .2s ease;
 }
 
-.health-analytics-trend-card[open] .health-analytics-trend-chevron {
+health-analytics-trend-card[open] .health-analytics-trend-chevron {
   transform: rotate(180deg);
 }
 
-.health-analytics-trend-details {
+health-analytics-trend-details {
   padding: 0 14px 14px;
   border-top: 1px solid var(--sep);
 }
 
-.health-analytics-trend-comparison {
+health-analytics-trend-comparison {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 9px;
   margin-top: 13px;
 }
 
-.health-analytics-trend-comparison > div {
+health-analytics-trend-comparison > div {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -1242,18 +1248,18 @@ const recentEffects = [...filteredEffects]
   background: var(--bg);
 }
 
-.health-analytics-trend-comparison span,
-.health-analytics-trend-comparison small {
+health-analytics-trend-comparison span,
+health-analytics-trend-comparison small {
   color: var(--label-3);
   font-size: 10px;
 }
 
-.health-analytics-trend-comparison strong {
+health-analytics-trend-comparison strong {
   color: var(--label);
   font-size: 15px;
 }
 
-.health-analytics-trend-detail-chart {
+health-analytics-trend-detail-chart {
   display: block;
   width: 100%;
   height: auto;
@@ -1261,19 +1267,19 @@ const recentEffects = [...filteredEffects]
   overflow: visible;
 }
 
-.health-analytics-trend-history {
+health-analytics-trend-history {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-.health-analytics-trend-history > strong {
+health-analytics-trend-history > strong {
   margin-bottom: 8px;
   color: var(--label-2);
   font-size: 11px;
 }
 
-.health-analytics-trend-history > div {
+health-analytics-trend-history > div {
   display: flex;
   justify-content: space-between;
   gap: 10px;
@@ -1282,22 +1288,22 @@ const recentEffects = [...filteredEffects]
   font-size: 11px;
 }
 
-.health-analytics-trend-history > div span {
+health-analytics-trend-history > div span {
   color: var(--label-3);
 }
 
-.health-analytics-trend-history > div strong {
+health-analytics-trend-history > div strong {
   color: var(--label);
 }
 
-.health-analytics-training-summary {
+health-analytics-training-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 9px;
   margin: 12px 0 16px;
 }
 
-.health-analytics-training-summary > div {
+health-analytics-training-summary > div {
   min-width: 0;
   border: 1px solid var(--sep);
   border-radius: 13px;
@@ -1305,13 +1311,13 @@ const recentEffects = [...filteredEffects]
   background: var(--surface-2);
 }
 
-.health-analytics-training-summary span {
+health-analytics-training-summary span {
   display: block;
   color: var(--label-3);
   font-size: 11px;
 }
 
-.health-analytics-training-summary strong {
+health-analytics-training-summary strong {
   display: block;
   color: var(--label);
   font-size: 21px;
@@ -1328,7 +1334,7 @@ const recentEffects = [...filteredEffects]
     grid-template-columns: 1fr;
   }
 }
-    
+
         @media(max-width:380px) {
           .health-analytics-review-grid {
             grid-template-columns: 1fr;
@@ -1362,7 +1368,7 @@ const recentEffects = [...filteredEffects]
       </header>
 
       <div className="health-analytics-toolbar">
-        
+
 <div className="health-analytics-range">
   {[
     ['7', tx('Week', 'هفته')],
@@ -1432,10 +1438,10 @@ const recentEffects = [...filteredEffects]
         ) : (
           <>
             <p className="health-muted">
-              {tx('Latest check-in:', 'آخرین ارزیابی:')} {current.date}
+              {tx('Latest check-in:', 'آخرین ارزیابی:')} {fmtDateFull(current.date, calendar)}
 
               {previous
-                ? ` · ${tx('Compared with', 'در مقایسه با')} ${previous.date}`
+                ? ` · ${tx('Compared with', 'در مقایسه با')} ${fmtDateFull(previous.date, calendar)}`
                 : ''}
             </p>
 
@@ -1524,6 +1530,7 @@ const recentEffects = [...filteredEffects]
                 title={metric.title}
                 unit={metric.unit}
                 fa={fa}
+              calendar={calendar}
                 accent={metric.accent}
                 data={filteredCheckIns.map(item => ({
                   date: item.date,
@@ -1550,7 +1557,7 @@ const recentEffects = [...filteredEffects]
         </p>
 
         <div className="health-analytics-bars">
-            
+
 {weeklyLogCounts.map(item => (
   <div
     className="health-analytics-bar-wrap"
@@ -1585,7 +1592,7 @@ const recentEffects = [...filteredEffects]
         </p>
       </section>
 
-    
+
 <section className="health-card health-analytics-section">
   <h3>{tx('Side-effect overview', 'نمای کلی عوارض جانبی')}</h3>
 
@@ -1709,7 +1716,7 @@ const recentEffects = [...filteredEffects]
             <strong>{item.symptom || tx('Unspecified symptom', 'علامت نامشخص')}</strong>
 
             <small>
-              {item.date || '—'}
+              {item.date ? fmtDateFull(item.date, calendar) : '—'}
               {item.compoundName ? ` · ${item.compoundName}` : ''}
             </small>
           </div>
@@ -1809,6 +1816,7 @@ const recentEffects = [...filteredEffects]
                 'برای نمایش روند حداقل دو هفته داده لازم است.'
               )}
               fa={fa}
+              calendar={calendar}
             />
 
             <TrendChart
@@ -1823,6 +1831,7 @@ const recentEffects = [...filteredEffects]
                 'برای نمایش روند حداقل دو هفته داده لازم است.'
               )}
               fa={fa}
+              calendar={calendar}
             />
 
             <TrendChart
@@ -1837,11 +1846,12 @@ const recentEffects = [...filteredEffects]
                 'برای نمایش روند حداقل دو هفته داده لازم است.'
               )}
               fa={fa}
+              calendar={calendar}
             />
           </div>
         )}
       </section>
-      
+
       <div className="health-analytics-toolbar">
         <button
           className="health-secondary"
