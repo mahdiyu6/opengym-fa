@@ -689,7 +689,10 @@ const selectedHistory = selected
         >
           {busy
             ? tx('Reading…', 'در حال خواندن…')
-            : tx('+ Upload PDF', '+ بارگذاری PDF')}
+            : tx(
+  '+ Upload Report (PDF, JPG, PNG, WEBP)',
+  '+ بارگذاری گزارش (PDF، JPG، PNG، WEBP)'
+)}
         </button>
 
 <input
