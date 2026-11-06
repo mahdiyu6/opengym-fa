@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import HealthDatePicker from '../components/HealthDatePicker.jsx'
 import { getLang, useLang } from '../lib/i18n.js'
+import { fmtDateFull } from '../lib/format.js'
 import HealthDoseSchedule from './HealthDoseSchedule.jsx'
 import HealthSideEffects from './HealthSideEffects.jsx'
 import './health-hub.css'
@@ -154,6 +155,7 @@ export default function PerformanceHealth() {
   const protocols = useStore(s => s.S.healthProtocols || [])
   const doseLogs = useStore(s => s.S.healthDoseLogs || [])
   const checkIns = useStore(s => s.S.healthCheckIns || [])
+  const calendar = useStore(s => s.S?.calendar === 'jalali' ? 'jalali' : 'gregorian')
 const [checkInForm, setCheckInForm] = useState({
   date: today(),
   weight: '',
@@ -605,7 +607,7 @@ const compoundCount = protocols.reduce(
     <strong>{entry.compoundName}</strong>
   </div>
 
-  <small>{entry.protocolName} · {entry.date}</small>
+ <small>{entry.protocolName} · {fmtDateFull(entry.date, calendar)}</small>
 
   <span className="health-log-entry-amount">
     {entry.amount} {entry.unit}
@@ -789,7 +791,7 @@ const compoundCount = protocols.reduce(
           key={entry.id}
         >
           <div className="health-checkin-entry-heading">
-            <strong>{entry.date}</strong>
+            <strong>{fmtDateFull(entry.date, calendar)}</strong>
 
             <button
               type="button"
@@ -1174,13 +1176,15 @@ const compoundCount = protocols.reduce(
             </div>
             <div>
               <span>{tx('Start date', 'تاریخ شروع')}</span>
-              <strong>{item.startDate || '—'}</strong>
+              <strong>{item.startDate ? fmtDateFull(item.startDate, calendar) : '—'}</strong>
             </div>
             <div>
               <span>{tx('End date', 'تاریخ پایان')}</span>
-              <strong>{item.endDate || (isActive
-                ? tx('Ongoing', 'در حال انجام')
-                : '—')}</strong>
+<strong>
+  {item.endDate
+    ? fmtDateFull(item.endDate, calendar)
+    : (isActive ? tx('Ongoing', 'در حال انجام') : '—')}
+</strong>
             </div>
           </div>
 
