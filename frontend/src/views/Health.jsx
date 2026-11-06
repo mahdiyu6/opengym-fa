@@ -8,6 +8,7 @@ import { getLabInfo } from '../lib/lab-info.js'
 import { useNavigate } from 'react-router-dom'
 import HealthDatePicker from '../components/HealthDatePicker.jsx'
 import { fmtDateFull, todayISO } from '../lib/format.js'
+import { extractPdfTextWithOcr } from '../lib/lab-ocr.js'
 
 const KEY = 'opengym.health.reports.v1'
 
@@ -189,57 +190,84 @@ export default function Health() {
     return a
   }, {})
 
-  async function importPdf(file) {
-    if (!file) return
 
-    setError('')
-    setNotice('')
+async function importPdf(file) {
+  if (!file) return
 
-    if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) {
-      setError(tx('Please select a PDF file.', 'لطفاً فایل PDF انتخاب کن.'))
-      return
+  setError('')
+  setNotice('')
+
+  if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) {
+    setError(tx('Please select a PDF file.', 'لطفاً فایل PDF انتخاب کن.'))
+    return
+  }
+
+  if (file.size > 20 * 1024 * 1024) {
+    setError(tx('File size exceeds 20 MB.', 'حجم فایل بیشتر از ۲۰ مگابایت است.'))
+    return
+  }
+
+  setBusy(true)
+
+  try {
+    // Keep the existing PDF extraction as the primary method.
+    let text = await extractPdfText(file)
+    let parsed = parseLabReportText(text)
+    let usedOcr = false
+
+    // OCR is only a fallback when normal extraction finds no rows.
+    if (!parsed.items.length) {
+      try {
+        const ocrText = await extractPdfTextWithOcr(file)
+
+        if (ocrText.trim()) {
+          const ocrParsed = parseLabReportText(ocrText)
+
+          if (ocrParsed.items.length) {
+            text = ocrText
+            parsed = ocrParsed
+            usedOcr = true
+          }
+        }
+      } catch (ocrError) {
+        console.warn('Lab OCR fallback failed:', ocrError)
+      }
     }
 
-    if (file.size > 20 * 1024 * 1024) {
-      setError(tx('File size exceeds 20 MB.', 'حجم فایل بیشتر از ۲۰ مگابایت است.'))
-      return
-    }
+    setDraft({
+      id: 'r-' + Date.now(),
+      name: file.name,
+      date: parsed.date || todayISO(),
+      items: parsed.items,
+      rawText: text.slice(0, 30000),
+      warnings: parsed.warnings
+    })
 
-    setBusy(true)
-
-    try {
-      const text = await extractPdfText(file)
-      const parsed = parseLabReportText(text)
-
-      setDraft({
-        id: 'r-' + Date.now(),
-        name: file.name,
-        date: parsed.date || todayISO(),
-        items: parsed.items,
-        rawText: text.slice(0, 30000),
-        warnings: parsed.warnings
-      })
-
-      setNotice(
-        parsed.items.length
+    setNotice(
+      parsed.items.length
+        ? usedOcr
           ? tx(
+              `${parsed.items.length} preliminary rows found using OCR. Review every row against the original PDF before saving.`,
+              `${parsed.items.length} ردیف با OCR استخراج شد؛ پیش از ذخیره، تمام ردیف‌ها را با PDF اصلی تطبیق بده.`
+            )
+          : tx(
               `${parsed.items.length} preliminary rows found. Review each row against the PDF before saving.`,
               `${parsed.items.length} ردیف اولیه پیدا شد؛ پیش از ذخیره، تک‌تک ردیف‌ها را با PDF تطبیق بده.`
             )
-          : tx(
-              'No extractable text found. The file may be a scanned image. Nothing has been saved.',
-              'متن قابل‌استخراج پیدا نشد؛ فایل ممکن است اسکن تصویری باشد. هیچ نتیجه‌ای ذخیره نشده است.'
-            )
-      )
-    } catch (e) {
-      setError(
-        tx('Could not read PDF: ', 'خواندن PDF ناموفق بود: ') +
-        (e?.message || tx('Unknown error', 'خطای نامشخص'))
-      )
-    } finally {
-      setBusy(false)
-    }
+        : tx(
+            'No readable lab results were found. Nothing has been saved.',
+            'نتیجه آزمایش قابل‌خواندن پیدا نشد. هیچ اطلاعاتی ذخیره نشده است.'
+          )
+    )
+  } catch (e) {
+    setError(
+      tx('Could not read PDF: ', 'خواندن PDF ناموفق بود: ') +
+      (e?.message || tx('Unknown error', 'خطای نامشخص'))
+    )
+  } finally {
+    setBusy(false)
   }
+}
 
   function edit(i, k, v) {
     setDraft(d => ({
