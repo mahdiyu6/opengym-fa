@@ -14,7 +14,9 @@ export default function Nutrition() {
   )
   const nutrition = useStore(s => s.S?.nutrition || {})
   const updateStore = useStore(s => s.update)
-  const workouts = useStore(s => s.S?.workouts || [])
+  const workouts = useStore(s =>
+  Array.isArray(s.S?.workouts) ? s.S.workouts : []
+)
 
   const today = todayISO()
   const day = nutrition.days?.[today] || {}
