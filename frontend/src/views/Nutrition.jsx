@@ -44,7 +44,11 @@ const [foodQuantity, setFoodQuantity] = useState('1')
   const tx = (en, faText) => fa ? faText : en
 
   const target = Number(nutrition.targetCalories || 2000)
-  const consumed = Number(day.consumedCalories || 0)
+  const consumed = meals.length > 0
+  ? meals.reduce(
+      (sum, item) => sum + (Number(item.calories) || 0), 0
+    )
+  : Number(day.consumedCalories || 0)
   const exercise = workouts
   .filter(w => w.d === today)
   .reduce((sum, w) => sum + (Number(w.calories) || 0), 0)
