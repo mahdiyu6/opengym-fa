@@ -81,18 +81,33 @@ const progress = target > 0
   
   function saveNewFood() {
   const name = foodDraft.name.trim()
+  const unit = foodDraft.unit.trim() || 'g'
   const quantity = Number(foodQuantity)
 
   if (!name || !addingFoodFor || !Number.isFinite(quantity) || quantity <= 0) return
 
-  const food = {
+  const calories = Number(foodDraft.calories) || 0
+  const protein = Number(foodDraft.protein) || 0
+  const carbs = Number(foodDraft.carbs) || 0
+  const fat = Number(foodDraft.fat) || 0
+
+  const existingFood = foodBank.find(food =>
+    food.name.trim().toLowerCase() === name.toLowerCase() &&
+    food.unit === unit &&
+    Number(food.calories) === calories &&
+    Number(food.protein) === protein &&
+    Number(food.carbs) === carbs &&
+    Number(food.fat) === fat
+  )
+
+  const food = existingFood || {
     id: `food-${Date.now()}`,
     name,
-    unit: foodDraft.unit.trim() || 'g',
-    calories: Number(foodDraft.calories) || 0,
-    protein: Number(foodDraft.protein) || 0,
-    carbs: Number(foodDraft.carbs) || 0,
-    fat: Number(foodDraft.fat) || 0
+    unit,
+    calories,
+    protein,
+    carbs,
+    fat
   }
 
   const mealItem = {
@@ -111,7 +126,10 @@ const progress = target > 0
   updateStore(s => {
     s.nutrition ||= {}
     s.nutrition.foods ||= []
-    s.nutrition.foods.push(food)
+
+    if (!existingFood) {
+      s.nutrition.foods.push(food)
+    }
 
     s.nutrition.days ||= {}
     s.nutrition.days[today] ||= {}
