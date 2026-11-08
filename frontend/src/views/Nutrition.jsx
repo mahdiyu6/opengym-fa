@@ -622,152 +622,173 @@ const macros = [
 
 {page === 'nutrition' && (
   <section className="health-nutrition-facts">
-<div className="health-nutrition-section-title">
-  <h2>{tx('Daily nutrition', 'ارزش غذایی امروز')}</h2>
+    <div className="health-nutrition-section-title">
+      <h2>{tx('Daily nutrition', 'ارزش غذایی امروز')}</h2>
 
-  <button
-    type="button"
-    className="health-nutrition-edit"
-    onClick={() => {
-      setMacroGoalsDraft({
-        protein: String(nutrition.macroGoals?.protein ?? ''),
-        carbs: String(nutrition.macroGoals?.carbs ?? ''),
-        fat: String(nutrition.macroGoals?.fat ?? '')
-      })
-      setEditingMacroGoals(v => !v)
-    }}
-  >
-    ✎ {tx('Edit goals', 'ویرایش اهداف')}
-  </button>
-</div>
-
-{editingMacroGoals && (
-  <div className="health-nutrition-target-editor">
-    <label>
-      {tx('Protein target (g)', 'هدف پروتئین (گرم)')}
-      <input
-        type="number"
-        min="0"
-        step="0.1"
-        value={macroGoalsDraft.protein}
-        onChange={e => setMacroGoalsDraft(v => ({
-          ...v, protein: e.target.value
-        }))}
-      />
-    </label>
-
-    <label>
-      {tx('Carbohydrate target (g)', 'هدف کربوهیدرات (گرم)')}
-      <input
-        type="number"
-        min="0"
-        step="0.1"
-        value={macroGoalsDraft.carbs}
-        onChange={e => setMacroGoalsDraft(v => ({
-          ...v, carbs: e.target.value
-        }))}
-      />
-    </label>
-
-    <label>
-      {tx('Fat target (g)', 'هدف چربی (گرم)')}
-      <input
-        type="number"
-        min="0"
-        step="0.1"
-        value={macroGoalsDraft.fat}
-        onChange={e => setMacroGoalsDraft(v => ({
-          ...v, fat: e.target.value
-        }))}
-      />
-    </label>
-
-    <div className="health-nutrition-food-actions">
-      <button type="button" onClick={saveMacroGoals}>
-        {tx('Save goals', 'ذخیره اهداف')}
-      </button>
       <button
         type="button"
-        className="secondary"
-        onClick={() => setEditingMacroGoals(false)}
+        className="health-nutrition-edit"
+        onClick={() => {
+          setMacroGoalsDraft({
+            protein: String(nutrition.macroGoals?.protein ?? ''),
+            carbs: String(nutrition.macroGoals?.carbs ?? ''),
+            fat: String(nutrition.macroGoals?.fat ?? '')
+          })
+          setEditingMacroGoals(v => !v)
+        }}
       >
-        {tx('Cancel', 'انصراف')}
+        ✎ {tx('Edit macro goals', 'ویرایش اهداف درشت‌مغذی‌ها')}
       </button>
     </div>
-  </div>
-)}
 
-<div className="health-nutrition-facts-table">
-  <div className="health-nutrition-facts-row header">
-    <strong>{tx('Nutrient', 'ماده مغذی')}</strong>
-    <strong>{tx('Goal', 'هدف')}</strong>
-    <strong>{tx('Consumed', 'دریافتی')}</strong>
-    <strong>{tx('Remaining', 'باقی‌مانده')}</strong>
-  </div>
+    {editingMacroGoals && (
+      <div className="health-nutrition-target-editor">
+        <label>
+          {tx('Protein target (g)', 'هدف پروتئین (گرم)')}
+          <input
+            type="number"
+            min="0"
+            step="0.1"
+            value={macroGoalsDraft.protein}
+            onChange={e => setMacroGoalsDraft(v => ({
+              ...v, protein: e.target.value
+            }))}
+          />
+        </label>
 
-  {[
-    {
-      id: 'calories',
-      label: tx('Calories', 'کالری'),
-      value: consumed,
-      goal: target,
-      unit: 'kcal'
-    },
-    {
-      id: 'protein',
-      label: tx('Protein', 'پروتئین'),
-      value: macroTotals.protein,
-      goal: nutrition.macroGoals?.protein,
-      unit: 'g'
-    },
-    {
-      id: 'carbs',
-      label: tx('Carbohydrates', 'کربوهیدرات'),
-      value: macroTotals.carbs,
-      goal: nutrition.macroGoals?.carbs,
-      unit: 'g'
-    },
-    {
-      id: 'fat',
-      label: tx('Fat', 'چربی'),
-      value: macroTotals.fat,
-      goal: nutrition.macroGoals?.fat,
-      unit: 'g'
-    }
-  ].map(item => {
-    const hasGoal = item.goal !== undefined &&
-      item.goal !== null &&
-      Number.isFinite(Number(item.goal))
+        <label>
+          {tx('Carbohydrate target (g)', 'هدف کربوهیدرات (گرم)')}
+          <input
+            type="number"
+            min="0"
+            step="0.1"
+            value={macroGoalsDraft.carbs}
+            onChange={e => setMacroGoalsDraft(v => ({
+              ...v, carbs: e.target.value
+            }))}
+          />
+        </label>
 
-    const remaining = hasGoal
-      ? Number(item.goal) - item.value
-      : null
+        <label>
+          {tx('Fat target (g)', 'هدف چربی (گرم)')}
+          <input
+            type="number"
+            min="0"
+            step="0.1"
+            value={macroGoalsDraft.fat}
+            onChange={e => setMacroGoalsDraft(v => ({
+              ...v, fat: e.target.value
+            }))}
+          />
+        </label>
 
-    return (
-      <div className="health-nutrition-facts-row" key={item.id}>
-        <span>{item.label}</span>
-
-        <strong>
-          {hasGoal
-            ? `${fmtNum(Number(item.goal))} ${item.unit}`
-            : '—'}
-        </strong>
-
-        <strong>
-          {fmtNum(Number(item.value.toFixed(1)))} {item.unit}
-        </strong>
-
-        <strong className={
-          remaining !== null && remaining < 0 ? 'over-goal' : ''
-        }>
-          {remaining !== null
-            ? `${fmtNum(Number(remaining.toFixed(1)))} ${item.unit}`
-            : '—'}
-        </strong>
+        <div className="health-nutrition-food-actions">
+          <button type="button" onClick={saveMacroGoals}>
+            {tx('Save goals', 'ذخیره اهداف')}
+          </button>
+          <button
+            type="button"
+            className="secondary"
+            onClick={() => setEditingMacroGoals(false)}
+          >
+            {tx('Cancel', 'انصراف')}
+          </button>
+        </div>
       </div>
-    )
-  })}
-</div>
+    )}
+
+    <h3 className="health-nutrition-facts-heading">
+      {tx('Macronutrients', 'درشت‌مغذی‌ها')}
+    </h3>
+
+    <div className="health-nutrition-facts-table">
+      <div
+        className="health-nutrition-facts-row header"
+        style={{ gridTemplateColumns: 'minmax(0,1.4fr) repeat(2,minmax(0,1fr))', minWidth: 0 }}
+      >
+        <strong>{tx('Nutrient', 'ماده مغذی')}</strong>
+        <strong>{tx('Goal', 'هدف')}</strong>
+        <strong>{tx('Consumed', 'دریافتی')}</strong>
+      </div>
+
+      {[
+        { id: 'calories', label: tx('Calories', 'کالری'), value: consumed, goal: target, unit: 'kcal' },
+        { id: 'protein', label: tx('Protein', 'پروتئین'), value: macroTotals.protein, goal: nutrition.macroGoals?.protein, unit: 'g' },
+        { id: 'carbs', label: tx('Carbohydrates', 'کربوهیدرات'), value: macroTotals.carbs, goal: nutrition.macroGoals?.carbs, unit: 'g' },
+        { id: 'fat', label: tx('Fat', 'چربی'), value: macroTotals.fat, goal: nutrition.macroGoals?.fat, unit: 'g' }
+      ].map(item => (
+        <div
+          className="health-nutrition-facts-row"
+          key={item.id}
+          style={{ gridTemplateColumns: 'minmax(0,1.4fr) repeat(2,minmax(0,1fr))', minWidth: 0 }}
+        >
+          <span>{item.label}</span>
+          <strong>
+            {item.goal !== undefined && item.goal !== null && item.goal !== ''
+              ? `${fmtNum(Number(item.goal))} ${item.unit}`
+              : '—'}
+          </strong>
+          <strong>{fmtNum(Number(item.value.toFixed(1)))} {item.unit}</strong>
+        </div>
+      ))}
+    </div>
+
+    <h3 className="health-nutrition-facts-heading">
+      {tx('Micronutrients', 'ریزمغذی‌ها')}
+    </h3>
+
+    <div className="health-nutrition-facts-table">
+      <div
+        className="health-nutrition-facts-row header"
+        style={{ gridTemplateColumns: 'minmax(0,1.4fr) repeat(2,minmax(0,1fr))', minWidth: 0 }}
+      >
+        <strong>{tx('Nutrient', 'ماده مغذی')}</strong>
+        <strong>{tx('Goal', 'هدف')}</strong>
+        <strong>{tx('Consumed', 'دریافتی')}</strong>
+      </div>
+
+      {[
+        ['fiber', 'Fiber', 'فیبر', 'gr'],
+        ['vitaminA', 'Vitamin A', 'ویتامین A', 'mcg'],
+        ['vitaminB1', 'Vitamin B1', 'ویتامین B1', 'mg'],
+        ['vitaminB2', 'Vitamin B2', 'ویتامین B2', 'mg'],
+        ['vitaminB3', 'Vitamin B3', 'ویتامین B3', 'mg'],
+        ['vitaminB5', 'Vitamin B5', 'ویتامین B5', 'mg'],
+        ['vitaminB6', 'Vitamin B6', 'ویتامین B6', 'mg'],
+        ['vitaminB9', 'Vitamin B9', 'ویتامین B9', 'mcg'],
+        ['vitaminB12', 'Vitamin B12', 'ویتامین B12', 'mcg'],
+        ['vitaminC', 'Vitamin C', 'ویتامین C', 'mg'],
+        ['vitaminD3', 'Vitamin D3', 'ویتامین D3', 'mcg'],
+        ['vitaminE', 'Vitamin E', 'ویتامین E', 'mg'],
+        ['vitaminK', 'Vitamin K', 'ویتامین K', 'mcg'],
+        ['iron', 'Iron', 'آهن', 'mg'],
+        ['zinc', 'Zinc', 'روی', 'mg'],
+        ['copper', 'Copper', 'مس', 'mg'],
+        ['calcium', 'Calcium', 'کلسیم', 'mg'],
+        ['sodium', 'Sodium', 'سدیم', 'mg'],
+        ['potassium', 'Potassium', 'پتاسیم', 'mg'],
+        ['magnesium', 'Magnesium', 'منیزیم', 'mg'],
+        ['selenium', 'Selenium', 'سلنیوم', 'mcg'],
+        ['manganese', 'Manganese', 'منگنز', 'mg'],
+        ['phosphorus', 'Phosphorus', 'فسفر', 'mg'],
+        ['fluoride', 'Fluoride', 'فلوراید', 'mcg'],
+        ['choline', 'Choline', 'کولین', 'mg'],
+        ['cholesterol', 'Cholesterol', 'کلسترول', 'mg'],
+        ['saturatedFat', 'Saturated fatty acids', 'اسیدهای چرب اشباع‌شده', 'gr'],
+        ['unsaturatedFat', 'Unsaturated fatty acids', 'اسیدهای چرب اشباع‌نشده', 'gr'],
+        ['sugar', 'Sugar', 'قند', 'gr']
+      ].map(([id, en, faLabel, unit]) => (
+        <div
+          className="health-nutrition-facts-row"
+          key={id}
+          style={{ gridTemplateColumns: 'minmax(0,1.4fr) repeat(2,minmax(0,1fr))', minWidth: 0 }}
+        >
+          <span>{tx(en, faLabel)}</span>
+          <strong>— {unit}</strong>
+          <strong>— {unit}</strong>
+        </div>
+      ))}
+    </div>
   </section>
 )}
     </main>
