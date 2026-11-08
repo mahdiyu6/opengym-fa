@@ -4547,3 +4547,63 @@
   font-variant-numeric: tabular-nums;
   text-align: end;
 }
+
+
+/* Nutrition facts table */
+
+.health-nutrition-facts {
+  margin-top: 20px;
+}
+
+.health-nutrition-facts-table {
+  margin-top: 14px;
+  overflow: hidden;
+  background: var(--card, #fff);
+  border: 1px solid var(--line, #e8e8e8);
+  border-radius: 16px;
+}
+
+.health-nutrition-facts-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 8px;
+  min-height: 54px;
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--line, #e8e8e8);
+}
+
+.health-nutrition-facts-row:last-child {
+  border-bottom: 0;
+}
+
+.health-nutrition-facts-row.header {
+  min-height: 46px;
+  background: var(--bg-soft, #f5f5f5);
+  color: var(--label-2);
+  font-size: 10px;
+}
+
+.health-nutrition-facts-row:not(.header) {
+  font-size: 11.5px;
+}
+
+.health-nutrition-facts-row > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.health-nutrition-facts-row strong {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.health-nutrition-facts-row > span {
+  font-weight: 550;
+  text-align: start;
+}
+
+.health-nutrition-facts-row .over-goal {
+  color: var(--danger, #d94b4b);
+}
