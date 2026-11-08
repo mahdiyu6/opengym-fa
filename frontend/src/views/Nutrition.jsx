@@ -343,6 +343,101 @@ const macros = [
 >
   + {tx('Create new food', 'تعریف غذای جدید')}
 </button>
+   {addingFoodFor === 'foodbank' && (
+  <div className="health-nutrition-food-form">
+    <h3 className="health-nutrition-form-title">
+      {tx('New food details', 'مشخصات غذای جدید')}
+    </h3>
+
+    <div className="health-nutrition-form-section">
+      <div className="health-nutrition-food-identity">
+        <label>
+          {tx('Food name', 'نام غذا')}
+          <input
+            value={foodDraft.name}
+            onChange={e => setFoodDraft(v => ({ ...v, name: e.target.value }))}
+            placeholder={tx('e.g. Bread', 'مثلاً نان')}
+          />
+        </label>
+
+        <label>
+          {tx('Measurement unit', 'واحد اندازه‌گیری')}
+          <input
+            value={foodDraft.unit}
+            onChange={e => setFoodDraft(v => ({ ...v, unit: e.target.value }))}
+            placeholder={tx('g, spoon, slice, piece', 'گرم، قاشق، اسلایس، عدد')}
+          />
+        </label>
+      </div>
+    </div>
+
+    <div className="health-nutrition-form-section">
+      <strong>{tx('Nutrition per unit', 'ارزش غذایی هر واحد')}</strong>
+
+      <div className="health-nutrition-food-macros">
+        {[
+          ['calories', 'Calories (kcal)', 'کالری (کیلوکالری)'],
+          ['protein', 'Protein (g)', 'پروتئین (گرم)'],
+          ['carbs', 'Carbs (g)', 'کربوهیدرات (گرم)'],
+          ['fat', 'Fat (g)', 'چربی (گرم)']
+        ].map(([key, en, faText]) => (
+          <label key={key}>
+            {tx(en, faText)}
+            <input
+              type="number"
+              min="0"
+              step="any"
+              value={foodDraft[key]}
+              onChange={e => setFoodDraft(v => ({
+                ...v,
+                [key]: e.target.value
+              }))}
+              placeholder="0"
+            />
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <details className="health-nutrition-micro-editor">
+      <summary>
+        {tx('Micronutrients & More', 'ریزمغذی‌ها و سایر موارد')}
+      </summary>
+
+      <div className="health-nutrition-micro-grid">
+        {MICRONUTRIENTS.map(item => (
+          <label key={item.id}>
+            {tx(item.en, item.fa)} ({item.unit})
+            <input
+              type="number"
+              min="0"
+              step="any"
+              value={foodDraft[item.id] ?? ''}
+              onChange={e => setFoodDraft(v => ({
+                ...v,
+                [item.id]: e.target.value
+              }))}
+              placeholder="0"
+            />
+          </label>
+        ))}
+      </div>
+    </details>
+
+    <div className="health-nutrition-food-actions">
+      <button type="button" onClick={saveNewFood}>
+        {tx('Save to food bank', 'ذخیره در بانک غذا')}
+      </button>
+      <button
+        type="button"
+        className="secondary"
+        onClick={() => setAddingFoodFor(null)}
+      >
+        {tx('Cancel', 'انصراف')}
+      </button>
+    </div>
+  </div>
+)}
     <input
       type="search"
       className="health-nutrition-bank-search"
