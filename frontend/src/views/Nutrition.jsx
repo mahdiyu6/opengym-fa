@@ -424,7 +424,38 @@ const progress = target > 0
             {addingFoodFor === type.id && (
               <div className="health-nutrition-food-form">
                 <h3>{tx('New food', 'ثبت غذای جدید')}</h3>
+                
+{foodBank.length > 0 && (
+  <label>
+    {tx('Choose from food bank', 'انتخاب از بانک غذا')}
+    <select
+      defaultValue=""
+      onChange={e => {
+        const food = foodBank.find(item => item.id === e.target.value)
+        if (!food) return
 
+        setFoodDraft({
+          name: food.name,
+          unit: food.unit,
+          calories: String(food.calories),
+          protein: String(food.protein),
+          carbs: String(food.carbs),
+          fat: String(food.fat)
+        })
+        setFoodQuantity('1')
+      }}
+    >
+      <option value="">
+        {tx('Select a saved food', 'انتخاب غذای ذخیره‌شده')}
+      </option>
+      {foodBank.map(food => (
+        <option key={food.id} value={food.id}>
+          {food.name}
+        </option>
+      ))}
+    </select>
+  </label>
+)}
                 <label>
                   {tx('Food name', 'نام غذا')}
                   <input
