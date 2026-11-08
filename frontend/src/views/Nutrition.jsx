@@ -863,6 +863,62 @@ setFoodDraft({
       {tx('Micronutrients', 'ریزمغذی‌ها')}
     </h3>
 
+<div className="health-nutrition-micro-goal-controls">
+  <button
+    type="button"
+    className="health-nutrition-edit"
+    onClick={() => {
+      setMicroGoalsDraft(
+        Object.fromEntries(
+          MICRONUTRIENTS.map(item => [
+            item.id,
+            String(nutrition.microGoals?.[item.id] ?? '')
+          ])
+        )
+      )
+      setEditingMicroGoals(v => !v)
+    }}
+  >
+    ✎ {tx('Edit micronutrient goals', 'ویرایش اهداف ریزمغذی‌ها')}
+  </button>
+</div>
+
+{editingMicroGoals && (
+  <div className="health-nutrition-target-editor">
+    <div className="health-nutrition-micro-grid">
+      {MICRONUTRIENTS.map(item => (
+        <label key={item.id}>
+          {tx(item.en, item.fa)} ({item.unit})
+          <input
+            type="number"
+            min="0"
+            step="any"
+            value={microGoalsDraft[item.id] ?? ''}
+            placeholder="—"
+            onChange={e => setMicroGoalsDraft(v => ({
+              ...v,
+              [item.id]: e.target.value
+            }))}
+          />
+        </label>
+      ))}
+    </div>
+
+    <div className="health-nutrition-food-actions">
+      <button type="button" onClick={saveMicroGoals}>
+        {tx('Save goals', 'ذخیره اهداف')}
+      </button>
+      <button
+        type="button"
+        className="secondary"
+        onClick={() => setEditingMicroGoals(false)}
+      >
+        {tx('Cancel', 'انصراف')}
+      </button>
+    </div>
+  </div>
+)}
+    
     <div className="health-nutrition-facts-table">
       <div
         className="health-nutrition-facts-row header"
