@@ -40,7 +40,13 @@ const [foodQuantity, setFoodQuantity] = useState('1')
   const [targetDraft, setTargetDraft] = useState(
     String(nutrition.targetCalories || 2000)
   )
+const [macroGoalsDraft, setMacroGoalsDraft] = useState({
+  protein: String(nutrition.macroGoals?.protein ?? ''),
+  carbs: String(nutrition.macroGoals?.carbs ?? ''),
+  fat: String(nutrition.macroGoals?.fat ?? '')
+})
 
+const [editingMacroGoals, setEditingMacroGoals] = useState(false)
   const tx = (en, faText) => fa ? faText : en
 
   const target = Number(nutrition.targetCalories || 2000)
@@ -153,6 +159,25 @@ const progress = target > 0
 
     setEditingTarget(false)
   }
+
+  function saveMacroGoals() {
+  const goals = {
+    protein: Number(macroGoalsDraft.protein),
+    carbs: Number(macroGoalsDraft.carbs),
+    fat: Number(macroGoalsDraft.fat)
+  }
+
+  if (Object.values(goals).some(value =>
+    !Number.isFinite(value) || value < 0
+  )) return
+
+  updateStore(s => {
+    s.nutrition ||= {}
+    s.nutrition.macroGoals = goals
+  })
+
+  setEditingMacroGoals(false)
+}
 
   const macroTotals = meals.reduce((totals, item) => ({
   fat: totals.fat + (Number(item.fat) || 0),
