@@ -540,14 +540,20 @@ const macros = [
         const food = foodBank.find(item => item.id === e.target.value)
         if (!food) return
 
-        setFoodDraft({
-          name: food.name,
-          unit: food.unit,
-          calories: String(food.calories),
-          protein: String(food.protein),
-          carbs: String(food.carbs),
-          fat: String(food.fat)
-        })
+setFoodDraft({
+  name: food.name,
+  unit: food.unit,
+  calories: String(food.calories ?? ''),
+  protein: String(food.protein ?? ''),
+  carbs: String(food.carbs ?? ''),
+  fat: String(food.fat ?? ''),
+  ...Object.fromEntries(
+    MICRONUTRIENTS.map(item => [
+      item.id,
+      String(food[item.id] ?? '')
+    ])
+  )
+})
         setFoodQuantity('1')
       }}
     >
