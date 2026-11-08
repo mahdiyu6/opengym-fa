@@ -5,6 +5,9 @@ import { useStore } from '../store/useStore.js'
 import { fmtDateFull, todayISO, fmtNum } from '../lib/format.js'
 import './health-hub.css'
 
+const EMPTY_NUTRITION = Object.freeze({})
+const EMPTY_WORKOUTS = Object.freeze([])
+
 export default function Nutrition() {
   useLang()
 
@@ -12,10 +15,10 @@ export default function Nutrition() {
   const calendar = useStore(s =>
     s.S?.calendar === 'jalali' ? 'jalali' : 'gregorian'
   )
-  const nutrition = useStore(s => s.S?.nutrition || {})
+  const nutrition = useStore(s => s.S?.nutrition || EMPTY_NUTRITION)
   const updateStore = useStore(s => s.update)
   const workouts = useStore(s =>
-  Array.isArray(s.S?.workouts) ? s.S.workouts : []
+  Array.isArray(s.S?.workouts) ? s.S.workouts : EMPTY_WORKOUTS
 )
 
   const today = todayISO()
