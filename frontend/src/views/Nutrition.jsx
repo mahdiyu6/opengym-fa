@@ -20,6 +20,21 @@ export default function Nutrition() {
   const day = nutrition.days?.[today] || {}
   const meals = Array.isArray(day.meals) ? day.meals : []
 
+  const foodBank = Array.isArray(nutrition.foods) ? nutrition.foods : []
+
+const emptyFoodDraft = {
+  name: '',
+  unit: 'g',
+  calories: '',
+  protein: '',
+  carbs: '',
+  fat: ''
+}
+
+const [addingFoodFor, setAddingFoodFor] = useState(null)
+const [foodDraft, setFoodDraft] = useState(emptyFoodDraft)
+const [foodQuantity, setFoodQuantity] = useState('1')
+  
   const [page, setPage] = useState('dashboard')
   const [editingTarget, setEditingTarget] = useState(false)
   const [targetDraft, setTargetDraft] = useState(
@@ -58,6 +73,51 @@ const progress = target > 0
     s.nutrition.days[today] ||= {}
     s.nutrition.days[today].meals = nextMeals
   })
+}
+  
+  function saveNewFood() {
+  const name = foodDraft.name.trim()
+  const quantity = Number(foodQuantity)
+
+  if (!name || !addingFoodFor || !Number.isFinite(quantity) || quantity <= 0) return
+
+  const food = {
+    id: `food-${Date.now()}`,
+    name,
+    unit: foodDraft.unit.trim() || 'g',
+    calories: Number(foodDraft.calories) || 0,
+    protein: Number(foodDraft.protein) || 0,
+    carbs: Number(foodDraft.carbs) || 0,
+    fat: Number(foodDraft.fat) || 0
+  }
+
+  const mealItem = {
+    id: `meal-${Date.now()}`,
+    foodId: food.id,
+    mealType: addingFoodFor,
+    name: food.name,
+    unit: food.unit,
+    quantity,
+    calories: food.calories * quantity,
+    protein: food.protein * quantity,
+    carbs: food.carbs * quantity,
+    fat: food.fat * quantity
+  }
+
+  updateStore(s => {
+    s.nutrition ||= {}
+    s.nutrition.foods ||= []
+    s.nutrition.foods.push(food)
+
+    s.nutrition.days ||= {}
+    s.nutrition.days[today] ||= {}
+    s.nutrition.days[today].meals ||= []
+    s.nutrition.days[today].meals.push(mealItem)
+  })
+
+  setFoodDraft(emptyFoodDraft)
+  setFoodQuantity('1')
+  setAddingFoodFor(null)
 }
   
   function saveTarget() {
