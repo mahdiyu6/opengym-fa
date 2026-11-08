@@ -590,16 +590,33 @@ const macros = [
   </section>
 )}
 
-      {page === 'nutrition' && (
-        <section className="health-nutrition-placeholder">
-          <span>🥗</span>
-          <h2>{tx('Nutrition facts', 'ارزش غذایی')}</h2>
-          <p>{tx(
-            'Daily nutrition targets and consumed amounts will appear here.',
-            'اهداف و مقادیر دریافتی روزانه مواد مغذی در این قسمت نمایش داده می‌شوند.'
-          )}</p>
-        </section>
-      )}
+{page === 'nutrition' && (
+  <section className="health-nutrition-facts">
+    <div className="health-nutrition-section-title">
+      <h2>{tx('Daily nutrition', 'ارزش غذایی امروز')}</h2>
+      <span>{fmtDateFull(today, calendar)}</span>
+    </div>
+
+    <div className="health-nutrition-facts-table">
+      <div className="health-nutrition-facts-row header">
+        <strong>{tx('Nutrient', 'ماده مغذی')}</strong>
+        <strong>{tx('Consumed', 'دریافتی')}</strong>
+      </div>
+
+      {[
+        { label: tx('Calories', 'کالری'), value: consumed, unit: 'kcal' },
+        { label: tx('Protein', 'پروتئین'), value: macroTotals.protein, unit: 'g' },
+        { label: tx('Carbohydrates', 'کربوهیدرات'), value: macroTotals.carbs, unit: 'g' },
+        { label: tx('Fat', 'چربی'), value: macroTotals.fat, unit: 'g' }
+      ].map(item => (
+        <div className="health-nutrition-facts-row" key={item.label}>
+          <span>{item.label}</span>
+          <strong>{fmtNum(Number(item.value.toFixed(1)))} {item.unit}</strong>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
     </main>
   )
 }
