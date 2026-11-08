@@ -154,11 +154,17 @@ const progress = target > 0
     setEditingTarget(false)
   }
 
-  const macros = [
-    { label: tx('Fat', 'چربی'), value: 0, goal: '—', unit: 'g', icon: '🥑' },
-    { label: tx('Protein', 'پروتئین'), value: 0, goal: '—', unit: 'g', icon: '🥩' },
-    { label: tx('Carbs', 'کربوهیدرات'), value: 0, goal: '—', unit: 'g', icon: '🍚' }
-  ]
+  const macroTotals = meals.reduce((totals, item) => ({
+  fat: totals.fat + (Number(item.fat) || 0),
+  protein: totals.protein + (Number(item.protein) || 0),
+  carbs: totals.carbs + (Number(item.carbs) || 0)
+}), { fat: 0, protein: 0, carbs: 0 })
+
+const macros = [
+  { label: tx('Fat', 'چربی'), value: macroTotals.fat, goal: '—', unit: 'g', icon: '🥑' },
+  { label: tx('Protein', 'پروتئین'), value: macroTotals.protein, goal: '—', unit: 'g', icon: '🥩' },
+  { label: tx('Carbs', 'کربوهیدرات'), value: macroTotals.carbs, goal: '—', unit: 'g', icon: '🍚' }
+]
 
   const tabs = [
     { id: 'dashboard', label: tx('Overview', 'نمای کلی'), icon: '🔥' },
