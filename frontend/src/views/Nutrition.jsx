@@ -18,6 +18,7 @@ export default function Nutrition() {
 
   const today = todayISO()
   const day = nutrition.days?.[today] || {}
+  const meals = Array.isArray(day.meals) ? day.meals : []
 
   const [page, setPage] = useState('dashboard')
   const [editingTarget, setEditingTarget] = useState(false)
@@ -50,6 +51,15 @@ const progress = target > 0
     })
   }
 
+  function saveMeals(nextMeals) {
+  updateStore(s => {
+    s.nutrition ||= {}
+    s.nutrition.days ||= {}
+    s.nutrition.days[today] ||= {}
+    s.nutrition.days[today].meals = nextMeals
+  })
+}
+  
   function saveTarget() {
     const value = Number(targetDraft)
     if (!Number.isFinite(value) || value <= 0) return
