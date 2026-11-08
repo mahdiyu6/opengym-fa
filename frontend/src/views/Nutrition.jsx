@@ -571,36 +571,39 @@ const macros = [
 
             {addingFoodFor === type.id && (
               <div className="health-nutrition-food-form">
-                <h3>{tx('New food', 'ثبت غذای جدید')}</h3>
                 
+<h3 className="health-nutrition-form-title">
+  {tx('Add food to meal', 'افزودن غذا به وعده')}
+</h3>
+
 {foodBank.length > 0 && (
-  <label>
-    {tx('Choose from food bank', 'انتخاب از بانک غذا')}
+  <label className="health-nutrition-bank-picker">
+    {tx('Choose a saved food', 'انتخاب از بانک غذا')}
     <select
       defaultValue=""
       onChange={e => {
         const food = foodBank.find(item => item.id === e.target.value)
         if (!food) return
 
-setFoodDraft({
-  name: food.name,
-  unit: food.unit,
-  calories: String(food.calories ?? ''),
-  protein: String(food.protein ?? ''),
-  carbs: String(food.carbs ?? ''),
-  fat: String(food.fat ?? ''),
-  ...Object.fromEntries(
-    MICRONUTRIENTS.map(item => [
-      item.id,
-      String(food[item.id] ?? '')
-    ])
-  )
-})
+        setFoodDraft({
+          name: food.name,
+          unit: food.unit,
+          calories: String(food.calories ?? ''),
+          protein: String(food.protein ?? ''),
+          carbs: String(food.carbs ?? ''),
+          fat: String(food.fat ?? ''),
+          ...Object.fromEntries(
+            MICRONUTRIENTS.map(item => [
+              item.id,
+              String(food[item.id] ?? '')
+            ])
+          )
+        })
         setFoodQuantity('1')
       }}
     >
       <option value="">
-        {tx('Select a saved food', 'انتخاب غذای ذخیره‌شده')}
+        {tx('Select from food bank', 'انتخاب غذای ذخیره‌شده')}
       </option>
       {foodBank.map(food => (
         <option key={food.id} value={food.id}>
@@ -610,77 +613,100 @@ setFoodDraft({
     </select>
   </label>
 )}
-                <label>
-                  {tx('Food name', 'نام غذا')}
-                  <input
-                    value={foodDraft.name}
-                    onChange={e => setFoodDraft(v => ({ ...v, name: e.target.value }))}
-                    placeholder={tx('e.g. Rice', 'مثلاً برنج')}
-                  />
-                </label>
 
-                <label>
-                  {tx('Unit', 'واحد اندازه‌گیری')}
-                  <input
-                    value={foodDraft.unit}
-                    onChange={e => setFoodDraft(v => ({ ...v, unit: e.target.value }))}
-                    placeholder="g"
-                  />
-                </label>
+<div className="health-nutrition-form-section">
+  <strong>{tx('Food details', 'مشخصات غذا')}</strong>
+  <div className="health-nutrition-food-identity">
+    <label>
+      {tx('Food name', 'نام غذا')}
+      <input
+        value={foodDraft.name}
+        onChange={e => setFoodDraft(v => ({ ...v, name: e.target.value }))}
+        placeholder={tx('e.g. Rice', 'مثلاً برنج')}
+      />
+    </label>
 
-                <label>
-                  {tx('Quantity', 'تعداد واحد مصرفی')}
-                  <input
-                    type="number"
-                    min="0.1"
-                    step="0.1"
-                    value={foodQuantity}
-                    onChange={e => setFoodQuantity(e.target.value)}
-                  />
-                </label>
+    <label>
+      {tx('Unit', 'واحد اندازه‌گیری')}
+      <input
+        value={foodDraft.unit}
+        onChange={e => setFoodDraft(v => ({ ...v, unit: e.target.value }))}
+        placeholder={tx('e.g. spoon, slice, piece', 'مثلاً قاشق، اسلایس، عدد')}
+      />
+    </label>
 
-                <label>
-                  {tx('Calories per unit', 'کالری هر واحد')}
-                  <input
-                    type="number"
-                    min="0"
-                    value={foodDraft.calories}
-                    onChange={e => setFoodDraft(v => ({ ...v, calories: e.target.value }))}
-                  />
-                </label>
+    <label>
+      {tx('Quantity consumed', 'تعداد واحد مصرفی')}
+      <input
+        type="number"
+        min="0.1"
+        step="0.1"
+        value={foodQuantity}
+        onChange={e => setFoodQuantity(e.target.value)}
+        placeholder="1"
+      />
+    </label>
+  </div>
+</div>
 
-                <label>
-                  {tx('Protein (g)', 'پروتئین (گرم)')}
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    value={foodDraft.protein}
-                    onChange={e => setFoodDraft(v => ({ ...v, protein: e.target.value }))}
-                  />
-                </label>
+<div className="health-nutrition-form-section">
+  <strong>{tx('Nutrition per unit', 'ارزش غذایی هر واحد')}</strong>
+  <small>
+    {tx(
+      'Enter the nutritional values for one unit, not the total quantity.',
+      'مقادیر زیر را برای یک واحد وارد کن، نه کل تعداد مصرفی.'
+    )}
+  </small>
 
-                <label>
-                  {tx('Carbs (g)', 'کربوهیدرات (گرم)')}
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    value={foodDraft.carbs}
-                    onChange={e => setFoodDraft(v => ({ ...v, carbs: e.target.value }))}
-                  />
-                </label>
+  <div className="health-nutrition-food-macros">
+    <label>
+      {tx('Calories (kcal)', 'کالری (کیلوکالری)')}
+      <input
+        type="number"
+        min="0"
+        value={foodDraft.calories}
+        onChange={e => setFoodDraft(v => ({ ...v, calories: e.target.value }))}
+        placeholder="0"
+      />
+    </label>
 
-                <label>
-                  {tx('Fat (g)', 'چربی (گرم)')}
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    value={foodDraft.fat}
-                    onChange={e => setFoodDraft(v => ({ ...v, fat: e.target.value }))}
-                  />
-                </label>
+    <label>
+      {tx('Protein (g)', 'پروتئین (گرم)')}
+      <input
+        type="number"
+        min="0"
+        step="0.1"
+        value={foodDraft.protein}
+        onChange={e => setFoodDraft(v => ({ ...v, protein: e.target.value }))}
+        placeholder="0"
+      />
+    </label>
+
+    <label>
+      {tx('Carbs (g)', 'کربوهیدرات (گرم)')}
+      <input
+        type="number"
+        min="0"
+        step="0.1"
+        value={foodDraft.carbs}
+        onChange={e => setFoodDraft(v => ({ ...v, carbs: e.target.value }))}
+        placeholder="0"
+      />
+    </label>
+
+    <label>
+      {tx('Fat (g)', 'چربی (گرم)')}
+      <input
+        type="number"
+        min="0"
+        step="0.1"
+        value={foodDraft.fat}
+        onChange={e => setFoodDraft(v => ({ ...v, fat: e.target.value }))}
+        placeholder="0"
+      />
+    </label>
+  </div>
+</div>
 
 <details className="health-nutrition-micro-editor">
   <summary>
