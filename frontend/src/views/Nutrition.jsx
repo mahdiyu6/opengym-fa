@@ -8,6 +8,38 @@ import './health-hub.css'
 const EMPTY_NUTRITION = Object.freeze({})
 const EMPTY_WORKOUTS = Object.freeze([])
 
+const MICRONUTRIENTS = [
+  { id: 'fiber', en: 'Fiber', fa: 'فیبر', unit: 'gr' },
+  { id: 'vitaminA', en: 'Vitamin A', fa: 'ویتامین A', unit: 'mcg' },
+  { id: 'vitaminB1', en: 'Vitamin B1', fa: 'ویتامین B1', unit: 'mg' },
+  { id: 'vitaminB2', en: 'Vitamin B2', fa: 'ویتامین B2', unit: 'mg' },
+  { id: 'vitaminB3', en: 'Vitamin B3', fa: 'ویتامین B3', unit: 'mg' },
+  { id: 'vitaminB5', en: 'Vitamin B5', fa: 'ویتامین B5', unit: 'mg' },
+  { id: 'vitaminB6', en: 'Vitamin B6', fa: 'ویتامین B6', unit: 'mg' },
+  { id: 'vitaminB9', en: 'Vitamin B9', fa: 'ویتامین B9', unit: 'mcg' },
+  { id: 'vitaminB12', en: 'Vitamin B12', fa: 'ویتامین B12', unit: 'mcg' },
+  { id: 'vitaminC', en: 'Vitamin C', fa: 'ویتامین C', unit: 'mg' },
+  { id: 'vitaminD3', en: 'Vitamin D3', fa: 'ویتامین D3', unit: 'mcg' },
+  { id: 'vitaminE', en: 'Vitamin E', fa: 'ویتامین E', unit: 'mg' },
+  { id: 'vitaminK', en: 'Vitamin K', fa: 'ویتامین K', unit: 'mcg' },
+  { id: 'iron', en: 'Iron', fa: 'آهن', unit: 'mg' },
+  { id: 'zinc', en: 'Zinc', fa: 'روی', unit: 'mg' },
+  { id: 'copper', en: 'Copper', fa: 'مس', unit: 'mg' },
+  { id: 'calcium', en: 'Calcium', fa: 'کلسیم', unit: 'mg' },
+  { id: 'sodium', en: 'Sodium', fa: 'سدیم', unit: 'mg' },
+  { id: 'potassium', en: 'Potassium', fa: 'پتاسیم', unit: 'mg' },
+  { id: 'magnesium', en: 'Magnesium', fa: 'منیزیم', unit: 'mg' },
+  { id: 'selenium', en: 'Selenium', fa: 'سلنیوم', unit: 'mcg' },
+  { id: 'manganese', en: 'Manganese', fa: 'منگنز', unit: 'mg' },
+  { id: 'phosphorus', en: 'Phosphorus', fa: 'فسفر', unit: 'mg' },
+  { id: 'fluoride', en: 'Fluoride', fa: 'فلوراید', unit: 'mcg' },
+  { id: 'choline', en: 'Choline', fa: 'کولین', unit: 'mg' },
+  { id: 'cholesterol', en: 'Cholesterol', fa: 'کلسترول', unit: 'mg' },
+  { id: 'saturatedFat', en: 'Saturated fatty acids', fa: 'اسیدهای چرب اشباع‌شده', unit: 'gr' },
+  { id: 'unsaturatedFat', en: 'Unsaturated fatty acids', fa: 'اسیدهای چرب اشباع‌نشده', unit: 'gr' },
+  { id: 'sugar', en: 'Sugar', fa: 'قند', unit: 'gr' }
+]
+
 export default function Nutrition() {
   useLang()
 
@@ -33,7 +65,10 @@ const emptyFoodDraft = {
   calories: '',
   protein: '',
   carbs: '',
-  fat: ''
+  fat: '',
+  ...Object.fromEntries(
+    MICRONUTRIENTS.map(item => [item.id, ''])
+  )
 }
 
 const [addingFoodFor, setAddingFoodFor] = useState(null)
