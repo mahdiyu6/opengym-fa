@@ -939,7 +939,13 @@ setFoodDraft({
     }}
   >
     <span>{tx(item.en, item.fa)}</span>
-    <strong>— {item.unit}</strong>
+    <strong>
+  {nutrition.microGoals?.[item.id] !== undefined &&
+   nutrition.microGoals?.[item.id] !== null &&
+   nutrition.microGoals?.[item.id] !== ''
+    ? `${fmtNum(Number(nutrition.microGoals[item.id]))} ${item.unit}`
+    : `— ${item.unit}`}
+    </strong>
     <strong>
       {fmtNum(Number(microTotals[item.id].toFixed(2)))} {item.unit}
     </strong>
