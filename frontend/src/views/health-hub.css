@@ -4569,3 +4569,31 @@
   color: var(--danger, #d94b4b);
 }
 
+/* Nutrition facts table - readability fix */
+.health-nutrition-facts-table {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.health-nutrition-facts-row:not(.header) {
+  background: #f1f5f9 !important;
+  color: #26364a !important;
+}
+
+.health-nutrition-facts-row:not(.header) > span,
+.health-nutrition-facts-row:not(.header) > strong {
+  color: #26364a !important;
+}
+
+.health-nutrition-facts-row:not(.header):nth-child(odd) {
+  background: #ffffff !important;
+}
+
+.health-nutrition-facts-row.header {
+  background: #26364a !important;
+  color: #ffffff !important;
+}
+
+.health-nutrition-facts-row.header > * {
+  color: #ffffff !important;
+}
