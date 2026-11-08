@@ -4597,3 +4597,36 @@
 .health-nutrition-facts-row.header > * {
   color: #ffffff !important;
 }
+
+/* Nutrition meals readability */
+.health-nutrition-meal-card {
+  background: #f1f5f9 !important;
+  color: #26364a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.health-nutrition-meal-card * {
+  color: #26364a;
+}
+
+.health-nutrition-meal-card .health-nutrition-meal-name small,
+.health-nutrition-meal-card .health-nutrition-meal-empty,
+.health-nutrition-meal-card .health-nutrition-meal-item small {
+  color: #64748b !important;
+}
+
+.health-nutrition-meal-card button {
+  color: #ffffff !important;
+}
+
+.health-nutrition-meal-card input,
+.health-nutrition-meal-card select {
+  color: #26364a !important;
+  background: #ffffff !important;
+}
+
+.health-nutrition-meal-card .health-nutrition-meal-name strong,
+.health-nutrition-meal-card .health-nutrition-meal-item strong,
+.health-nutrition-meal-card .health-nutrition-meal-calories {
+  color: #26364a !important;
+}
