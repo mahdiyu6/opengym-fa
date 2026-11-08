@@ -617,10 +617,80 @@ const macros = [
 
 {page === 'nutrition' && (
   <section className="health-nutrition-facts">
-    <div className="health-nutrition-section-title">
-      <h2>{tx('Daily nutrition', 'ارزش غذایی امروز')}</h2>
-      <span>{fmtDateFull(today, calendar)}</span>
+<div className="health-nutrition-section-title">
+  <h2>{tx('Daily nutrition', 'ارزش غذایی امروز')}</h2>
+
+  <button
+    type="button"
+    className="health-nutrition-edit"
+    onClick={() => {
+      setMacroGoalsDraft({
+        protein: String(nutrition.macroGoals?.protein ?? ''),
+        carbs: String(nutrition.macroGoals?.carbs ?? ''),
+        fat: String(nutrition.macroGoals?.fat ?? '')
+      })
+      setEditingMacroGoals(v => !v)
+    }}
+  >
+    ✎ {tx('Edit goals', 'ویرایش اهداف')}
+  </button>
+</div>
+
+{editingMacroGoals && (
+  <div className="health-nutrition-target-editor">
+    <label>
+      {tx('Protein target (g)', 'هدف پروتئین (گرم)')}
+      <input
+        type="number"
+        min="0"
+        step="0.1"
+        value={macroGoalsDraft.protein}
+        onChange={e => setMacroGoalsDraft(v => ({
+          ...v, protein: e.target.value
+        }))}
+      />
+    </label>
+
+    <label>
+      {tx('Carbohydrate target (g)', 'هدف کربوهیدرات (گرم)')}
+      <input
+        type="number"
+        min="0"
+        step="0.1"
+        value={macroGoalsDraft.carbs}
+        onChange={e => setMacroGoalsDraft(v => ({
+          ...v, carbs: e.target.value
+        }))}
+      />
+    </label>
+
+    <label>
+      {tx('Fat target (g)', 'هدف چربی (گرم)')}
+      <input
+        type="number"
+        min="0"
+        step="0.1"
+        value={macroGoalsDraft.fat}
+        onChange={e => setMacroGoalsDraft(v => ({
+          ...v, fat: e.target.value
+        }))}
+      />
+    </label>
+
+    <div className="health-nutrition-food-actions">
+      <button type="button" onClick={saveMacroGoals}>
+        {tx('Save goals', 'ذخیره اهداف')}
+      </button>
+      <button
+        type="button"
+        className="secondary"
+        onClick={() => setEditingMacroGoals(false)}
+      >
+        {tx('Cancel', 'انصراف')}
+      </button>
     </div>
+  </div>
+)}
 
     <div className="health-nutrition-facts-table">
       <div className="health-nutrition-facts-row header">
