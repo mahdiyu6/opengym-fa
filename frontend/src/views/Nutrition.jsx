@@ -338,7 +338,17 @@ const macros = [
       <h2>{tx('Food Bank', 'بانک غذا')}</h2>
       <span>{foodBank.length} {tx('saved foods', 'غذای ذخیره‌شده')}</span>
     </div>
-
+<button
+  type="button"
+  className="health-nutrition-add-food"
+  onClick={() => {
+    setFoodDraft(emptyFoodDraft)
+    setFoodQuantity('1')
+    setAddingFoodFor('foodbank')
+  }}
+>
+  + {tx('Create new food', 'تعریف غذای جدید')}
+</button>
     <input
       type="search"
       className="health-nutrition-bank-search"
