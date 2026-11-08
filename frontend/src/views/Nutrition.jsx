@@ -84,6 +84,13 @@ const progress = target > 0
     { id: 'nutrition', label: tx('Nutrition', 'ارزش غذایی'), icon: '🥗' }
   ]
 
+  const mealTypes = [
+  { id: 'breakfast', label: tx('Breakfast', 'صبحانه'), icon: '🌅' },
+  { id: 'lunch', label: tx('Lunch', 'ناهار'), icon: '☀️' },
+  { id: 'dinner', label: tx('Dinner', 'شام'), icon: '🌙' },
+  { id: 'snack', label: tx('Snacks', 'میان‌وعده'), icon: '🍎' }
+]
+
   return (
     <main className="health-page health-nutrition" dir={fa ? 'rtl' : 'ltr'}>
       <header className="health-header">
@@ -302,16 +309,65 @@ const progress = target > 0
         </>
       )}
 
-      {page === 'meals' && (
-        <section className="health-nutrition-placeholder">
-          <span>🍽️</span>
-          <h2>{tx('Meals', 'وعده‌های غذایی')}</h2>
-          <p>{tx(
-            'Breakfast, lunch, dinner and snacks will be managed here.',
-            'صبحانه، ناهار، شام و میان‌وعده در این قسمت ثبت می‌شوند.'
-          )}</p>
-        </section>
-      )}
+{page === 'meals' && (
+  <section className="health-nutrition-meals">
+    <div className="health-nutrition-section-title">
+      <h2>{tx('Daily meals', 'وعده‌های غذایی امروز')}</h2>
+      <span>
+        {fmtNum(meals.reduce(
+          (sum, item) => sum + (Number(item.calories) || 0), 0
+        ))} kcal
+      </span>
+    </div>
+
+    <div className="health-nutrition-meal-list">
+      {mealTypes.map(type => {
+        const items = meals.filter(item => item.mealType === type.id)
+        const calories = items.reduce(
+          (sum, item) => sum + (Number(item.calories) || 0), 0
+        )
+
+        return (
+          <article className="health-nutrition-meal-card" key={type.id}>
+            <div className="health-nutrition-meal-heading">
+              <div className="health-nutrition-meal-name">
+                <span>{type.icon}</span>
+                <div>
+                  <strong>{type.label}</strong>
+                  <small>
+                    {items.length} {tx('items', 'مورد')}
+                  </small>
+                </div>
+              </div>
+
+              <strong className="health-nutrition-meal-calories">
+                {fmtNum(calories)} kcal
+              </strong>
+            </div>
+
+            {items.length > 0 ? (
+              <div className="health-nutrition-meal-items">
+                {items.map(item => (
+                  <div className="health-nutrition-meal-item" key={item.id}>
+                    <span>{item.name}</span>
+                    <small>
+                      {item.quantity} {item.unit}
+                    </small>
+                    <strong>{fmtNum(item.calories)} kcal</strong>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="health-nutrition-meal-empty">
+                {tx('No food added yet', 'هنوز غذایی ثبت نشده است')}
+              </p>
+            )}
+          </article>
+        )
+      })}
+    </div>
+  </section>
+)}
 
       {page === 'nutrition' && (
         <section className="health-nutrition-placeholder">
