@@ -242,6 +242,15 @@ const progress = target > 0
   carbs: totals.carbs + (Number(item.carbs) || 0)
 }), { fat: 0, protein: 0, carbs: 0 })
 
+const microTotals = meals.reduce((totals, item) => {
+  MICRONUTRIENTS.forEach(nutrient => {
+    totals[nutrient.id] += Number(item[nutrient.id]) || 0
+  })
+  return totals
+}, Object.fromEntries(
+  MICRONUTRIENTS.map(item => [item.id, 0])
+))
+  
 const macros = [
   { label: tx('Fat', 'چربی'), value: macroTotals.fat, goal: '—', unit: 'g', icon: '🥑' },
   { label: tx('Protein', 'پروتئین'), value: macroTotals.protein, goal: '—', unit: 'g', icon: '🥩' },
@@ -831,46 +840,22 @@ setFoodDraft({
         <strong>{tx('Consumed', 'دریافتی')}</strong>
       </div>
 
-      {[
-        ['fiber', 'Fiber', 'فیبر', 'gr'],
-        ['vitaminA', 'Vitamin A', 'ویتامین A', 'mcg'],
-        ['vitaminB1', 'Vitamin B1', 'ویتامین B1', 'mg'],
-        ['vitaminB2', 'Vitamin B2', 'ویتامین B2', 'mg'],
-        ['vitaminB3', 'Vitamin B3', 'ویتامین B3', 'mg'],
-        ['vitaminB5', 'Vitamin B5', 'ویتامین B5', 'mg'],
-        ['vitaminB6', 'Vitamin B6', 'ویتامین B6', 'mg'],
-        ['vitaminB9', 'Vitamin B9', 'ویتامین B9', 'mcg'],
-        ['vitaminB12', 'Vitamin B12', 'ویتامین B12', 'mcg'],
-        ['vitaminC', 'Vitamin C', 'ویتامین C', 'mg'],
-        ['vitaminD3', 'Vitamin D3', 'ویتامین D3', 'mcg'],
-        ['vitaminE', 'Vitamin E', 'ویتامین E', 'mg'],
-        ['vitaminK', 'Vitamin K', 'ویتامین K', 'mcg'],
-        ['iron', 'Iron', 'آهن', 'mg'],
-        ['zinc', 'Zinc', 'روی', 'mg'],
-        ['copper', 'Copper', 'مس', 'mg'],
-        ['calcium', 'Calcium', 'کلسیم', 'mg'],
-        ['sodium', 'Sodium', 'سدیم', 'mg'],
-        ['potassium', 'Potassium', 'پتاسیم', 'mg'],
-        ['magnesium', 'Magnesium', 'منیزیم', 'mg'],
-        ['selenium', 'Selenium', 'سلنیوم', 'mcg'],
-        ['manganese', 'Manganese', 'منگنز', 'mg'],
-        ['phosphorus', 'Phosphorus', 'فسفر', 'mg'],
-        ['fluoride', 'Fluoride', 'فلوراید', 'mcg'],
-        ['choline', 'Choline', 'کولین', 'mg'],
-        ['cholesterol', 'Cholesterol', 'کلسترول', 'mg'],
-        ['saturatedFat', 'Saturated fatty acids', 'اسیدهای چرب اشباع‌شده', 'gr'],
-        ['unsaturatedFat', 'Unsaturated fatty acids', 'اسیدهای چرب اشباع‌نشده', 'gr'],
-        ['sugar', 'Sugar', 'قند', 'gr']
-      ].map(([id, en, faLabel, unit]) => (
-        <div
-          className="health-nutrition-facts-row"
-          key={id}
-          style={{ gridTemplateColumns: 'minmax(0,1.4fr) repeat(2,minmax(0,1fr))', minWidth: 0 }}
-        >
-          <span>{tx(en, faLabel)}</span>
-          <strong>— {unit}</strong>
-          <strong>— {unit}</strong>
-        </div>
+{MICRONUTRIENTS.map(item => (
+  <div
+    className="health-nutrition-facts-row"
+    key={item.id}
+    style={{
+      gridTemplateColumns: 'minmax(0,1.4fr) repeat(2,minmax(0,1fr))',
+      minWidth: 0
+    }}
+  >
+    <span>{tx(item.en, item.fa)}</span>
+    <strong>— {item.unit}</strong>
+    <strong>
+      {fmtNum(Number(microTotals[item.id].toFixed(2)))} {item.unit}
+    </strong>
+  </div>
+))}
       ))}
     </div>
   </section>
