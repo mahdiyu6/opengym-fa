@@ -72,6 +72,7 @@ const emptyFoodDraft = {
 }
 
 const [addingFoodFor, setAddingFoodFor] = useState(null)
+  const [foodSearch, setFoodSearch] = useState('')
 const [foodDraft, setFoodDraft] = useState(emptyFoodDraft)
 const [foodQuantity, setFoodQuantity] = useState('1')
   
@@ -293,7 +294,8 @@ const macros = [
   const tabs = [
     { id: 'dashboard', label: tx('Overview', 'نمای کلی'), icon: '🔥' },
     { id: 'meals', label: tx('Meals', 'وعده‌ها'), icon: '🍽️' },
-    { id: 'nutrition', label: tx('Nutrition', 'ارزش غذایی'), icon: '🥗' }
+    { id: 'nutrition', label: tx('Nutrition', 'ارزش غذایی'), icon: '🥗' },
+    { id: 'foodbank', label: tx('Food Bank', 'بانک غذا'), icon: '📚' }
   ]
 
   const mealTypes = [
@@ -330,7 +332,68 @@ const macros = [
           </button>
         ))}
       </nav>
+{page === 'foodbank' && (
+  <section className="health-nutrition-meals">
+    <div className="health-nutrition-section-title">
+      <h2>{tx('Food Bank', 'بانک غذا')}</h2>
+      <span>{foodBank.length} {tx('saved foods', 'غذای ذخیره‌شده')}</span>
+    </div>
 
+    <input
+      type="search"
+      className="health-nutrition-bank-search"
+      value={foodSearch}
+      onChange={e => setFoodSearch(e.target.value)}
+      placeholder={tx('Search foods...', 'جست‌وجوی غذا...')}
+    />
+
+    {foodBank.length > 0 ? (
+      <div className="health-nutrition-meal-list">
+        {foodBank
+          .filter(food =>
+            food.name.toLowerCase().includes(foodSearch.trim().toLowerCase())
+          )
+          .map(food => (
+            <article className="health-nutrition-meal-card" key={food.id}>
+              <div className="health-nutrition-meal-heading">
+                <div className="health-nutrition-meal-name">
+                  <span>🍽️</span>
+                  <div>
+                    <strong>{food.name}</strong>
+                    <small>{tx('Per unit:', 'به ازای هر واحد:')} {food.unit}</small>
+                  </div>
+                </div>
+                <strong className="health-nutrition-meal-calories">
+                  {fmtNum(food.calories)} kcal
+                </strong>
+              </div>
+              <div className="health-nutrition-meal-items">
+                <div className="health-nutrition-meal-item">
+                  <span>{tx('Protein', 'پروتئین')}</span>
+                  <strong>{fmtNum(food.protein)} g</strong>
+                </div>
+                <div className="health-nutrition-meal-item">
+                  <span>{tx('Carbs', 'کربوهیدرات')}</span>
+                  <strong>{fmtNum(food.carbs)} g</strong>
+                </div>
+                <div className="health-nutrition-meal-item">
+                  <span>{tx('Fat', 'چربی')}</span>
+                  <strong>{fmtNum(food.fat)} g</strong>
+                </div>
+              </div>
+            </article>
+          ))}
+      </div>
+    ) : (
+      <p className="health-nutrition-meal-empty">
+        {tx(
+          'Your food bank is empty. Foods you save will appear here.',
+          'بانک غذای شما هنوز خالی است. غذاهایی که ذخیره کنید اینجا نمایش داده می‌شوند.'
+        )}
+      </p>
+    )}
+  </section>
+)}
       {page === 'dashboard' && (
         <>
           <section className="health-nutrition-calorie-card">
