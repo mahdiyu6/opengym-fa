@@ -4630,3 +4630,16 @@
 .health-nutrition-meal-card .health-nutrition-meal-calories {
   color: #26364a !important;
 }
+
+.health-nutrition-meal-card .health-nutrition-add-food {
+  background: #26364a !important;
+  color: #ffffff !important;
+  border: 1px solid #26364a !important;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 700;
+}
+
+.health-nutrition-meal-card .health-nutrition-add-food * {
+  color: #ffffff !important;
+}
