@@ -405,6 +405,108 @@ const progress = target > 0
               </strong>
             </div>
 
+                        <button
+              type="button"
+              className="health-nutrition-add-food"
+              onClick={() => {
+                setAddingFoodFor(type.id)
+                setFoodDraft(emptyFoodDraft)
+                setFoodQuantity('1')
+              }}
+            >
+              + {tx('Add food', 'افزودن غذا')}
+            </button>
+
+            {addingFoodFor === type.id && (
+              <div className="health-nutrition-food-form">
+                <h3>{tx('New food', 'ثبت غذای جدید')}</h3>
+
+                <label>
+                  {tx('Food name', 'نام غذا')}
+                  <input
+                    value={foodDraft.name}
+                    onChange={e => setFoodDraft(v => ({ ...v, name: e.target.value }))}
+                    placeholder={tx('e.g. Rice', 'مثلاً برنج')}
+                  />
+                </label>
+
+                <label>
+                  {tx('Unit', 'واحد اندازه‌گیری')}
+                  <input
+                    value={foodDraft.unit}
+                    onChange={e => setFoodDraft(v => ({ ...v, unit: e.target.value }))}
+                    placeholder="g"
+                  />
+                </label>
+
+                <label>
+                  {tx('Quantity', 'تعداد واحد مصرفی')}
+                  <input
+                    type="number"
+                    min="0.1"
+                    step="0.1"
+                    value={foodQuantity}
+                    onChange={e => setFoodQuantity(e.target.value)}
+                  />
+                </label>
+
+                <label>
+                  {tx('Calories per unit', 'کالری هر واحد')}
+                  <input
+                    type="number"
+                    min="0"
+                    value={foodDraft.calories}
+                    onChange={e => setFoodDraft(v => ({ ...v, calories: e.target.value }))}
+                  />
+                </label>
+
+                <label>
+                  {tx('Protein (g)', 'پروتئین (گرم)')}
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    value={foodDraft.protein}
+                    onChange={e => setFoodDraft(v => ({ ...v, protein: e.target.value }))}
+                  />
+                </label>
+
+                <label>
+                  {tx('Carbs (g)', 'کربوهیدرات (گرم)')}
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    value={foodDraft.carbs}
+                    onChange={e => setFoodDraft(v => ({ ...v, carbs: e.target.value }))}
+                  />
+                </label>
+
+                <label>
+                  {tx('Fat (g)', 'چربی (گرم)')}
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    value={foodDraft.fat}
+                    onChange={e => setFoodDraft(v => ({ ...v, fat: e.target.value }))}
+                  />
+                </label>
+
+                <div className="health-nutrition-food-actions">
+                  <button type="button" onClick={saveNewFood}>
+                    {tx('Save food', 'ثبت غذا')}
+                  </button>
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => setAddingFoodFor(null)}
+                  >
+                    {tx('Cancel', 'انصراف')}
+                  </button>
+                </div>
+              </div>
+            )}
             {items.length > 0 ? (
               <div className="health-nutrition-meal-items">
                 {items.map(item => (
