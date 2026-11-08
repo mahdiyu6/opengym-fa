@@ -132,6 +132,13 @@ const progress = target > 0
 
   if (!name || !addingFoodFor || !Number.isFinite(quantity) || quantity <= 0) return
 
+  const nutrients = Object.fromEntries(
+    MICRONUTRIENTS.map(item => [
+      item.id,
+      Number(foodDraft[item.id]) || 0
+    ])
+  )
+
   const calories = Number(foodDraft.calories) || 0
   const protein = Number(foodDraft.protein) || 0
   const carbs = Number(foodDraft.carbs) || 0
@@ -143,7 +150,10 @@ const progress = target > 0
     Number(food.calories) === calories &&
     Number(food.protein) === protein &&
     Number(food.carbs) === carbs &&
-    Number(food.fat) === fat
+    Number(food.fat) === fat &&
+    MICRONUTRIENTS.every(item =>
+      (Number(food[item.id]) || 0) === nutrients[item.id]
+    )
   )
 
   const food = existingFood || {
@@ -153,7 +163,8 @@ const progress = target > 0
     calories,
     protein,
     carbs,
-    fat
+    fat,
+    ...nutrients
   }
 
   const mealItem = {
@@ -166,7 +177,13 @@ const progress = target > 0
     calories: food.calories * quantity,
     protein: food.protein * quantity,
     carbs: food.carbs * quantity,
-    fat: food.fat * quantity
+    fat: food.fat * quantity,
+    ...Object.fromEntries(
+      MICRONUTRIENTS.map(item => [
+        item.id,
+        (Number(food[item.id]) || 0) * quantity
+      ])
+    )
   }
 
   updateStore(s => {
