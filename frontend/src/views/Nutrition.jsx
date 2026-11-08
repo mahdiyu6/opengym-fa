@@ -87,6 +87,15 @@ const [macroGoalsDraft, setMacroGoalsDraft] = useState({
 })
 
 const [editingMacroGoals, setEditingMacroGoals] = useState(false)
+  const [microGoalsDraft, setMicroGoalsDraft] = useState(
+  Object.fromEntries(
+    MICRONUTRIENTS.map(item => [
+      item.id,
+      String(nutrition.microGoals?.[item.id] ?? '')
+    ])
+  )
+)
+const [editingMicroGoals, setEditingMicroGoals] = useState(false)
   const tx = (en, faText) => fa ? faText : en
 
   const target = Number(nutrition.targetCalories || 2000)
@@ -236,6 +245,30 @@ const progress = target > 0
   setEditingMacroGoals(false)
 }
 
+function saveMicroGoals() {
+  const goals = {}
+
+  for (const item of MICRONUTRIENTS) {
+    const raw = microGoalsDraft[item.id]
+    if (raw === '') {
+      goals[item.id] = null
+      continue
+    }
+
+    const value = Number(raw)
+    if (!Number.isFinite(value) || value < 0) return
+
+    goals[item.id] = value
+  }
+
+  updateStore(s => {
+    s.nutrition ||= {}
+    s.nutrition.microGoals = goals
+  })
+
+  setEditingMicroGoals(false)
+}
+  
   const macroTotals = meals.reduce((totals, item) => ({
   fat: totals.fat + (Number(item.fat) || 0),
   protein: totals.protein + (Number(item.protein) || 0),
