@@ -634,6 +634,32 @@ const macros = [
                   />
                 </label>
 
+<details className="health-nutrition-micro-editor">
+  <summary>
+    {tx('Micronutrients & More', 'ریزمغذی‌ها و سایر موارد')}
+    <span>29</span>
+  </summary>
+
+  <div className="health-nutrition-micro-grid">
+    {MICRONUTRIENTS.map(item => (
+      <label key={item.id}>
+        {tx(item.en, item.fa)} ({item.unit})
+        <input
+          type="number"
+          min="0"
+          step="any"
+          value={foodDraft[item.id] ?? ''}
+          onChange={e => setFoodDraft(v => ({
+            ...v,
+            [item.id]: e.target.value
+          }))}
+          placeholder="0"
+        />
+      </label>
+    ))}
+  </div>
+</details>
+                
                 <div className="health-nutrition-food-actions">
                   <button type="button" onClick={saveNewFood}>
                     {tx('Save food', 'ثبت غذا')}
