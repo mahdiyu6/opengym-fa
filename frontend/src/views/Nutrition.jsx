@@ -32,11 +32,11 @@ export default function Nutrition() {
   const stepsCalories = Number(day.stepsCalories || 0)
   const sleepCalories = Number(day.sleepCalories || 0)
 
-  const burned = exercise + stepsCalories + sleepCalories
-  const remaining = Math.max(0, target - consumed + burned)
-  const progress = target > 0
-    ? Math.min(100, Math.max(0, remaining / target * 100))
-    : 0
+const burned = exercise + stepsCalories + sleepCalories
+const remaining = Math.max(0, target - consumed)
+const progress = target > 0
+  ? Math.min(100, Math.max(0, remaining / target * 100))
+  : 0
 
   function saveDay(field, value) {
     updateStore(s => {
