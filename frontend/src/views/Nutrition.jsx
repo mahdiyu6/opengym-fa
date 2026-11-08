@@ -692,24 +692,77 @@ const macros = [
   </div>
 )}
 
-    <div className="health-nutrition-facts-table">
-      <div className="health-nutrition-facts-row header">
-        <strong>{tx('Nutrient', 'ماده مغذی')}</strong>
-        <strong>{tx('Consumed', 'دریافتی')}</strong>
-      </div>
+<div className="health-nutrition-facts-table">
+  <div className="health-nutrition-facts-row header">
+    <strong>{tx('Nutrient', 'ماده مغذی')}</strong>
+    <strong>{tx('Goal', 'هدف')}</strong>
+    <strong>{tx('Consumed', 'دریافتی')}</strong>
+    <strong>{tx('Remaining', 'باقی‌مانده')}</strong>
+  </div>
 
-      {[
-        { label: tx('Calories', 'کالری'), value: consumed, unit: 'kcal' },
-        { label: tx('Protein', 'پروتئین'), value: macroTotals.protein, unit: 'g' },
-        { label: tx('Carbohydrates', 'کربوهیدرات'), value: macroTotals.carbs, unit: 'g' },
-        { label: tx('Fat', 'چربی'), value: macroTotals.fat, unit: 'g' }
-      ].map(item => (
-        <div className="health-nutrition-facts-row" key={item.label}>
-          <span>{item.label}</span>
-          <strong>{fmtNum(Number(item.value.toFixed(1)))} {item.unit}</strong>
-        </div>
-      ))}
-    </div>
+  {[
+    {
+      id: 'calories',
+      label: tx('Calories', 'کالری'),
+      value: consumed,
+      goal: target,
+      unit: 'kcal'
+    },
+    {
+      id: 'protein',
+      label: tx('Protein', 'پروتئین'),
+      value: macroTotals.protein,
+      goal: nutrition.macroGoals?.protein,
+      unit: 'g'
+    },
+    {
+      id: 'carbs',
+      label: tx('Carbohydrates', 'کربوهیدرات'),
+      value: macroTotals.carbs,
+      goal: nutrition.macroGoals?.carbs,
+      unit: 'g'
+    },
+    {
+      id: 'fat',
+      label: tx('Fat', 'چربی'),
+      value: macroTotals.fat,
+      goal: nutrition.macroGoals?.fat,
+      unit: 'g'
+    }
+  ].map(item => {
+    const hasGoal = item.goal !== undefined &&
+      item.goal !== null &&
+      Number.isFinite(Number(item.goal))
+
+    const remaining = hasGoal
+      ? Number(item.goal) - item.value
+      : null
+
+    return (
+      <div className="health-nutrition-facts-row" key={item.id}>
+        <span>{item.label}</span>
+
+        <strong>
+          {hasGoal
+            ? `${fmtNum(Number(item.goal))} ${item.unit}`
+            : '—'}
+        </strong>
+
+        <strong>
+          {fmtNum(Number(item.value.toFixed(1)))} {item.unit}
+        </strong>
+
+        <strong className={
+          remaining !== null && remaining < 0 ? 'over-goal' : ''
+        }>
+          {remaining !== null
+            ? `${fmtNum(Number(remaining.toFixed(1)))} ${item.unit}`
+            : '—'}
+        </strong>
+      </div>
+    )
+  })}
+</div>
   </section>
 )}
     </main>
