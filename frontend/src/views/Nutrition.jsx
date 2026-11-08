@@ -856,7 +856,6 @@ setFoodDraft({
     </strong>
   </div>
 ))}
-      ))}
     </div>
   </section>
 )}
