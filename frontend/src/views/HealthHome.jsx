@@ -228,6 +228,20 @@ export default function HealthHome() {
             <span className="health-hub-arrow">←</span>
           </button>
         ))}
+
+        <button
+          className="health-hub-tile health-nutrition-tile"
+          onClick={() => nav('/health/nutrition')}
+        >
+          <span className="health-hub-icon">🥗</span>
+          <strong>{fa ? 'تغذیه و کالری' : 'Nutrition & Calories'}</strong>
+          <small>
+            {fa
+              ? 'مدیریت کالری، وعده‌ها و ارزش غذایی'
+              : 'Track calories, meals and nutrition'}
+          </small>
+          <span className="health-hub-arrow">←</span>
+        </button>
       </div>
     </main>
   )
