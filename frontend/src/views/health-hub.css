@@ -4520,51 +4520,6 @@
 
 .health-nutrition-facts-row {
   display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 12px;
-  min-height: 54px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--line, #e8e8e8);
-}
-
-.health-nutrition-facts-row:last-child {
-  border-bottom: 0;
-}
-
-.health-nutrition-facts-row.header {
-  min-height: 46px;
-  background: var(--bg-soft, #f5f5f5);
-  color: var(--label-2);
-  font-size: 11px;
-}
-
-.health-nutrition-facts-row:not(.header) {
-  font-size: 13px;
-}
-
-.health-nutrition-facts-row strong:last-child {
-  font-variant-numeric: tabular-nums;
-  text-align: end;
-}
-
-
-/* Nutrition facts table */
-
-.health-nutrition-facts {
-  margin-top: 20px;
-}
-
-.health-nutrition-facts-table {
-  margin-top: 14px;
-  overflow: hidden;
-  background: var(--card, #fff);
-  border: 1px solid var(--line, #e8e8e8);
-  border-radius: 16px;
-}
-
-.health-nutrition-facts-row {
-  display: grid;
   grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 1fr));
   align-items: center;
   gap: 8px;
