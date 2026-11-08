@@ -14,6 +14,7 @@ export default function Nutrition() {
   )
   const nutrition = useStore(s => s.S?.nutrition || {})
   const updateStore = useStore(s => s.update)
+  const workouts = useStore(s => s.S?.workouts || [])
 
   const today = todayISO()
   const day = nutrition.days?.[today] || {}
@@ -28,7 +29,9 @@ export default function Nutrition() {
 
   const target = Number(nutrition.targetCalories || 2000)
   const consumed = Number(day.consumedCalories || 0)
-  const exercise = Number(day.exerciseCalories || 0)
+  const exercise = workouts
+  .filter(w => w.d === today)
+  .reduce((sum, w) => sum + (Number(w.calories) || 0), 0)
   const stepsCalories = Number(day.stepsCalories || 0)
   const sleepCalories = Number(day.sleepCalories || 0)
 
@@ -285,23 +288,6 @@ const progress = target > 0
                 <small>{tx('Based on body measurements', 'بر اساس اندازه‌گیری‌های بدن')}</small>
               </article>
             </div>
-          </section>
-
-          <section className="health-nutrition-exercise">
-            <div>
-              <strong>{tx('Workout calories', 'کالری تمرین')}</strong>
-              <small>{tx('Manual entry for now', 'ثبت دستی در نسخه فعلی')}</small>
-            </div>
-            <label>
-              <input
-                type="number"
-                min="0"
-                value={day.exerciseCalories ?? ''}
-                placeholder="0"
-                onChange={e => saveDay('exerciseCalories', e.target.value)}
-              />
-              <span>kcal</span>
-            </label>
           </section>
         </>
       )}
