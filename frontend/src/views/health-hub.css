@@ -3970,3 +3970,15 @@
     gap: 6px;
   }
 }
+
+.health-nutrition-tile {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 125px;
+  align-items: center;
+  text-align: center;
+}
+
+.health-nutrition-tile .health-hub-arrow {
+  align-self: center;
+}
