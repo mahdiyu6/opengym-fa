@@ -3982,3 +3982,426 @@
 .health-nutrition-tile .health-hub-arrow {
   align-self: center;
 }
+
+
+/* Nutrition dashboard */
+
+.health-nutrition {
+  min-width: 0;
+}
+
+.health-nutrition-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 18px 0;
+  padding: 5px;
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.health-nutrition-tabs button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 11px 5px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--label-2);
+  font: inherit;
+  font-size: 12px;
+}
+
+.health-nutrition-tabs button.active {
+  background: var(--surface);
+  color: var(--label);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.health-nutrition-calorie-card,
+.health-nutrition-macro,
+.health-nutrition-tool,
+.health-nutrition-exercise,
+.health-nutrition-placeholder {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--sep);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.health-nutrition-calorie-card {
+  margin-bottom: 20px;
+}
+
+.health-nutrition-card-heading,
+.health-nutrition-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.health-nutrition-card-heading h2,
+.health-nutrition-section-title h2 {
+  margin: 4px 0 0;
+  font-size: 17px;
+}
+
+.health-nutrition-eyebrow {
+  color: var(--label-3);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.health-nutrition-edit {
+  border: 0;
+  background: transparent;
+  color: var(--accent, #ff9f0a);
+  font: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.health-nutrition-calorie-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0 18px;
+}
+
+.health-nutrition-ring {
+  width: 150px;
+  height: 150px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--accent, #ff9f0a) var(--calorie-progress),
+    var(--surface-2) 0
+  );
+  transform: rotate(-90deg);
+}
+
+.health-nutrition-ring-inner {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(90deg);
+}
+
+.health-nutrition-ring-inner span {
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-nutrition-ring-inner strong {
+  font-size: 25px;
+  line-height: 1.4;
+}
+
+.health-nutrition-ring-inner small {
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-nutrition-side-stat {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.health-nutrition-side-stat span {
+  color: var(--label-2);
+  font-size: 11px;
+}
+
+.health-nutrition-side-stat strong {
+  font-size: 20px;
+}
+
+.health-nutrition-side-stat small {
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-nutrition-calorie-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 13px;
+  border-top: 1px solid var(--sep);
+  color: var(--label-2);
+  font-size: 12px;
+}
+
+.health-nutrition-calorie-footer strong {
+  color: var(--label);
+}
+
+.health-nutrition-target-editor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.health-nutrition-target-editor label {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--label-2);
+  font-size: 12px;
+}
+
+.health-nutrition-target-editor input,
+.health-nutrition-tool input,
+.health-nutrition-exercise input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--label);
+  font: inherit;
+}
+
+.health-nutrition-target-editor button {
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--accent, #ff9f0a);
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+}
+
+.health-nutrition-target-editor button.secondary {
+  background: var(--surface);
+  color: var(--label-2);
+}
+
+.health-nutrition-macros,
+.health-nutrition-tools {
+  margin: 22px 0;
+}
+
+.health-nutrition-section-title {
+  margin-bottom: 12px;
+}
+
+.health-nutrition-section-title > span {
+  color: var(--label-3);
+  font-size: 11px;
+}
+
+.health-nutrition-macro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.health-nutrition-macro {
+  padding: 12px 10px;
+}
+
+.health-nutrition-macro-icon {
+  font-size: 21px;
+}
+
+.health-nutrition-macro > strong {
+  display: block;
+  margin: 7px 0;
+  font-size: 12px;
+}
+
+.health-nutrition-macro b {
+  font-size: 16px;
+}
+
+.health-nutrition-macro div > span {
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-nutrition-macro-track {
+  height: 5px;
+  margin-top: 10px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.health-nutrition-macro-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--green);
+}
+
+.health-nutrition-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.health-nutrition-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.health-nutrition-tool-icon {
+  font-size: 25px;
+}
+
+.health-nutrition-tool > strong {
+  font-size: 14px;
+}
+
+.health-nutrition-tool label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--label-2);
+  font-size: 11px;
+}
+
+.health-nutrition-tool small,
+.health-nutrition-tool p {
+  color: var(--label-3);
+  font-size: 10px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.health-nutrition-water-value {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.health-nutrition-water-value b {
+  font-size: 27px;
+}
+
+.health-nutrition-water-value span {
+  color: var(--label-3);
+  font-size: 11px;
+}
+
+.health-nutrition-water-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.health-nutrition-water-actions button {
+  flex: 1;
+  min-height: 38px;
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--label);
+  font-size: 20px;
+}
+
+.health-nutrition-exercise {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.health-nutrition-exercise > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.health-nutrition-exercise small {
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-nutrition-exercise label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 120px;
+  color: var(--label-2);
+  font-size: 11px;
+}
+
+.health-nutrition-placeholder {
+  margin-top: 20px;
+  text-align: center;
+  padding: 35px 20px;
+}
+
+.health-nutrition-placeholder > span {
+  font-size: 38px;
+}
+
+.health-nutrition-placeholder h2 {
+  font-size: 17px;
+}
+
+.health-nutrition-placeholder p {
+  color: var(--label-2);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+@media (max-width: 380px) {
+  .health-nutrition-calorie-layout {
+    grid-template-columns: minmax(0, 1fr) 120px minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .health-nutrition-ring {
+    width: 120px;
+    height: 120px;
+  }
+
+  .health-nutrition-ring-inner {
+    width: 96px;
+    height: 96px;
+  }
+
+  .health-nutrition-ring-inner strong {
+    font-size: 21px;
+  }
+
+  .health-nutrition-side-stat strong {
+    font-size: 16px;
+  }
+
+  .health-nutrition-macro-grid {
+    gap: 6px;
+  }
+
+  .health-nutrition-macro {
+    padding: 10px 7px;
+  }
+}
