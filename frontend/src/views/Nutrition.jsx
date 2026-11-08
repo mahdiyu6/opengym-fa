@@ -139,8 +139,10 @@ const progress = target > 0
   const name = foodDraft.name.trim()
   const unit = foodDraft.unit.trim() || 'g'
   const quantity = Number(foodQuantity)
+  const isFoodBankOnly = addingFoodFor === 'foodbank'
 
-  if (!name || !addingFoodFor || !Number.isFinite(quantity) || quantity <= 0) return
+  if (!name || !addingFoodFor) return
+  if (!isFoodBankOnly && (!Number.isFinite(quantity) || quantity <= 0)) return
 
   const nutrients = Object.fromEntries(
     MICRONUTRIENTS.map(item => [
@@ -149,52 +151,23 @@ const progress = target > 0
     ])
   )
 
-  const calories = Number(foodDraft.calories) || 0
-  const protein = Number(foodDraft.protein) || 0
-  const carbs = Number(foodDraft.carbs) || 0
-  const fat = Number(foodDraft.fat) || 0
-
-  const existingFood = foodBank.find(food =>
-    food.name.trim().toLowerCase() === name.toLowerCase() &&
-    food.unit === unit &&
-    Number(food.calories) === calories &&
-    Number(food.protein) === protein &&
-    Number(food.carbs) === carbs &&
-    Number(food.fat) === fat &&
-    MICRONUTRIENTS.every(item =>
-      (Number(food[item.id]) || 0) === nutrients[item.id]
-    )
-  )
-
-  const food = existingFood || {
+  const food = {
     id: `food-${Date.now()}`,
     name,
     unit,
-    calories,
-    protein,
-    carbs,
-    fat,
+    calories: Number(foodDraft.calories) || 0,
+    protein: Number(foodDraft.protein) || 0,
+    carbs: Number(foodDraft.carbs) || 0,
+    fat: Number(foodDraft.fat) || 0,
     ...nutrients
   }
 
-  const mealItem = {
-    id: `meal-${Date.now()}`,
-    foodId: food.id,
-    mealType: addingFoodFor,
-    name: food.name,
-    unit: food.unit,
-    quantity,
-    calories: food.calories * quantity,
-    protein: food.protein * quantity,
-    carbs: food.carbs * quantity,
-    fat: food.fat * quantity,
-    ...Object.fromEntries(
-      MICRONUTRIENTS.map(item => [
-        item.id,
-        (Number(food[item.id]) || 0) * quantity
-      ])
-    )
-  }
+  const existingFood = foodBank.find(item =>
+    item.name.trim().toLowerCase() === name.toLowerCase() &&
+    item.unit === unit
+  )
+
+  const savedFood = existingFood || food
 
   updateStore(s => {
     s.nutrition ||= {}
@@ -204,10 +177,31 @@ const progress = target > 0
       s.nutrition.foods.push(food)
     }
 
-    s.nutrition.days ||= {}
-    s.nutrition.days[today] ||= {}
-    s.nutrition.days[today].meals ||= []
-    s.nutrition.days[today].meals.push(mealItem)
+    if (!isFoodBankOnly) {
+      const mealItem = {
+        id: `meal-${Date.now()}`,
+        foodId: savedFood.id,
+        mealType: addingFoodFor,
+        name: savedFood.name,
+        unit: savedFood.unit,
+        quantity,
+        calories: savedFood.calories * quantity,
+        protein: savedFood.protein * quantity,
+        carbs: savedFood.carbs * quantity,
+        fat: savedFood.fat * quantity,
+        ...Object.fromEntries(
+          MICRONUTRIENTS.map(item => [
+            item.id,
+            (Number(savedFood[item.id]) || 0) * quantity
+          ])
+        )
+      }
+
+      s.nutrition.days ||= {}
+      s.nutrition.days[today] ||= {}
+      s.nutrition.days[today].meals ||= []
+      s.nutrition.days[today].meals.push(mealItem)
+    }
   })
 
   setFoodDraft(emptyFoodDraft)
