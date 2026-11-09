@@ -150,12 +150,14 @@ const progress = target > 0
   if (!name || !addingFoodFor) return
   if (!isFoodBankOnly && (!Number.isFinite(quantity) || quantity <= 0)) return
 
-  const nutrients = Object.fromEntries(
-    MICRONUTRIENTS.map(item => [
-      item.id,
-      Number(foodDraft[item.id]) || 0
-    ])
-  )
+const nutrients = Object.fromEntries(
+  MICRONUTRIENTS.map(item => [
+    item.id,
+    foodDraft[item.id] === ''
+      ? null
+      : Number(foodDraft[item.id]) || 0
+  ])
+)
 
   const food = {
     id: `food-${Date.now()}`,
