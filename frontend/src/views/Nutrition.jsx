@@ -61,6 +61,7 @@ export default function Nutrition() {
 
 const emptyFoodDraft = {
   name: '',
+  nutritionBasis: 'perUnit',
   unit: 'g',
   calories: '',
   protein: '',
