@@ -4853,3 +4853,194 @@
   }
 }
 
+
+/* Nutrition Hub – unified modern UI */
+.health-nutrition-meal-card {
+  background: #f8fafc !important;
+  border: 1px solid #dbe4ef !important;
+  border-radius: 20px !important;
+  padding: 18px !important;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.045);
+  color: #26364a !important;
+}
+
+.health-nutrition-meal-heading {
+  padding-bottom: 12px;
+}
+
+.health-nutrition-meal-name > span {
+  background: #e8efff !important;
+  border-radius: 14px !important;
+}
+
+.health-nutrition-meal-name strong {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+}
+
+.health-nutrition-meal-items {
+  border-top: 1px solid #dbe4ef !important;
+}
+
+.health-nutrition-review-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 0 8px;
+  color: #26364a !important;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.health-nutrition-review-title span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 25px;
+  height: 25px;
+  padding: 0 7px;
+  border-radius: 20px;
+  background: #e0eaff;
+  color: #1d4ed8 !important;
+  font-size: 11px;
+}
+
+.health-nutrition-meal-card .health-nutrition-meal-item {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.health-nutrition-review-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.health-nutrition-review-info strong {
+  color: #26364a !important;
+  font-size: 13px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.health-nutrition-review-info small,
+.health-nutrition-review-values small {
+  color: #64748b !important;
+  font-size: 11px;
+}
+
+.health-nutrition-review-values {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.health-nutrition-review-values strong {
+  color: #26364a !important;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.health-nutrition-meal-card .health-nutrition-review-info input {
+  width: 90px;
+  min-height: 36px;
+  padding: 7px 9px;
+  border: 1px solid #93b4ef !important;
+  border-radius: 9px;
+  background: #fff !important;
+  color: #26364a !important;
+}
+
+.health-nutrition-meal-card .health-nutrition-meal-item button:not(.health-nutrition-remove-item) {
+  min-height: 34px;
+  padding: 6px 11px;
+  border: 1px solid #bfdbfe !important;
+  border-radius: 9px;
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.health-nutrition-meal-card .health-nutrition-meal-item button.secondary {
+  border-color: #cbd5e1 !important;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
+.health-nutrition-meal-card .health-nutrition-remove-item {
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #fecaca !important;
+  border-radius: 10px;
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.health-nutrition-meal-card .health-nutrition-add-food {
+  min-height: 46px;
+  margin-top: 15px;
+  border: 1px solid #bfdbfe !important;
+  border-radius: 12px;
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.health-nutrition-food-form {
+  border: 1px solid #dbe4ef !important;
+  border-radius: 18px !important;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05) !important;
+}
+
+.health-nutrition-bank-search {
+  width: 100%;
+  min-height: 46px;
+  margin: 12px 0;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 12px;
+  background: #fff !important;
+  color: #26364a !important;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.health-nutrition-bank-search:focus {
+  border-color: #3b82f6 !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+@media (max-width: 480px) {
+  .health-nutrition-meal-card {
+    padding: 13px !important;
+    border-radius: 16px !important;
+  }
+
+  .health-nutrition-meal-card .health-nutrition-meal-item {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 7px;
+  }
+
+  .health-nutrition-review-values strong {
+    font-size: 11px;
+  }
+
+  .health-nutrition-meal-card .health-nutrition-meal-item button:not(.health-nutrition-remove-item) {
+    padding: 6px 8px;
+  }
+}
+
