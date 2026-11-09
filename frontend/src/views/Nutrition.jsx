@@ -200,10 +200,10 @@ protein: savedFood.protein * nutritionScale,
 carbs: savedFood.carbs * nutritionScale,
 fat: savedFood.fat * nutritionScale,
         ...Object.fromEntries(
-          MICRONUTRIENTS.map(item => [
-            item.id,
-            (Number(savedFood[item.id]) || 0) * quantity
-          ])
+MICRONUTRIENTS.map(item => [
+  item.id,
+  (Number(savedFood[item.id]) || 0) * nutritionScale
+])
         )
       }
 
