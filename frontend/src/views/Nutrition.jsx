@@ -207,7 +207,9 @@ fat: savedFood.fat * nutritionScale,
         ...Object.fromEntries(
 MICRONUTRIENTS.map(item => [
   item.id,
-  (Number(savedFood[item.id]) || 0) * nutritionScale
+  savedFood[item.id] == null
+    ? null
+    : Number(savedFood[item.id]) * nutritionScale
 ])
         )
       }
