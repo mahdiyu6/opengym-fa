@@ -72,9 +72,10 @@ const emptyFoodDraft = {
 }
 
 const [addingFoodFor, setAddingFoodFor] = useState(null)
-  const [foodSearch, setFoodSearch] = useState('')
+const [foodSearch, setFoodSearch] = useState('')
 const [foodDraft, setFoodDraft] = useState(emptyFoodDraft)
 const [foodQuantity, setFoodQuantity] = useState('1')
+const [selectedFoodId, setSelectedFoodId] = useState('')
   
   const [page, setPage] = useState('dashboard')
   const [editingTarget, setEditingTarget] = useState(false)
@@ -204,9 +205,13 @@ const progress = target > 0
     }
   })
 
+if (isFoodBankOnly) {
+  setAddingFoodFor(null)
+} else {
   setFoodDraft(emptyFoodDraft)
   setFoodQuantity('1')
-  setAddingFoodFor(null)
+  setSelectedFoodId('')
+}
 }
   
   function saveTarget() {
@@ -742,9 +747,10 @@ const macros = [
   <label className="health-nutrition-bank-picker">
     {tx('Choose a saved food', 'انتخاب از بانک غذا')}
     <select
-      defaultValue=""
-      onChange={e => {
-        const food = foodBank.find(item => item.id === e.target.value)
+  value={selectedFoodId}
+  onChange={e => {
+    const food = foodBank.find(item => item.id === e.target.value)
+    setSelectedFoodId(e.target.value)
         if (!food) return
 
         setFoodDraft({
