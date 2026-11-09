@@ -248,9 +248,11 @@ if (isFoodBankOnly) {
 
   updateStore(s => {
     s.nutrition ||= {}
-    s.nutrition.foods = (s.nutrition.foods || []).map(food =>
-      food.id === editingFoodId ? updatedFood : food
-    )
+s.nutrition.foods = (s.nutrition.foods || []).map(food =>
+  food.id === editingFoodId
+    ? { ...food, ...updatedFood }
+    : food
+)
   })
 
   setEditingFoodId(null)
