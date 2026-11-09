@@ -78,6 +78,8 @@ const [foodQuantity, setFoodQuantity] = useState('1')
 const [selectedFoodId, setSelectedFoodId] = useState('')
 const [editingMealItemId, setEditingMealItemId] = useState(null)
 const [editingMealQuantity, setEditingMealQuantity] = useState('')
+const [editingFoodId, setEditingFoodId] = useState(null)
+const [editingFoodDraft, setEditingFoodDraft] = useState(emptyFoodDraft)
   
   const [page, setPage] = useState('dashboard')
   const [editingTarget, setEditingTarget] = useState(false)
@@ -214,6 +216,52 @@ if (isFoodBankOnly) {
   setFoodQuantity('1')
   setSelectedFoodId('')
 }
+}
+  function saveFoodBankEdit() {
+  const name = editingFoodDraft.name.trim()
+  const unit = editingFoodDraft.unit.trim() || 'g'
+
+  if (!name || !editingFoodId) return
+
+  const nutrients = Object.fromEntries(
+    MICRONUTRIENTS.map(item => [
+      item.id,
+      Number(editingFoodDraft[item.id]) || 0
+    ])
+  )
+
+  const updatedFood = {
+    id: editingFoodId,
+    name,
+    unit,
+    calories: Number(editingFoodDraft.calories) || 0,
+    protein: Number(editingFoodDraft.protein) || 0,
+    carbs: Number(editingFoodDraft.carbs) || 0,
+    fat: Number(editingFoodDraft.fat) || 0,
+    ...nutrients
+  }
+
+  updateStore(s => {
+    s.nutrition ||= {}
+    s.nutrition.foods = (s.nutrition.foods || []).map(food =>
+      food.id === editingFoodId ? updatedFood : food
+    )
+  })
+
+  setEditingFoodId(null)
+}
+
+function deleteFoodBankItem(foodId) {
+  updateStore(s => {
+    s.nutrition ||= {}
+    s.nutrition.foods = (s.nutrition.foods || []).filter(
+      food => food.id !== foodId
+    )
+  })
+
+  if (editingFoodId === foodId) {
+    setEditingFoodId(null)
+  }
 }
   
   function saveTarget() {
