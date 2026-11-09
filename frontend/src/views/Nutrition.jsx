@@ -521,6 +521,46 @@ const macros = [
                   {fmtNum(food.calories)} kcal
                 </strong>
               </div>
+              <div className="health-nutrition-food-actions">
+  <button
+    type="button"
+    className="secondary"
+    onClick={() => {
+      setEditingFoodId(food.id)
+      setEditingFoodDraft({
+        name: food.name || '',
+        unit: food.unit || 'g',
+        calories: String(food.calories ?? ''),
+        protein: String(food.protein ?? ''),
+        carbs: String(food.carbs ?? ''),
+        fat: String(food.fat ?? ''),
+        ...Object.fromEntries(
+          MICRONUTRIENTS.map(item => [
+            item.id,
+            String(food[item.id] ?? '')
+          ])
+        )
+      })
+    }}
+  >
+    {tx('Edit food', 'ویرایش غذا')}
+  </button>
+
+  <button
+    type="button"
+    className="secondary"
+    onClick={() => {
+      if (window.confirm(tx(
+        'Delete this food from the food bank?',
+        'این غذا از بانک غذا حذف شود؟'
+      ))) {
+        deleteFoodBankItem(food.id)
+      }
+    }}
+  >
+    {tx('Delete', 'حذف')}
+  </button>
+</div>
               <div className="health-nutrition-meal-items">
                 <div className="health-nutrition-meal-item">
                   <span>{tx('Protein', 'پروتئین')}</span>
