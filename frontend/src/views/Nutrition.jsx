@@ -344,11 +344,20 @@ function saveMicroGoals() {
 
 const microTotals = meals.reduce((totals, item) => {
   MICRONUTRIENTS.forEach(nutrient => {
-    totals[nutrient.id] += Number(item[nutrient.id]) || 0
+    const value = item[nutrient.id]
+
+    if (value != null && value !== '') {
+      totals[nutrient.id].sum += Number(value) || 0
+      totals[nutrient.id].count += 1
+    }
   })
+
   return totals
 }, Object.fromEntries(
-  MICRONUTRIENTS.map(item => [item.id, 0])
+  MICRONUTRIENTS.map(item => [
+    item.id,
+    { sum: 0, count: 0 }
+  ])
 ))
   
 const macros = [
