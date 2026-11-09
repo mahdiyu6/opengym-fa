@@ -76,6 +76,8 @@ const [foodSearch, setFoodSearch] = useState('')
 const [foodDraft, setFoodDraft] = useState(emptyFoodDraft)
 const [foodQuantity, setFoodQuantity] = useState('1')
 const [selectedFoodId, setSelectedFoodId] = useState('')
+const [editingMealItemId, setEditingMealItemId] = useState(null)
+const [editingMealQuantity, setEditingMealQuantity] = useState('')
   
   const [page, setPage] = useState('dashboard')
   const [editingTarget, setEditingTarget] = useState(false)
@@ -923,34 +925,102 @@ const macros = [
       <span>{items.length}</span>
     </h4>
 
-    {items.map(item => (
-      <div className="health-nutrition-meal-item" key={item.id}>
-        <div className="health-nutrition-review-info">
-          <strong>{item.name}</strong>
-          <small>
-            {item.quantity} {item.unit}
-          </small>
-        </div>
+{items.map(item => (
+  <div className="health-nutrition-meal-item" key={item.id}>
+    <div className="health-nutrition-review-info">
+      <strong>{item.name}</strong>
 
-        <div className="health-nutrition-review-values">
-          <strong>{fmtNum(item.calories)} kcal</strong>
-          <small>
-            {tx('Carbs:', 'کربوهیدرات:')} {fmtNum(item.carbs)} g
-          </small>
-        </div>
+      {editingMealItemId === item.id ? (
+        <input
+          type="number"
+          min="0.1"
+          step="any"
+          value={editingMealQuantity}
+          onChange={e => setEditingMealQuantity(e.target.value)}
+        />
+      ) : (
+        <small>{item.quantity} {item.unit}</small>
+      )}
+    </div>
+
+    <div className="health-nutrition-review-values">
+      <strong>{fmtNum(item.calories)} kcal</strong>
+      <small>
+        {tx('Carbs:', 'کربوهیدرات:')} {fmtNum(item.carbs)} g
+      </small>
+    </div>
+
+    {editingMealItemId === item.id ? (
+      <>
+        <button
+          type="button"
+          onClick={() => {
+            const newQuantity = Number(editingMealQuantity)
+            const oldQuantity = Number(item.quantity)
+
+            if (!Number.isFinite(newQuantity) || newQuantity <= 0 || oldQuantity <= 0) return
+
+            const ratio = newQuantity / oldQuantity
+
+            const updatedMeals = meals.map(meal =>
+              meal.id === item.id
+                ? {
+                    ...meal,
+                    quantity: newQuantity,
+                    calories: (Number(meal.calories) || 0) * ratio,
+                    protein: (Number(meal.protein) || 0) * ratio,
+                    carbs: (Number(meal.carbs) || 0) * ratio,
+                    fat: (Number(meal.fat) || 0) * ratio,
+                    ...Object.fromEntries(
+                      MICRONUTRIENTS.map(n => [
+                        n.id,
+                        (Number(meal[n.id]) || 0) * ratio
+                      ])
+                    )
+                  }
+                : meal
+            )
+
+            saveMeals(updatedMeals)
+            setEditingMealItemId(null)
+          }}
+        >
+          {tx('Save', 'ذخیره')}
+        </button>
 
         <button
           type="button"
-          className="health-nutrition-remove-item"
-          onClick={() => {
-            saveMeals(meals.filter(meal => meal.id !== item.id))
-          }}
-          aria-label={tx('Remove food', 'حذف غذا')}
+          className="secondary"
+          onClick={() => setEditingMealItemId(null)}
         >
-          ✕
+          {tx('Cancel', 'انصراف')}
         </button>
-      </div>
-    ))}
+      </>
+    ) : (
+      <button
+        type="button"
+        onClick={() => {
+          setEditingMealItemId(item.id)
+          setEditingMealQuantity(String(item.quantity))
+        }}
+      >
+        {tx('Edit', 'ویرایش')}
+      </button>
+    )}
+
+    <button
+      type="button"
+      className="health-nutrition-remove-item"
+      onClick={() => {
+        saveMeals(meals.filter(meal => meal.id !== item.id))
+        if (editingMealItemId === item.id) setEditingMealItemId(null)
+      }}
+      aria-label={tx('Remove food', 'حذف غذا')}
+    >
+      ✕
+    </button>
+  </div>
+))}
   </div>
 ) : (
   <p className="health-nutrition-meal-empty">
