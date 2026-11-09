@@ -169,10 +169,12 @@ const progress = target > 0
     ...nutrients
   }
 
-  const existingFood = foodBank.find(item =>
-    item.name.trim().toLowerCase() === name.toLowerCase() &&
-    item.unit === unit
-  )
+ const existingFood = foodBank.find(item =>
+  item.name.trim().toLowerCase() === name.toLowerCase() &&
+  item.unit === unit &&
+  (item.nutritionBasis || 'perUnit') ===
+    (food.nutritionBasis || 'perUnit')
+)
 
   const savedFood = existingFood || food
 
