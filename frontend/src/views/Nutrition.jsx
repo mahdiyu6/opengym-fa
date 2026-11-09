@@ -540,9 +540,10 @@ const macros = [
     className="secondary"
     onClick={() => {
       setEditingFoodId(food.id)
-      setEditingFoodDraft({
-        name: food.name || '',
-        unit: food.unit || 'g',
+setEditingFoodDraft({
+  name: food.name || '',
+  nutritionBasis: food.nutritionBasis || 'perUnit',
+  unit: food.unit || 'g',
         calories: String(food.calories ?? ''),
         protein: String(food.protein ?? ''),
         carbs: String(food.carbs ?? ''),
