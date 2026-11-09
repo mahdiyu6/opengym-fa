@@ -241,6 +241,7 @@ if (isFoodBankOnly) {
   const updatedFood = {
     id: editingFoodId,
     name,
+    nutritionBasis: editingFoodDraft.nutritionBasis || 'perUnit',
     unit,
     calories: Number(editingFoodDraft.calories) || 0,
     protein: Number(editingFoodDraft.protein) || 0,
