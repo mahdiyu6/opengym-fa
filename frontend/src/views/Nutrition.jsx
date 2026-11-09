@@ -997,7 +997,9 @@ setFoodDraft({
     </label>
 
     <label>
-      {tx('Quantity consumed', 'تعداد واحد مصرفی')}
+      {foodDraft.nutritionBasis === 'per100g'
+  ? tx('Amount consumed (g)', 'مقدار مصرف (گرم)')
+  : tx('Quantity consumed', 'تعداد واحد مصرفی')}
       <input
         type="number"
         min="0.1"
