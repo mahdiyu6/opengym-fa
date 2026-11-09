@@ -1013,13 +1013,22 @@ setFoodDraft({
 </div>
 
 <div className="health-nutrition-form-section">
-  <strong>{tx('Nutrition per unit', 'ارزش غذایی هر واحد')}</strong>
-  <small>
-    {tx(
-      'Enter the nutritional values for one unit, not the total quantity.',
-      'مقادیر زیر را برای یک واحد وارد کن، نه کل تعداد مصرفی.'
-    )}
-  </small>
+<strong>
+  {foodDraft.nutritionBasis === 'per100g'
+    ? tx('Nutrition per 100 g', 'ارزش غذایی در هر ۱۰۰ گرم')
+    : tx('Nutrition per unit', 'ارزش غذایی هر واحد')}
+</strong>
+<small>
+  {foodDraft.nutritionBasis === 'per100g'
+    ? tx(
+        'Enter nutritional values for 100 grams. The consumed amount will be calculated in grams.',
+        'مقادیر غذایی را برای ۱۰۰ گرم وارد کن؛ مقدار مصرف برحسب گرم محاسبه می‌شود.'
+      )
+    : tx(
+        'Enter the nutritional values for one unit, not the total quantity.',
+        'مقادیر زیر را برای یک واحد وارد کن، نه کل تعداد مصرفی.'
+      )}
+</small>
 
   <div className="health-nutrition-food-macros">
     <label>
