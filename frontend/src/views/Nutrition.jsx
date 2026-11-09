@@ -945,9 +945,10 @@ const macros = [
     setSelectedFoodId(e.target.value)
         if (!food) return
 
-        setFoodDraft({
-          name: food.name,
-          unit: food.unit,
+setFoodDraft({
+  name: food.name,
+  nutritionBasis: food.nutritionBasis || 'perUnit',
+  unit: food.unit,
           calories: String(food.calories ?? ''),
           protein: String(food.protein ?? ''),
           carbs: String(food.carbs ?? ''),
