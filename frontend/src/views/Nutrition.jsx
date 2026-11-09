@@ -606,7 +606,11 @@ setEditingFoodDraft({
     </div>
 
     <div className="health-nutrition-form-section">
-      <strong>{tx('Nutrition per unit', 'ارزش غذایی هر واحد')}</strong>
+      <strong>
+  {editingFoodDraft.nutritionBasis === 'per100g'
+    ? tx('Nutrition per 100 g', 'ارزش غذایی در هر ۱۰۰ گرم')
+    : tx('Nutrition per unit', 'ارزش غذایی هر واحد')}
+      </strong>
 
       <div className="health-nutrition-food-macros">
         {[
