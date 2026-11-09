@@ -158,6 +158,7 @@ const progress = target > 0
 
   const food = {
     id: `food-${Date.now()}`,
+    nutritionBasis: 'perUnit',
     name,
     unit,
     calories: Number(foodDraft.calories) || 0,
