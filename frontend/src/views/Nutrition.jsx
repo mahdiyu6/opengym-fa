@@ -691,20 +691,26 @@ setEditingFoodDraft({
     </div>
   </div>
 )}
-              <div className="health-nutrition-meal-items">
-                <div className="health-nutrition-meal-item">
-                  <span>{tx('Protein', 'پروتئین')}</span>
-                  <strong>{fmtNum(food.protein)} g</strong>
-                </div>
-                <div className="health-nutrition-meal-item">
-                  <span>{tx('Carbs', 'کربوهیدرات')}</span>
-                  <strong>{fmtNum(food.carbs)} g</strong>
-                </div>
-                <div className="health-nutrition-meal-item">
-                  <span>{tx('Fat', 'چربی')}</span>
-                  <strong>{fmtNum(food.fat)} g</strong>
-                </div>
-              </div>
+<details className="health-nutrition-micro-editor">
+  <summary>
+    {tx('Micronutrient details', 'جزئیات ریزمغذی‌ها')}
+  </summary>
+
+  <div className="health-nutrition-meal-items">
+    {MICRONUTRIENTS.map(item => (
+      <div className="health-nutrition-meal-item" key={item.id}>
+        <span>{tx(item.en, item.fa)}</span>
+        <strong>
+          {food[item.id] !== null &&
+           food[item.id] !== undefined &&
+           food[item.id] !== ''
+            ? `${fmtNum(Number(food[item.id]))} ${item.unit}`
+            : '—'}
+        </strong>
+      </div>
+    ))}
+  </div>
+</details>
             </article>
           ))}
       </div>
