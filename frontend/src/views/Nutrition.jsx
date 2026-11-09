@@ -235,12 +235,14 @@ if (isFoodBankOnly) {
 
   if (!name || !editingFoodId) return
 
-  const nutrients = Object.fromEntries(
-    MICRONUTRIENTS.map(item => [
-      item.id,
-      Number(editingFoodDraft[item.id]) || 0
-    ])
-  )
+const nutrients = Object.fromEntries(
+  MICRONUTRIENTS.map(item => [
+    item.id,
+    editingFoodDraft[item.id] === ''
+      ? null
+      : Number(editingFoodDraft[item.id]) || 0
+  ])
+)
 
   const updatedFood = {
     id: editingFoodId,
