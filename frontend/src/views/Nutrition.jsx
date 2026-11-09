@@ -917,22 +917,46 @@ const macros = [
               </div>
             )}
             {items.length > 0 ? (
-              <div className="health-nutrition-meal-items">
-                {items.map(item => (
-                  <div className="health-nutrition-meal-item" key={item.id}>
-                    <span>{item.name}</span>
-                    <small>
-                      {item.quantity} {item.unit}
-                    </small>
-                    <strong>{fmtNum(item.calories)} kcal</strong>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="health-nutrition-meal-empty">
-                {tx('No food added yet', 'هنوز غذایی ثبت نشده است')}
-              </p>
-            )}
+  <div className="health-nutrition-meal-items">
+    <h4 className="health-nutrition-review-title">
+      {tx('Added foods – Review', 'غذاهای اضافه‌شده – بازبینی')}
+      <span>{items.length}</span>
+    </h4>
+
+    {items.map(item => (
+      <div className="health-nutrition-meal-item" key={item.id}>
+        <div className="health-nutrition-review-info">
+          <strong>{item.name}</strong>
+          <small>
+            {item.quantity} {item.unit}
+          </small>
+        </div>
+
+        <div className="health-nutrition-review-values">
+          <strong>{fmtNum(item.calories)} kcal</strong>
+          <small>
+            {tx('Carbs:', 'کربوهیدرات:')} {fmtNum(item.carbs)} g
+          </small>
+        </div>
+
+        <button
+          type="button"
+          className="health-nutrition-remove-item"
+          onClick={() => {
+            saveMeals(meals.filter(meal => meal.id !== item.id))
+          }}
+          aria-label={tx('Remove food', 'حذف غذا')}
+        >
+          ✕
+        </button>
+      </div>
+    ))}
+  </div>
+) : (
+  <p className="health-nutrition-meal-empty">
+    {tx('No food added yet', 'هنوز غذایی ثبت نشده است')}
+  </p>
+)}
           </article>
         )
       })}
