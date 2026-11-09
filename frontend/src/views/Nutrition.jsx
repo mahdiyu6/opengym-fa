@@ -184,6 +184,9 @@ const progress = target > 0
     }
 
     if (!isFoodBankOnly) {
+      const nutritionScale = savedFood.nutritionBasis === 'per100g'
+  ? quantity / 100
+  : quantity
       const mealItem = {
         id: `meal-${Date.now()}`,
         foodId: savedFood.id,
@@ -191,10 +194,11 @@ const progress = target > 0
         name: savedFood.name,
         unit: savedFood.unit,
         quantity,
-        calories: savedFood.calories * quantity,
-        protein: savedFood.protein * quantity,
-        carbs: savedFood.carbs * quantity,
-        fat: savedFood.fat * quantity,
+nutritionBasis: savedFood.nutritionBasis || 'perUnit',
+calories: savedFood.calories * nutritionScale,
+protein: savedFood.protein * nutritionScale,
+carbs: savedFood.carbs * nutritionScale,
+fat: savedFood.fat * nutritionScale,
         ...Object.fromEntries(
           MICRONUTRIENTS.map(item => [
             item.id,
