@@ -522,7 +522,12 @@ const macros = [
                   <span>🍽️</span>
                   <div>
                     <strong>{food.name}</strong>
-                    <small>{tx('Per unit:', 'به ازای هر واحد:')} {food.unit}</small>
+                    <small>
+  {food.nutritionBasis === 'per100g'
+    ? tx('Per 100 g', 'به ازای هر ۱۰۰ گرم')
+    : tx('Per unit:', 'به ازای هر واحد:')}
+  {food.nutritionBasis === 'per100g' ? '' : ` ${food.unit}`}
+</small>
                   </div>
                 </div>
                 <strong className="health-nutrition-meal-calories">
