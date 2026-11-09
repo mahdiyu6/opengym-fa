@@ -1464,9 +1464,16 @@ setFoodDraft({
     ? `${fmtNum(Number(nutrition.microGoals[item.id]))} ${item.unit}`
     : `— ${item.unit}`}
     </strong>
-    <strong>
-      {fmtNum(Number(microTotals[item.id].toFixed(2)))} {item.unit}
-    </strong>
+<strong>
+  {microTotals[item.id].count > 0
+    ? `${fmtNum(Number(microTotals[item.id].sum.toFixed(2)))} ${item.unit}`
+    : `— ${item.unit}`}
+</strong>
+{microTotals[item.id].count < meals.length && (
+  <small>
+    {tx('Partial data', 'اطلاعات ناقص')}
+  </small>
+)}
   </div>
 ))}
     </div>
