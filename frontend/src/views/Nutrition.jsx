@@ -561,6 +561,100 @@ const macros = [
     {tx('Delete', 'حذف')}
   </button>
 </div>
+             {editingFoodId === food.id && (
+  <div className="health-nutrition-food-form health-nutrition-edit-form">
+    <h3 className="health-nutrition-form-title">
+      {tx('Edit food details', 'ویرایش مشخصات غذا')}
+    </h3>
+
+    <div className="health-nutrition-form-section">
+      <div className="health-nutrition-food-identity">
+        <label>
+          {tx('Food name', 'نام غذا')}
+          <input
+            value={editingFoodDraft.name}
+            onChange={e => setEditingFoodDraft(v => ({
+              ...v, name: e.target.value
+            }))}
+          />
+        </label>
+
+        <label>
+          {tx('Measurement unit', 'واحد اندازه‌گیری')}
+          <input
+            value={editingFoodDraft.unit}
+            onChange={e => setEditingFoodDraft(v => ({
+              ...v, unit: e.target.value
+            }))}
+          />
+        </label>
+      </div>
+    </div>
+
+    <div className="health-nutrition-form-section">
+      <strong>{tx('Nutrition per unit', 'ارزش غذایی هر واحد')}</strong>
+
+      <div className="health-nutrition-food-macros">
+        {[
+          ['calories', 'Calories (kcal)', 'کالری (کیلوکالری)'],
+          ['protein', 'Protein (g)', 'پروتئین (گرم)'],
+          ['carbs', 'Carbs (g)', 'کربوهیدرات (گرم)'],
+          ['fat', 'Fat (g)', 'چربی (گرم)']
+        ].map(([key, en, faText]) => (
+          <label key={key}>
+            {tx(en, faText)}
+            <input
+              type="number"
+              min="0"
+              step="any"
+              value={editingFoodDraft[key]}
+              onChange={e => setEditingFoodDraft(v => ({
+                ...v, [key]: e.target.value
+              }))}
+            />
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <details className="health-nutrition-micro-editor">
+      <summary>
+        {tx('Micronutrients & More', 'ریزمغذی‌ها و سایر موارد')}
+      </summary>
+
+      <div className="health-nutrition-micro-grid">
+        {MICRONUTRIENTS.map(item => (
+          <label key={item.id}>
+            {tx(item.en, item.fa)} ({item.unit})
+            <input
+              type="number"
+              min="0"
+              step="any"
+              value={editingFoodDraft[item.id] ?? ''}
+              onChange={e => setEditingFoodDraft(v => ({
+                ...v, [item.id]: e.target.value
+              }))}
+            />
+          </label>
+        ))}
+      </div>
+    </details>
+
+    <div className="health-nutrition-food-actions">
+      <button type="button" onClick={saveFoodBankEdit}>
+        {tx('Save changes', 'ذخیره تغییرات')}
+      </button>
+
+      <button
+        type="button"
+        className="secondary"
+        onClick={() => setEditingFoodId(null)}
+      >
+        {tx('Cancel', 'انصراف')}
+      </button>
+    </div>
+  </div>
+)}
               <div className="health-nutrition-meal-items">
                 <div className="health-nutrition-meal-item">
                   <span>{tx('Protein', 'پروتئین')}</span>
