@@ -82,16 +82,20 @@ export default function HealthDoseLogHistory() {
 
   return (
     <main className="health-page" dir={fa ? 'rtl' : 'ltr'}>
-      <button
-        className="health-secondary"
-        onClick={() => nav('/health/performance')}
-      >
-        {tx('‹ Back to Performance', '‹ بازگشت به پایش عملکرد')}
-      </button>
-
       <header className="health-header">
         <div>
-          <h1>{tx('Daily Log History', 'تاریخچه ثبت روزانه')}</h1>
+          <div className="health-title-row">
+            <h1>{tx('Daily Log History', 'تاریخچه ثبت روزانه')}</h1>
+
+            <button
+              type="button"
+              className="health-secondary health-back"
+              onClick={() => nav('/health/performance')}
+            >
+              {tx('‹ Back', '‹ بازگشت')}
+            </button>
+          </div>
+
           <p className="health-muted">
             {tx(
               'All your recorded entries.',
