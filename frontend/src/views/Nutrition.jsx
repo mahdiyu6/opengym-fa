@@ -537,7 +537,24 @@ const tabs = [
         ))}
       </div>
     </details>
-
+<div className="health-nutrition-food-macro-summary">
+  {[
+    { key: 'protein', label: tx('Protein', 'پروتئین') },
+    { key: 'carbs', label: tx('Carbs', 'کربوهیدرات') },
+    { key: 'fat', label: tx('Fat', 'چربی') }
+  ].map(item => (
+    <div className="health-nutrition-food-macro-item" key={item.key}>
+      <span>{item.label}</span>
+      <strong>
+        {food[item.key] !== null &&
+         food[item.key] !== undefined &&
+         food[item.key] !== ''
+          ? `${fmtNum(Number(food[item.key]))} g`
+          : '—'}
+      </strong>
+    </div>
+  ))}
+</div>
     <div className="health-nutrition-food-actions">
       <button type="button" onClick={saveNewFood}>
         {tx('Save to food bank', 'ذخیره در بانک غذا')}
