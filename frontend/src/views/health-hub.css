@@ -4061,7 +4061,7 @@
 .health-nutrition-edit {
   border: 0;
   background: transparent;
-  color: var(--accent, #ff9f0a);
+  color: var(--acc);
   font: inherit;
   font-size: 12px;
   white-space: nowrap;
@@ -4082,7 +4082,7 @@
   place-items: center;
   border-radius: 50%;
   background: conic-gradient(
-    var(--accent, #ff9f0a) var(--calorie-progress),
+    var(--acc) var(--calorie-progress),
     var(--surface-2) 0
   );
   transform: rotate(-90deg);
@@ -4190,7 +4190,7 @@
   padding: 9px 12px;
   border: 0;
   border-radius: 9px;
-  background: var(--accent, #ff9f0a);
+  background: var(--acc);
   color: #fff;
   font: inherit;
   font-size: 12px;
