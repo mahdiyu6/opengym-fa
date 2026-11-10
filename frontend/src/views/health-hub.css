@@ -5044,3 +5044,14 @@
   }
 }
 
+/* Nutrition header full-width alignment */
+.health-nutrition > .health-header > div {
+  width: 100%;
+  flex: 1;
+  min-width: 0;
+}
+
+.health-nutrition > .health-header .health-title-row {
+  width: 100%;
+  justify-content: space-between;
+}
