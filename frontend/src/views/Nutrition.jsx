@@ -1413,11 +1413,12 @@ setFoodDraft({
       ))}
     </div>
 
-<h3 className="health-nutrition-facts-heading">
-  {tx('Micronutrients', 'ریزمغذی‌ها')}
-</h3>
 
-<div className="health-nutrition-micro-goal-controls">
+<div className="health-nutrition-goal-heading">
+  <h3 className="health-nutrition-facts-heading">
+    {tx('Micronutrients', 'ریزمغذی‌ها')}
+  </h3>
+
   <button
     type="button"
     className="health-nutrition-edit"
@@ -1436,6 +1437,7 @@ setFoodDraft({
     ✎ {tx('Edit micro goals', 'ویرایش اهداف ریزمغذی‌ها')}
   </button>
 </div>
+
 
 {editingMicroGoals && (
   <div className="health-nutrition-target-editor">
