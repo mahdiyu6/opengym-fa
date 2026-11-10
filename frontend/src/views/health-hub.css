@@ -5070,3 +5070,329 @@
   align-items: center;
   gap: 12px;
 }
+
+
+/* =========================================
+   NUTRITION – Modern Performance-style UI
+========================================= */
+
+.health-nutrition {
+  color: var(--label);
+}
+
+.health-nutrition .health-nutrition-calorie-card,
+.health-nutrition .health-nutrition-macro,
+.health-nutrition .health-nutrition-tool,
+.health-nutrition .health-nutrition-exercise,
+.health-nutrition .health-nutrition-meal-card,
+.health-nutrition .health-nutrition-food-form,
+.health-nutrition .health-nutrition-facts-table,
+.health-nutrition .health-nutrition-placeholder {
+  background: var(--surface) !important;
+  color: var(--label) !important;
+  border: 1px solid var(--sep) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 5px 18px rgba(0,0,0,.045);
+}
+
+/* Section headings */
+.health-nutrition .health-nutrition-section-title h2,
+.health-nutrition .health-nutrition-card-heading h2,
+.health-nutrition .health-nutrition-form-title,
+.health-nutrition .health-nutrition-facts-heading {
+  color: var(--label) !important;
+  font-weight: 850;
+  letter-spacing: -.25px;
+}
+
+.health-nutrition .health-nutrition-eyebrow {
+  color: var(--acc) !important;
+  font-weight: 800;
+}
+
+/* Navigation tabs */
+.health-nutrition .health-nutrition-tabs {
+  padding: 5px;
+  border: 1px solid var(--sep);
+  border-radius: 16px;
+  background: var(--surface-2);
+}
+
+.health-nutrition .health-nutrition-tabs button {
+  min-height: 44px;
+  border-radius: 12px;
+  color: var(--label-2) !important;
+  font-weight: 700;
+}
+
+.health-nutrition .health-nutrition-tabs button.active {
+  background: var(--surface) !important;
+  color: var(--acc) !important;
+  border: 1px solid var(--sep);
+  box-shadow: 0 3px 10px rgba(0,0,0,.07);
+}
+
+/* Calorie dashboard */
+.health-nutrition .health-nutrition-calorie-card {
+  padding: 20px;
+  border-radius: 22px !important;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--acc) 9%, var(--surface)),
+      var(--surface) 72%) !important;
+}
+
+.health-nutrition .health-nutrition-ring-inner {
+  background: var(--surface) !important;
+}
+
+.health-nutrition .health-nutrition-calorie-footer {
+  border-color: var(--sep);
+  color: var(--label-2);
+}
+
+/* Macro cards */
+.health-nutrition .health-nutrition-macro {
+  padding: 15px;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--acc) 7%, var(--surface)),
+      var(--surface) 75%) !important;
+}
+
+.health-nutrition .health-nutrition-macro > strong,
+.health-nutrition .health-nutrition-macro b {
+  color: var(--label) !important;
+}
+
+.health-nutrition .health-nutrition-macro div > span {
+  color: var(--label-3) !important;
+}
+
+.health-nutrition .health-nutrition-macro-track {
+  background: var(--surface-2);
+}
+
+/* Body and activity cards */
+.health-nutrition .health-nutrition-tool,
+.health-nutrition .health-nutrition-exercise {
+  padding: 17px;
+  background: var(--surface) !important;
+}
+
+.health-nutrition .health-nutrition-tool strong,
+.health-nutrition .health-nutrition-exercise strong {
+  color: var(--label) !important;
+}
+
+.health-nutrition .health-nutrition-tool label,
+.health-nutrition .health-nutrition-tool small,
+.health-nutrition .health-nutrition-tool p,
+.health-nutrition .health-nutrition-exercise small {
+  color: var(--label-2) !important;
+}
+
+/* Meal cards */
+.health-nutrition .health-nutrition-meal-card {
+  padding: 18px !important;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--acc) 5%, var(--surface)),
+      var(--surface) 65%) !important;
+  border-radius: 20px !important;
+  border-color: var(--sep) !important;
+  color: var(--label) !important;
+}
+
+.health-nutrition .health-nutrition-meal-card * {
+  color: inherit;
+}
+
+.health-nutrition .health-nutrition-meal-name > span {
+  background: color-mix(in srgb, var(--acc) 13%, var(--surface-2)) !important;
+  color: var(--acc) !important;
+}
+
+.health-nutrition .health-nutrition-meal-name strong,
+.health-nutrition .health-nutrition-meal-item strong,
+.health-nutrition .health-nutrition-meal-calories,
+.health-nutrition .health-nutrition-review-title {
+  color: var(--label) !important;
+}
+
+.health-nutrition .health-nutrition-meal-name small,
+.health-nutrition .health-nutrition-meal-empty,
+.health-nutrition .health-nutrition-meal-item small,
+.health-nutrition .health-nutrition-review-info small,
+.health-nutrition .health-nutrition-review-values small {
+  color: var(--label-2) !important;
+}
+
+.health-nutrition .health-nutrition-meal-items,
+.health-nutrition .health-nutrition-meal-item,
+.health-nutrition .health-nutrition-meal-empty {
+  border-color: var(--sep) !important;
+}
+
+/* Forms and inputs */
+.health-nutrition .health-nutrition-food-form {
+  padding: 18px !important;
+  gap: 16px;
+  background: var(--surface) !important;
+  border-color: var(--sep) !important;
+  color: var(--label) !important;
+  border-radius: 20px !important;
+}
+
+.health-nutrition .health-nutrition-form-title {
+  border-color: var(--sep) !important;
+}
+
+.health-nutrition .health-nutrition-form-section {
+  padding: 15px;
+  border: 1px solid var(--sep) !important;
+  border-radius: 15px;
+  background: var(--surface-2) !important;
+}
+
+.health-nutrition .health-nutrition-form-section > strong,
+.health-nutrition .health-nutrition-form-section > small,
+.health-nutrition .health-nutrition-food-form label {
+  color: var(--label-2) !important;
+}
+
+.health-nutrition .health-nutrition-food-form input,
+.health-nutrition .health-nutrition-food-form select,
+.health-nutrition .health-nutrition-target-editor input,
+.health-nutrition .health-nutrition-tool input,
+.health-nutrition .health-nutrition-exercise input,
+.health-nutrition .health-nutrition-meal-card input,
+.health-nutrition .health-nutrition-meal-card select,
+.health-nutrition .health-nutrition-bank-search {
+  box-sizing: border-box;
+  min-height: 44px;
+  border: 1px solid var(--sep) !important;
+  border-radius: 11px;
+  background: var(--bg) !important;
+  color: var(--label) !important;
+  font: inherit;
+}
+
+.health-nutrition .health-nutrition-food-form input:focus,
+.health-nutrition .health-nutrition-food-form select:focus,
+.health-nutrition .health-nutrition-bank-search:focus {
+  border-color: var(--acc) !important;
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 15%, transparent);
+}
+
+.health-nutrition .health-nutrition-food-form input::placeholder,
+.health-nutrition .health-nutrition-bank-search::placeholder {
+  color: var(--label-3) !important;
+}
+
+/* Micronutrients */
+.health-nutrition .health-nutrition-micro-editor {
+  padding: 14px;
+  border: 1px solid var(--sep) !important;
+  border-radius: 14px;
+  background: var(--surface-2) !important;
+  color: var(--label) !important;
+}
+
+.health-nutrition .health-nutrition-micro-editor summary {
+  color: var(--label) !important;
+}
+
+.health-nutrition .health-nutrition-micro-editor summary span {
+  background: color-mix(in srgb, var(--acc) 13%, var(--surface)) !important;
+  color: var(--acc) !important;
+}
+
+/* Buttons */
+.health-nutrition button.health-nutrition-add-food,
+.health-nutrition .health-nutrition-food-actions button:not(.secondary),
+.health-nutrition .health-nutrition-target-editor button:not(.secondary) {
+  min-height: 44px;
+  border: 1px solid var(--acc) !important;
+  border-radius: 12px;
+  background: var(--acc) !important;
+  color: #fff !important;
+  font-family: inherit;
+  font-weight: 800;
+}
+
+.health-nutrition .health-nutrition-food-actions button.secondary,
+.health-nutrition .health-nutrition-target-editor button.secondary {
+  min-height: 44px;
+  border: 1px solid var(--sep) !important;
+  border-radius: 12px;
+  background: var(--surface-2) !important;
+  color: var(--label) !important;
+}
+
+.health-nutrition .health-nutrition-meal-item button:not(.health-nutrition-remove-item) {
+  border: 1px solid var(--sep) !important;
+  border-radius: 10px;
+  background: var(--surface-2) !important;
+  color: var(--label) !important;
+  font-weight: 750;
+}
+
+.health-nutrition .health-nutrition-remove-item {
+  border-radius: 10px;
+}
+
+/* Nutrition facts table */
+.health-nutrition .health-nutrition-facts-table {
+  overflow: hidden;
+  background: var(--surface) !important;
+  border-color: var(--sep) !important;
+  border-radius: 18px !important;
+}
+
+.health-nutrition .health-nutrition-facts-row {
+  min-height: 52px;
+  border-color: var(--sep) !important;
+  color: var(--label) !important;
+  background: var(--surface) !important;
+}
+
+.health-nutrition .health-nutrition-facts-row:nth-child(odd):not(.header) {
+  background: var(--surface-2) !important;
+}
+
+.health-nutrition .health-nutrition-facts-row > span,
+.health-nutrition .health-nutrition-facts-row > strong {
+  color: var(--label) !important;
+}
+
+.health-nutrition .health-nutrition-facts-row.header {
+  background: color-mix(in srgb, var(--acc) 17%, var(--surface)) !important;
+  color: var(--label) !important;
+}
+
+.health-nutrition .health-nutrition-facts-row.header > * {
+  color: var(--label) !important;
+  font-weight: 850;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .health-nutrition .health-nutrition-calorie-card,
+  .health-nutrition .health-nutrition-meal-card,
+  .health-nutrition .health-nutrition-food-form {
+    padding: 14px !important;
+    border-radius: 17px !important;
+  }
+
+  .health-nutrition .health-nutrition-section-title h2 {
+    font-size: 16px;
+  }
+
+  .health-nutrition .health-nutrition-facts-row {
+    gap: 5px;
+    padding: 10px 7px;
+    font-size: 10px;
+  }
+}
