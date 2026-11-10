@@ -5636,3 +5636,8 @@
   }
 }
 
+/* Align Nutrient header with the first column content */
+.health-nutrition .health-nutrition-facts-row.header > strong:first-child {
+  text-align: start !important;
+  justify-self: stretch;
+}
