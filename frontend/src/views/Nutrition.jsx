@@ -1,5 +1,6 @@
 
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useLang, getLang } from '../lib/i18n.js'
 import { useStore } from '../store/useStore.js'
 import { fmtDateFull, todayISO, fmtNum } from '../lib/format.js'
@@ -42,7 +43,8 @@ const MICRONUTRIENTS = [
 
 export default function Nutrition() {
   useLang()
-
+  
+  const nav = useNavigate()
   const fa = getLang() === 'fa'
   const calendar = useStore(s =>
     s.S?.calendar === 'jalali' ? 'jalali' : 'gregorian'
@@ -382,16 +384,28 @@ const tabs = [
   return (
     <main className="health-page health-nutrition" dir={fa ? 'rtl' : 'ltr'}>
       <header className="health-header">
-        <div>
-          <h1>{tx('Nutrition & Calories', 'تغذیه و کالری')}</h1>
-          <p className="health-muted">
-            {tx('Daily nutrition and body tracking', 'پایش تغذیه و وضعیت روزانه بدن')}
-          </p>
-        </div>
-        <span className="health-dashboard-date">
-          {fmtDateFull(today, calendar)}
-        </span>
-      </header>
+  <div>
+    <div className="health-title-row">
+      <h1>{tx('Nutrition & Calories', 'تغذیه و کالری')}</h1>
+
+      <button
+        type="button"
+        className="health-secondary health-back"
+        onClick={() => nav('/health')}
+      >
+        {tx('‹ Back', '‹ بازگشت')}
+      </button>
+    </div>
+
+    <p className="health-muted">
+      {tx('Daily nutrition and body tracking', 'پایش تغذیه و وضعیت روزانه بدن')}
+    </p>
+  </div>
+
+  <span className="health-dashboard-date">
+    {fmtDateFull(today, calendar)}
+  </span>
+</header>
 
 {page === 'dashboard' ? (
   <nav className="health-nutrition-tabs">
