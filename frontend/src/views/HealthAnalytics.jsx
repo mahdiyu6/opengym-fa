@@ -1364,21 +1364,24 @@ health-analytics-training-summary strong {
         }
       `}</style>
 
-      <button
-        className="health-secondary"
-        onClick={() => nav('/health')}
-      >
-        {tx('‹ Back to Health', '‹ بازگشت به سلامت')}
-      </button>
-
       <header className="health-header">
         <div>
-          <h1>
-            {tx(
-              'Analytics & Insights',
-              'تحلیل و بینش ها '
-            )}
-          </h1>
+          <div className="health-title-row">
+            <h1>
+              {tx(
+                'Analytics & Insights',
+                'تحلیل و بینش ها '
+              )}
+            </h1>
+
+            <button
+              type="button"
+              className="health-secondary health-back"
+              onClick={() => nav('/health')}
+            >
+              {tx('‹ Back to Health', '‹ بازگشت به سلامت')}
+            </button>
+          </div>
 
           <p className="health-muted">
             {tx(
