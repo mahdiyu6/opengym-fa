@@ -5427,3 +5427,114 @@
     padding: 6px 8px;
   }
 }
+
+
+/* Food Bank – final theme and button fixes */
+
+.health-nutrition-foodbank-page .health-nutrition-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-section-title h2 {
+  color: var(--label) !important;
+}
+
+/* Create food button */
+.health-nutrition-foodbank-page > .health-nutrition-add-food {
+  width: 100%;
+  min-height: 46px;
+  margin: 4px 0 12px;
+  padding: 11px 16px;
+  border: 1px solid var(--acc) !important;
+  border-radius: 13px;
+  background: var(--acc) !important;
+  color: #fff !important;
+  font-weight: 800;
+}
+
+/* Search */
+.health-nutrition-foodbank-page .health-nutrition-bank-search {
+  width: 100%;
+  min-height: 46px;
+  margin: 8px 0 14px;
+  padding: 11px 14px;
+  border: 1px solid var(--sep) !important;
+  border-radius: 13px;
+  background: var(--surface-2) !important;
+  color: var(--label) !important;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-bank-search:focus {
+  border-color: var(--acc) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 15%, transparent);
+}
+
+/* Food cards */
+.health-nutrition-foodbank-page .health-nutrition-meal-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--sep) !important;
+  border-radius: 18px !important;
+  color: var(--label) !important;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-meal-card * {
+  color: inherit;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-meal-name small {
+  color: var(--label-2) !important;
+}
+
+/* Edit and Delete buttons */
+.health-nutrition-foodbank-page .health-nutrition-meal-card .health-nutrition-food-actions button {
+  min-height: 40px;
+  padding: 9px 13px;
+  border: 1px solid var(--sep) !important;
+  border-radius: 11px;
+  background: var(--surface-2) !important;
+  color: var(--label) !important;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+/* Food forms */
+.health-nutrition-foodbank-page .health-nutrition-food-form {
+  background: var(--surface) !important;
+  border: 1px solid var(--sep) !important;
+  border-radius: 17px !important;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-food-form .health-nutrition-food-actions button {
+  min-height: 44px;
+  border: 1px solid var(--acc) !important;
+  border-radius: 11px;
+  background: var(--acc) !important;
+  color: #fff !important;
+  font-weight: 800;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-food-form .health-nutrition-food-actions button.secondary {
+  border-color: var(--sep) !important;
+  background: var(--surface-2) !important;
+  color: var(--label) !important;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .health-nutrition-foodbank-page .health-nutrition-meal-card {
+    padding: 14px !important;
+  }
+
+  .health-nutrition-foodbank-page .health-nutrition-meal-card .health-nutrition-food-actions {
+    gap: 8px;
+  }
+
+  .health-nutrition-foodbank-page .health-nutrition-meal-card .health-nutrition-food-actions button {
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+}
