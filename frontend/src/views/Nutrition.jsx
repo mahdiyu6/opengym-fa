@@ -383,7 +383,7 @@ const tabs = [
 
   return (
     <main className="health-page health-nutrition" dir={fa ? 'rtl' : 'ltr'}>
-      <header className="health-header">
+<header className="health-header">
   <div>
     <div className="health-title-row">
       <h1>{tx('Nutrition & Calories', 'تغذیه و کالری')}</h1>
@@ -397,14 +397,16 @@ const tabs = [
       </button>
     </div>
 
-    <p className="health-muted">
-      {tx('Daily nutrition and body tracking', 'پایش تغذیه و وضعیت روزانه بدن')}
-    </p>
-  </div>
+    <div className="health-title-row">
+      <p className="health-muted">
+        {tx('Daily nutrition and body tracking', 'پایش تغذیه و وضعیت روزانه بدن')}
+      </p>
 
-  <span className="health-dashboard-date">
-    {fmtDateFull(today, calendar)}
-  </span>
+      <span className="health-dashboard-date">
+        {fmtDateFull(today, calendar)}
+      </span>
+    </div>
+  </div>
 </header>
 
 {page === 'dashboard' ? (
