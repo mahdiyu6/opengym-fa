@@ -5538,3 +5538,101 @@
     font-size: 11px;
   }
 }
+
+
+/* Food Bank – edit form readability and action spacing */
+
+/* Measurement unit and all edit form fields */
+.health-nutrition-foodbank-page .health-nutrition-edit-form input {
+  background: var(--surface-2) !important;
+  color: var(--label) !important;
+  border: 1px solid var(--sep) !important;
+  border-radius: 11px !important;
+  min-height: 44px;
+  padding: 10px 12px;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--label) !important;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-edit-form input:focus {
+  border-color: var(--acc) !important;
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 15%, transparent) !important;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-edit-form label {
+  color: var(--label) !important;
+}
+
+/* Separate Edit and Delete buttons */
+.health-nutrition-foodbank-page .health-nutrition-meal-card > .health-nutrition-food-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px !important;
+  margin: 14px 0 0;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-meal-card > .health-nutrition-food-actions button {
+  flex: 1 1 110px;
+  min-width: 0;
+  min-height: 42px;
+  margin: 0 !important;
+}
+
+/* Micronutrient details – visually separated */
+.health-nutrition-foodbank-page .health-nutrition-meal-card > .health-nutrition-micro-editor {
+  display: block;
+  margin-top: 12px !important;
+  padding: 0;
+  border: 1px solid var(--sep) !important;
+  border-radius: 12px;
+  background: var(--surface-2) !important;
+  overflow: hidden;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-meal-card > .health-nutrition-micro-editor summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 11px 13px;
+  color: var(--label) !important;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-meal-card > .health-nutrition-micro-editor[open] summary {
+  border-bottom: 1px solid var(--sep);
+}
+
+.health-nutrition-foodbank-page .health-nutrition-meal-card > .health-nutrition-micro-editor .health-nutrition-meal-items {
+  padding: 10px 13px;
+}
+
+/* Edit form action buttons */
+.health-nutrition-foodbank-page .health-nutrition-edit-form .health-nutrition-food-actions {
+  display: flex;
+  gap: 10px !important;
+  margin-top: 16px;
+}
+
+.health-nutrition-foodbank-page .health-nutrition-edit-form .health-nutrition-food-actions button {
+  flex: 1;
+  min-height: 44px;
+  margin: 0 !important;
+}
+
+@media (max-width: 380px) {
+  .health-nutrition-foodbank-page .health-nutrition-meal-card > .health-nutrition-food-actions {
+    gap: 8px !important;
+  }
+
+  .health-nutrition-foodbank-page .health-nutrition-meal-card > .health-nutrition-food-actions button {
+    flex-basis: 95px;
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+}
+
