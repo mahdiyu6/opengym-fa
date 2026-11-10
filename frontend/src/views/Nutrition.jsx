@@ -366,12 +366,11 @@ const macros = [
   { label: tx('Carbs', 'کربوهیدرات'), value: macroTotals.carbs, goal: '—', unit: 'g', icon: '🍚' }
 ]
 
-  const tabs = [
-    { id: 'dashboard', label: tx('Overview', 'نمای کلی'), icon: '🔥' },
-    { id: 'meals', label: tx('Meals', 'وعده‌ها'), icon: '🍽️' },
-    { id: 'nutrition', label: tx('Nutrition', 'ارزش غذایی'), icon: '🥗' },
-    { id: 'foodbank', label: tx('Food Bank', 'بانک غذا'), icon: '📚' }
-  ]
+const tabs = [
+  { id: 'meals', label: tx('Meals', 'وعده‌ها'), icon: '🍽️' },
+  { id: 'nutrition', label: tx('Nutrition', 'ارزش غذایی'), icon: '🥗' },
+  { id: 'foodbank', label: tx('Food Bank', 'بانک غذا'), icon: '📚' }
+]
 
   const mealTypes = [
   { id: 'breakfast', label: tx('Breakfast', 'صبحانه'), icon: '🌅' },
@@ -394,19 +393,32 @@ const macros = [
         </span>
       </header>
 
-      <nav className="health-nutrition-tabs">
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            type="button"
-            className={page === tab.id ? 'active' : ''}
-            onClick={() => setPage(tab.id)}
-          >
-            <span>{tab.icon}</span>
-            {tab.label}
-          </button>
-        ))}
-      </nav>
+{page === 'dashboard' ? (
+  <nav className="health-nutrition-tabs">
+    {tabs.map(tab => (
+      <button
+        key={tab.id}
+        type="button"
+        onClick={() => setPage(tab.id)}
+      >
+        <span>{tab.icon}</span>
+        {tab.label}
+      </button>
+    ))}
+  </nav>
+) : (
+  <div className="health-nutrition-section-title">
+    <button
+      type="button"
+      className="health-nutrition-edit"
+      onClick={() => setPage('dashboard')}
+    >
+      ← {tx('Back', 'بازگشت')}
+    </button>
+
+    <h2>{tabs.find(tab => tab.id === page)?.label}</h2>
+  </div>
+)}
 {page === 'foodbank' && (
   <section className="health-nutrition-meals">
     <div className="health-nutrition-section-title">
