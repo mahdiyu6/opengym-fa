@@ -436,7 +436,7 @@ const tabs = [
   </div>
 )}
 {page === 'foodbank' && (
-  <section className="health-nutrition-meals">
+  <section className="health-nutrition-meals health-nutrition-foodbank-page">
     <div className="health-nutrition-section-title">
       <h2>{tx('Food Bank', 'بانک غذا')}</h2>
       <span>{foodBank.length} {tx('saved foods', 'غذای ذخیره‌شده')}</span>
