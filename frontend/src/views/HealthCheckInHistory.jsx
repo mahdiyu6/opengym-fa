@@ -201,7 +201,7 @@ export default function HealthCheckInHistory() {
               className="health-secondary health-back"
               onClick={() => nav('/health')}
             >
-              {tx('‹ Back to Health', '‹ بازگشت به سلامت')}
+              {tx('‹ Back', '‹ بازگشت')}
             </button>
           </div>
 
