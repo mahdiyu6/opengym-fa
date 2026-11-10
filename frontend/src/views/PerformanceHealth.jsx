@@ -366,19 +366,25 @@ const compoundCount = protocols.reduce(
 )
   return (
     <main className="health-page" dir={fa ? 'rtl' : 'ltr'}>
-      <button className="health-secondary" onClick={() => nav('/health')}>
+<header className="health-header">
+  <div>
+    <div className="health-title-row">
+      <h1>{tx('Performance', 'پایش عملکرد')}</h1>
+
+      <button
+        type="button"
+        className="health-secondary health-back"
+        onClick={() => nav('/health')}
+      >
         {tx('‹ Back', '‹ بازگشت')}
       </button>
+    </div>
 
-
-      <header className="health-header">
-        <div>
-          <h1>{tx('Performance', 'پایش عملکرد')}</h1>
-          <p className="health-muted">
-            {tx('Your personal compound library and protocol records.', 'کتابخانه ترکیبات و سوابق پروتکل‌های شخصی شما.')}
-          </p>
-        </div>
-      </header>
+    <p className="health-muted">
+      {tx('Your personal compound library and protocol records.', 'کتابخانه ترکیبات و سوابق پروتکل‌های شخصی شما.')}
+    </p>
+  </div>
+</header>
 
 <div className="health-stats-grid">
   <div className="health-stat-card stat-active">
