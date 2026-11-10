@@ -187,19 +187,24 @@ export default function HealthCheckInHistory() {
 
   return (
     <main className="health-page" dir={fa ? 'rtl' : 'ltr'}>
-      <button
-        className="health-secondary"
-        onClick={() => nav('/health')}
-      >
-        {tx('‹ Back to Health', '‹ بازگشت به سلامت')}
-      </button>
-
-      <header className="health-header health-checkin-header">
+            <header className="health-header health-checkin-header">
         <div>
           <span className="health-checkin-eyebrow">
             {tx('PERSONAL TRACKING', 'پایش شخصی')}
           </span>
-          <h1>{tx('Weekly Check-in', 'ارزیابی هفتگی')}</h1>
+
+          <div className="health-title-row">
+            <h1>{tx('Weekly Check-in', 'ارزیابی هفتگی')}</h1>
+
+            <button
+              type="button"
+              className="health-secondary health-back"
+              onClick={() => nav('/health')}
+            >
+              {tx('‹ Back to Health', '‹ بازگشت به سلامت')}
+            </button>
+          </div>
+
           <p className="health-muted">
             {tx(
               'Track body measurements, recovery and training progress.',
@@ -207,6 +212,7 @@ export default function HealthCheckInHistory() {
             )}
           </p>
         </div>
+
         <div className="health-checkin-header-icon">◉</div>
       </header>
 
