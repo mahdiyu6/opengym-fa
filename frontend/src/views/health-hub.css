@@ -5396,3 +5396,34 @@
     font-size: 10px;
   }
 }
+
+/* Nutrition goal section headings */
+.health-nutrition-goal-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin: 22px 0 12px;
+}
+
+.health-nutrition-goal-heading .health-nutrition-facts-heading {
+  margin: 0;
+  min-width: 0;
+}
+
+.health-nutrition-goal-heading .health-nutrition-edit {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .health-nutrition-goal-heading {
+    gap: 8px;
+  }
+
+  .health-nutrition-goal-heading .health-nutrition-edit {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+}
