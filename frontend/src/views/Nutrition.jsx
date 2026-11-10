@@ -1302,21 +1302,6 @@ setFoodDraft({
   <section className="health-nutrition-facts">
     <div className="health-nutrition-section-title">
       <h2>{tx('Daily nutrition', 'ارزش غذایی امروز')}</h2>
-
-      <button
-        type="button"
-        className="health-nutrition-edit"
-        onClick={() => {
-          setMacroGoalsDraft({
-            protein: String(nutrition.macroGoals?.protein ?? ''),
-            carbs: String(nutrition.macroGoals?.carbs ?? ''),
-            fat: String(nutrition.macroGoals?.fat ?? '')
-          })
-          setEditingMacroGoals(v => !v)
-        }}
-      >
-        ✎ {tx('Edit macro goals', 'ویرایش اهداف درشت‌مغذی‌ها')}
-      </button>
     </div>
 
     {editingMacroGoals && (
@@ -1375,9 +1360,26 @@ setFoodDraft({
       </div>
     )}
 
-    <h3 className="health-nutrition-facts-heading">
-      {tx('Macronutrients', 'درشت‌مغذی‌ها')}
-    </h3>
+<div className="health-nutrition-goal-heading">
+  <h3 className="health-nutrition-facts-heading">
+    {tx('Macronutrients', 'درشت‌مغذی‌ها')}
+  </h3>
+
+  <button
+    type="button"
+    className="health-nutrition-edit"
+    onClick={() => {
+      setMacroGoalsDraft({
+        protein: String(nutrition.macroGoals?.protein ?? ''),
+        carbs: String(nutrition.macroGoals?.carbs ?? ''),
+        fat: String(nutrition.macroGoals?.fat ?? '')
+      })
+      setEditingMacroGoals(v => !v)
+    }}
+  >
+    ✎ {tx('Edit macro goals', 'ویرایش اهداف درشت‌مغذی‌ها')}
+  </button>
+</div>
 
     <div className="health-nutrition-facts-table">
       <div
@@ -1411,9 +1413,9 @@ setFoodDraft({
       ))}
     </div>
 
-    <h3 className="health-nutrition-facts-heading">
-      {tx('Micronutrients', 'ریزمغذی‌ها')}
-    </h3>
+<h3 className="health-nutrition-facts-heading">
+  {tx('Micronutrients', 'ریزمغذی‌ها')}
+</h3>
 
 <div className="health-nutrition-micro-goal-controls">
   <button
@@ -1431,7 +1433,7 @@ setFoodDraft({
       setEditingMicroGoals(v => !v)
     }}
   >
-    ✎ {tx('Edit micronutrient goals', 'ویرایش اهداف ریزمغذی‌ها')}
+    ✎ {tx('Edit micro goals', 'ویرایش اهداف ریزمغذی‌ها')}
   </button>
 </div>
 
