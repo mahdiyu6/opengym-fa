@@ -5055,3 +5055,9 @@
   width: 100%;
   justify-content: space-between;
 }
+
+/* Full-width title rows across all Health pages */
+.health-page > .health-header .health-title-row {
+  width: 100%;
+  justify-content: space-between;
+}
