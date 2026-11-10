@@ -432,13 +432,18 @@ const tabs = [
       ← {tx('Back', 'بازگشت')}
     </button>
 
-    <h2>{tabs.find(tab => tab.id === page)?.label}</h2>
+    <h2>
+  {page === 'meals'
+    ? tx('Daily meals', 'وعده‌های غذایی امروز')
+    : page === 'foodbank'
+      ? tx('Food Bank', 'بانک غذا')
+      : tx('Nutrition', 'ارزش غذایی')}
+</h2>
   </div>
 )}
 {page === 'foodbank' && (
   <section className="health-nutrition-meals health-nutrition-foodbank-page">
     <div className="health-nutrition-section-title">
-      <h2>{tx('Food Bank', 'بانک غذا')}</h2>
       <span>{foodBank.length} {tx('saved foods', 'غذای ذخیره‌شده')}</span>
     </div>
 <button
@@ -945,7 +950,6 @@ setEditingFoodDraft({
 {page === 'meals' && (
   <section className="health-nutrition-meals">
     <div className="health-nutrition-section-title">
-      <h2>{tx('Daily meals', 'وعده‌های غذایی امروز')}</h2>
       <span>
         {fmtNum(meals.reduce(
           (sum, item) => sum + (Number(item.calories) || 0), 0
@@ -1300,10 +1304,7 @@ setFoodDraft({
 
 {page === 'nutrition' && (
   <section className="health-nutrition-facts">
-    <div className="health-nutrition-section-title">
-      <h2>{tx('Daily nutrition', 'ارزش غذایی امروز')}</h2>
-    </div>
-
+  
     {editingMacroGoals && (
       <div className="health-nutrition-target-editor">
         <label>
