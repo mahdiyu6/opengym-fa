@@ -5056,8 +5056,17 @@
   justify-content: space-between;
 }
 
-/* Full-width title rows across all Health pages */
+/* Full-width Health page headers */
+.health-page > .health-header > div:first-child {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .health-page > .health-header .health-title-row {
+  display: flex;
   width: 100%;
+  min-width: 0;
   justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
