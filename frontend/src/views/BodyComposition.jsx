@@ -123,6 +123,35 @@ export default function BodyComposition() {
     ? latest.weight - idealWeight
     : null
 
+  const fatToLose = bfp != null && targetBfp != null &&
+    targetBfp > 0 && targetBfp < bfp &&
+    latest.weight && idealWeight != null
+      ? Math.max(0, latest.weight - idealWeight)
+      : null
+
+  const weeklyLossMin = latest.weight
+    ? latest.weight * 0.0025
+    : null
+
+  const weeklyLossMax = latest.weight
+    ? latest.weight * 0.0075
+    : null
+
+  const estimatedWeeksMin = fatToLose != null && weeklyLossMax > 0
+    ? Math.ceil(fatToLose / weeklyLossMax)
+    : null
+
+  const estimatedWeeksMax = fatToLose != null && weeklyLossMin > 0
+    ? Math.ceil(fatToLose / weeklyLossMin)
+    : null
+
+  const lossRateLabel = weeklyLossMin != null && weeklyLossMax != null
+    ? `${displayWeight(weeklyLossMin)}–${displayWeight(weeklyLossMax)} ${weightUnit}`
+    : null
+
+  const timelineLabel = estimatedWeeksMin != null && estimatedWeeksMax != null
+    ? `${estimatedWeeksMin}–${estimatedWeeksMax}`
+    : null
   const bmr = age && height && latest.weight
     ? (10 * latest.weight) + (6.25 * height) - (5 * age) + (sex === 'female' ? -161 : 5)
     : null
