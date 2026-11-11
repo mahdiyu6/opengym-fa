@@ -574,18 +574,6 @@ export default function HealthAnalytics() {
 
  const metrics = [
   {
-    key: 'weight',
-    title: tx('Body weight', 'وزن بدن'),
-    unit: 'kg',
-    accent: '#38bdf8'
-  },
-  {
-    key: 'waist',
-    title: tx('Waist', 'دور کمر'),
-    unit: 'cm',
-    accent: '#f59e0b'
-  },
-  {
     key: 'chest',
     title: tx('Chest circumference', 'دور سینه'),
     unit: 'cm',
