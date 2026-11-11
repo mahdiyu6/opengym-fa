@@ -106,7 +106,7 @@ export default function HealthHome() {
       title: fa ? 'ثبت هفتگی' : 'Weekly /n Check-in',
       desc: fa ? 'ثبت وزن، دور کمر، خواب، انرژی و غیره ' : 'Record weight, waist, sleep, energy and etc',
       path: '/health/check-in'
-    }
+    },
     {
   icon: '⚖️',
   title: fa ? 'ترکیب بدن' : 'Body Composition',
