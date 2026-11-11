@@ -276,6 +276,225 @@ function TrendChart({
 }
 
 
+function AreaTrendChart({
+  title,
+  unit,
+  data,
+  emptyText,
+  fa,
+  calendar,
+  accent = '#38bdf8'
+}) {
+  const points = data
+    .filter(item => numeric(item.value))
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  const first = points[0]
+  const last = points[points.length - 1]
+  const hasTrend = points.length >= 2
+
+  const values = points.map(item => Number(item.value))
+  const min = values.length ? Math.min(...values) : 0
+  const max = values.length ? Math.max(...values) : 0
+  const spread = max - min || Math.max(Math.abs(max) * 0.05, 1)
+  const low = min - spread * 0.18
+  const high = max + spread * 0.18
+
+  const x = index =>
+    points.length === 1
+      ? 150
+      : 8 + index / (points.length - 1) * 284
+
+  const y = value =>
+    78 - ((value - low) / (high - low)) * 58
+
+  const linePath = points
+    .map((item, index) =>
+      `${index === 0 ? 'M' : 'L'} ${x(index)} ${y(Number(item.value))}`
+    )
+    .join(' ')
+
+  const areaPath = points.length
+    ? `${linePath} L ${x(points.length - 1)} 86 L ${x(0)} 86 Z`
+    : ''
+
+  const change = hasTrend
+    ? Number(last.value) - Number(first.value)
+    : null
+
+  const history = points.slice(-8).reverse()
+
+  const renderChart = (detail = false) => (
+    <svg
+      className={
+        detail
+          ? 'health-analytics-trend-detail-chart'
+          : 'health-analytics-trend-sparkline'
+      }
+      viewBox="0 0 300 100"
+      role="img"
+      aria-label={`${title} area chart`}
+    >
+      <defs>
+        <linearGradient
+          id="body-weight-area-gradient"
+          x1="0"
+          y1="0"
+          x2="0"
+          y2="1"
+        >
+          <stop
+            offset="0%"
+            stopColor="var(--trend-accent)"
+            stopOpacity=".38"
+          />
+          <stop
+            offset="100%"
+            stopColor="var(--trend-accent)"
+            stopOpacity=".02"
+          />
+        </linearGradient>
+      </defs>
+
+      {[20, 50, 80].map(level => (
+        <line
+          key={level}
+          x1="8"
+          y1={level}
+          x2="292"
+          y2={level}
+          stroke="var(--sep)"
+          strokeWidth="1"
+          strokeDasharray="3 4"
+        />
+      ))}
+
+      {points.length > 0 && (
+        <>
+          <path
+            d={areaPath}
+            fill="url(#body-weight-area-gradient)"
+          />
+
+          {hasTrend && (
+            <path
+              d={linePath}
+              fill="none"
+              stroke="var(--trend-accent)"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
+
+          {points.map((item, index) => (
+            <circle
+              key={`${item.date}-${index}`}
+              cx={x(index)}
+              cy={y(Number(item.value))}
+              r={index === points.length - 1 ? 4.5 : 3}
+              fill="var(--trend-accent)"
+              stroke="var(--surface-2)"
+              strokeWidth="1.5"
+            >
+              <title>
+                {fmtDateFull(item.date, calendar)}: {fmt(Number(item.value))} {unit}
+              </title>
+            </circle>
+          ))}
+        </>
+      )}
+    </svg>
+  )
+
+  return (
+    <details
+      className="health-analytics-trend-card health-analytics-area-card"
+      style={{ '--trend-accent': accent }}
+    >
+      <summary>
+        <div className="health-analytics-trend-top">
+          <div className="health-analytics-trend-heading">
+            <span className="health-analytics-trend-indicator" />
+            <strong>{title}</strong>
+          </div>
+
+          <span className="health-analytics-trend-unit">{unit}</span>
+        </div>
+
+        <div className="health-analytics-trend-main">
+          <strong>{last ? fmt(Number(last.value)) : '—'}</strong>
+
+          {hasTrend && (
+            <span className="health-analytics-trend-change">
+              {change > 0 ? '+' : ''}
+              {fmt(change)} {unit}
+            </span>
+          )}
+        </div>
+
+        {points.length > 0
+          ? renderChart()
+          : (
+            <p className="health-muted health-analytics-trend-empty">
+              {emptyText}
+            </p>
+          )}
+
+        <div className="health-analytics-trend-footer">
+          <span>
+            {last
+              ? `${fa ? 'آخرین ثبت' : 'Latest'}: ${fmtDateFull(last.date, calendar)}`
+              : (fa ? 'بدون داده' : 'No data')}
+          </span>
+
+          <span className="health-analytics-trend-expand">
+            {fa ? 'مشاهده جزئیات' : 'View details'}
+            <span className="health-analytics-trend-chevron">⌄</span>
+          </span>
+        </div>
+      </summary>
+
+      <div className="health-analytics-trend-details">
+        {hasTrend && (
+          <>
+            <div className="health-analytics-trend-comparison">
+              <div>
+                <span>{fa ? 'اولین مقدار' : 'First value'}</span>
+                <strong>{fmt(Number(first.value))} {unit}</strong>
+                <small>{fmtDateFull(first.date, calendar)}</small>
+              </div>
+
+              <div>
+                <span>{fa ? 'آخرین مقدار' : 'Latest value'}</span>
+                <strong>{fmt(Number(last.value))} {unit}</strong>
+                <small>{fmtDateFull(last.date, calendar)}</small>
+              </div>
+            </div>
+
+            {renderChart(true)}
+
+            <div className="health-analytics-trend-history">
+              <strong>{fa ? 'آخرین ثبت‌ها' : 'Recent records'}</strong>
+
+              {history.map((item, index) => (
+                <div key={`${item.date}-${index}`}>
+                  <span>{fmtDateFull(item.date, calendar)}</span>
+                  <strong>{fmt(Number(item.value))} {unit}</strong>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {!hasTrend && (
+          <p className="health-muted">{emptyText}</p>
+        )}
+      </div>
+    </details>
+  )
+}
+
 function WeeklyBarChart({
   title,
   unit,
@@ -1951,18 +2170,20 @@ health-analytics-training-summary strong {
     </p>
   ) : (
     <div className="health-analytics-charts">
-      <TrendChart
-        title={tx('Body weight', 'وزن بدن')}
-        unit="kg"
-        accent="#38bdf8"
-        data={bodyCompositionTrends.map(item => ({
-          date: item.date,
-          value: item.weight
-        }))}
-        emptyText={tx('No weight data available.', 'داده وزن موجود نیست.')}
-        fa={fa}
-        calendar={calendar}
-      />
+
+<AreaTrendChart
+  title={tx('Body weight', 'وزن بدن')}
+  unit="kg"
+  accent="#38bdf8"
+  data={bodyCompositionTrends.map(item => ({
+    date: item.date,
+    value: item.weight
+  }))}
+  emptyText={tx('No weight data available.', 'داده وزن موجود نیست.')}
+  fa={fa}
+  calendar={calendar}
+/>
+
 
       <TrendChart
         title={tx('Body fat percentage', 'درصد چربی بدن')}
