@@ -16,6 +16,8 @@ const emptyForm = () => ({
   chest: '',
   arm: '',
   leg: '',
+  neck: '',
+  hip: '',
   sleep: '',
   stress: '3',
   energy: '3',
@@ -254,6 +256,18 @@ export default function HealthCheckInHistory() {
   title: tx('Waist', 'دور کمر'),
   subtitle: tx('Waist circumference', 'اندازه دور کمر')
 })}
+              
+{MeasurementField({
+  field: 'neck',
+  title: tx('Neck', 'دور گردن'),
+  subtitle: tx('Neck circumference', 'اندازه دور گردن')
+})}
+
+{MeasurementField({
+  field: 'hip',
+  title: tx('Hip', 'دور باسن'),
+  subtitle: tx('Hip circumference', 'اندازه دور باسن')
+})}
 
 {MeasurementField({
   field: 'chest',
@@ -402,6 +416,8 @@ export default function HealthCheckInHistory() {
                 {[
                   ['weight', 'Weight', 'وزن', 'kg'],
                   ['waist', 'Waist', 'دور کمر', 'cm'],
+                  ['neck', 'Neck', 'دور گردن', 'cm'],
+                  ['hip', 'Hip', 'دور باسن', 'cm'],
                   ['chest', 'Chest', 'دور سینه', 'cm'],
                   ['arm', 'Arm', 'دور بازو', 'cm'],
                   ['leg', 'Leg', 'دور پا', 'cm'],
