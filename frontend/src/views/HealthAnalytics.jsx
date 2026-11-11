@@ -276,6 +276,159 @@ function TrendChart({
 }
 
 
+function WeeklyBarChart({
+  title,
+  unit,
+  data,
+  emptyText,
+  fa,
+  calendar,
+  accent = '#8b5cf6'
+}) {
+  const points = data
+    .filter(item => numeric(item.value))
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  const visiblePoints = points.slice(-10)
+  const first = points[0]
+  const last = points[points.length - 1]
+  const max = Math.max(0, ...visiblePoints.map(item => Number(item.value)))
+
+  const hasTrend = points.length >= 2
+  const change = hasTrend
+    ? Number(last.value) - Number(first.value)
+    : null
+
+  const history = points.slice(-8).reverse()
+
+  return (
+    <details
+      className="health-analytics-trend-card health-analytics-bar-card"
+      style={{ '--trend-accent': accent }}
+    >
+      <summary>
+        <div className="health-analytics-trend-top">
+          <div className="health-analytics-trend-heading">
+            <span className="health-analytics-trend-indicator" />
+            <strong>{title}</strong>
+          </div>
+
+          <span className="health-analytics-trend-unit">
+            {unit}
+          </span>
+        </div>
+
+        <div className="health-analytics-trend-main">
+          <strong>
+            {last ? fmt(Number(last.value)) : '—'}
+          </strong>
+
+          {hasTrend && (
+            <span className="health-analytics-trend-change">
+              {change > 0 ? '+' : ''}
+              {fmt(change)} {unit}
+            </span>
+          )}
+        </div>
+
+        {visiblePoints.length > 0 ? (
+          <div
+            className="health-analytics-bar-chart"
+            role="img"
+            aria-label={`${title} weekly bar chart`}
+          >
+            {visiblePoints.map((item, index) => {
+              const value = Math.max(0, Number(item.value))
+              const height = max > 0
+                ? Math.max(3, value / max * 100)
+                : 3
+
+              return (
+                <div
+                  className="health-analytics-bar-column"
+                  key={`${item.date}-${index}`}
+                  title={`${fmtDateFull(item.date, calendar)}: ${fmt(value)} ${unit}`}
+                >
+                  <span className="health-analytics-bar-value">
+                    {fmt(value)}
+                  </span>
+
+                  <div className="health-analytics-bar-track">
+                    <div
+                      className="health-analytics-bar-fill"
+                      style={{ height: `${height}%` }}
+                    />
+                  </div>
+
+                  <span className="health-analytics-bar-label">
+                    {fa ? `هفته ${index + 1}` : `W${index + 1}`}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          <p className="health-muted health-analytics-trend-empty">
+            {emptyText}
+          </p>
+        )}
+
+        <div className="health-analytics-trend-footer">
+          <span>
+            {last
+              ? `${fa ? 'آخرین ثبت' : 'Latest'}: ${fmtDateFull(last.date, calendar)}`
+              : (fa ? 'بدون داده' : 'No data')}
+          </span>
+
+          <span className="health-analytics-trend-expand">
+            {fa ? 'مشاهده جزئیات' : 'View details'}
+            <span className="health-analytics-trend-chevron">⌄</span>
+          </span>
+        </div>
+      </summary>
+
+      <div className="health-analytics-trend-details">
+        {hasTrend && (
+          <>
+            <div className="health-analytics-trend-comparison">
+              <div>
+                <span>{fa ? 'اولین مقدار' : 'First value'}</span>
+                <strong>{fmt(Number(first.value))} {unit}</strong>
+                <small>{fmtDateFull(first.date, calendar)}</small>
+              </div>
+
+              <div>
+                <span>{fa ? 'آخرین مقدار' : 'Latest value'}</span>
+                <strong>{fmt(Number(last.value))} {unit}</strong>
+                <small>{fmtDateFull(last.date, calendar)}</small>
+              </div>
+            </div>
+
+            <div className="health-analytics-trend-history">
+              <strong>
+                {fa ? 'آخرین ثبت‌ها' : 'Recent records'}
+              </strong>
+
+              {history.map((item, index) => (
+                <div key={`${item.date}-${index}`}>
+                  <span>{fmtDateFull(item.date, calendar)}</span>
+                  <strong>{fmt(Number(item.value))} {unit}</strong>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {!hasTrend && (
+          <p className="health-muted">
+            {emptyText}
+          </p>
+        )}
+      </div>
+    </details>
+  )
+}
+
 function ReviewValue({
   label,
   current,
