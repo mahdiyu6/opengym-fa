@@ -25,6 +25,37 @@ const numeric = value =>
   value !== undefined &&
   Number.isFinite(Number(value))
 
+const positiveNumber = value => {
+  const n = Number(value)
+  return Number.isFinite(n) && n > 0 ? n : null
+}
+
+const log10 = value => Math.log(value) / Math.LN10
+
+function calculateNavyBodyFat({ sex, height, waist, neck, hip }) {
+  if (!height || !waist || !neck) return null
+
+  const h = height / 2.54
+  const w = waist / 2.54
+  const n = neck / 2.54
+
+  let result
+
+  if (sex === 'female') {
+    if (!hip) return null
+    result = 163.205 * log10(w + hip / 2.54 - n)
+      - 97.684 * log10(h) - 78.387
+  } else {
+    if (w <= n) return null
+    result = 86.010 * log10(w - n)
+      - 70.041 * log10(h) + 36.76
+  }
+
+  return Number.isFinite(result) && result >= 2 && result <= 70
+    ? result
+    : null
+}
+
 const average = values =>
   values.length
     ? values.reduce((sum, value) => sum + value, 0) / values.length
@@ -338,6 +369,15 @@ export default function HealthAnalytics() {
       : []
   )
 
+  const bodyweight = useStore(s =>
+  Array.isArray(s.S.bodyweight) ? s.S.bodyweight : []
+)
+
+  const bodyProfile = useStore(s => s.S.bodyProfile || {})
+  const weightUnit = useStore(s => s.S.unit || 'kg')
+  const bodySex = bodyProfile.sex || 'male'
+  const bodyHeight = positiveNumber(bodyProfile.heightCm)
+  
   const [range, setRange] = useState('90')
 
   const tx = (en, faText) =>
@@ -374,6 +414,79 @@ export default function HealthAnalytics() {
     w => w.d && dateValue(w.d) >= cutoff
   )
 
+  const bodyCompositionTrends = useMemo(() => {
+  const byDate = new Map()
+
+  // Full body-weight history
+  ;[...bodyweight]
+    .filter(item => item.d && numeric(item.w))
+    .sort((a, b) =>
+      (a.d || '').localeCompare(b.d || '') ||
+      Number(a.t || 0) - Number(b.t || 0)
+    )
+    .forEach(item => {
+      const kg = weightUnit === 'lb'
+        ? Number(item.w) / 2.20462262
+        : Number(item.w)
+
+      byDate.set(item.d, {
+        date: item.d,
+        weight: kg
+      })
+    })
+
+  // Weekly check-ins and body-fat estimates
+  sortedCheckIns.forEach(item => {
+    if (!item.date) return
+
+    const previous = byDate.get(item.date) || {}
+
+    const weight = numeric(item.weight)
+      ? Number(item.weight)
+      : previous.weight ?? null
+
+    const waist = positiveNumber(item.waist)
+
+    const bfp = calculateNavyBodyFat({
+      sex: bodySex,
+      height: bodyHeight,
+      waist,
+      neck: positiveNumber(item.neck),
+      hip: positiveNumber(item.hip)
+    })
+
+    const fatMass = bfp != null && weight != null
+      ? weight * bfp / 100
+      : null
+
+    byDate.set(item.date, {
+      ...previous,
+      date: item.date,
+      weight,
+      waist,
+      bfp,
+      fatMass,
+      leanMass: fatMass != null && weight != null
+        ? weight - fatMass
+        : null,
+      waistHeight: waist != null && bodyHeight
+        ? waist / bodyHeight
+        : null
+    })
+  })
+
+  return [...byDate.values()]
+    .filter(item => dateValue(item.date) >= cutoff)
+    .sort((a, b) => a.date.localeCompare(b.date))
+}, [
+  bodyweight,
+  sortedCheckIns,
+  weightUnit,
+  bodySex,
+  bodyHeight,
+  cutoff
+])
+  
   const trainingSummary = useMemo(() => {
     const sessions = filteredWorkouts.length
 
