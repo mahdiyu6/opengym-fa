@@ -1660,6 +1660,103 @@ health-analytics-training-summary strong {
         </p>
       </section>
 
+      
+<section className="health-card health-analytics-section">
+  <h3>{tx('Body Composition Trends', 'روند ترکیب بدن')}</h3>
+
+  <p className="health-muted">
+    {tx(
+      'Track changes in body weight, fat percentage and body composition.',
+      'تغییرات وزن، درصد چربی و ترکیب بدن را دنبال کن.'
+    )}
+  </p>
+
+  {bodyCompositionTrends.length === 0 ? (
+    <p className="health-muted">
+      {tx(
+        'No body composition records in this period.',
+        'در این بازه داده‌ای برای ترکیب بدن ثبت نشده است.'
+      )}
+    </p>
+  ) : (
+    <div className="health-analytics-charts">
+      <TrendChart
+        title={tx('Body weight', 'وزن بدن')}
+        unit="kg"
+        accent="#38bdf8"
+        data={bodyCompositionTrends.map(item => ({
+          date: item.date,
+          value: item.weight
+        }))}
+        emptyText={tx('No weight data available.', 'داده وزن موجود نیست.')}
+        fa={fa}
+        calendar={calendar}
+      />
+
+      <TrendChart
+        title={tx('Body fat percentage', 'درصد چربی بدن')}
+        unit="%"
+        accent="#f59e0b"
+        data={bodyCompositionTrends.map(item => ({
+          date: item.date,
+          value: item.bfp
+        }))}
+        emptyText={tx(
+          'Complete waist, neck and height measurements are needed.',
+          'برای محاسبه، اندازه‌های کامل دور کمر، گردن و قد لازم است.'
+        )}
+        fa={fa}
+        calendar={calendar}
+      />
+
+      <TrendChart
+        title={tx('Waist circumference', 'دور کمر')}
+        unit="cm"
+        accent="#fb923c"
+        data={bodyCompositionTrends.map(item => ({
+          date: item.date,
+          value: item.waist
+        }))}
+        emptyText={tx('No waist data available.', 'داده دور کمر موجود نیست.')}
+        fa={fa}
+        calendar={calendar}
+      />
+
+      <TrendChart
+        title={tx('Fat mass', 'توده چربی')}
+        unit="kg"
+        accent="#f87171"
+        data={bodyCompositionTrends.map(item => ({
+          date: item.date,
+          value: item.fatMass
+        }))}
+        emptyText={tx(
+          'Body fat and weight measurements are needed.',
+          'اندازه‌گیری وزن و درصد چربی لازم است.'
+        )}
+        fa={fa}
+        calendar={calendar}
+      />
+
+      <TrendChart
+        title={tx('Lean body mass', 'توده بدون چربی')}
+        unit="kg"
+        accent="#2dd4bf"
+        data={bodyCompositionTrends.map(item => ({
+          date: item.date,
+          value: item.leanMass
+        }))}
+        emptyText={tx(
+          'Body fat and weight measurements are needed.',
+          'اندازه‌گیری وزن و درصد چربی لازم است.'
+        )}
+        fa={fa}
+        calendar={calendar}
+      />
+    </div>
+  )}
+</section>
+
       <section className="health-card health-analytics-section">
         <h3>{tx('Progress trends', 'روند پیشرفت')}</h3>
 
