@@ -774,19 +774,6 @@ export default function HealthAnalytics() {
     return [...weeks.values()]
   }, [filteredWorkouts, range])
 
-
-      const item = weeks.get(key)
-
-      item.volume += workoutVolume(w)
-      item.sets += setsDone(w)
-      item.sessions += 1
-    })
-
-    return [...weeks.values()]
-      .sort((a, b) => a.date.localeCompare(b.date))
-      .slice(-12)
-  }, [filteredWorkouts])
-
   const latest = [...filteredCheckIns].reverse()
   const current = latest[0]
   const previous = latest[1]
