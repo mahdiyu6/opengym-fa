@@ -99,6 +99,24 @@ export default function BodyComposition() {
     hip: latest.hip
   })
 
+  const bodyTrend = useMemo(() => {
+    return [...(S.healthCheckIns || [])]
+      .filter(item => item.date)
+      .map(item => ({
+        date: item.date,
+        weight: number(item.weight),
+        waist: number(item.waist),
+        bfp: bodyFatNavy({
+          sex,
+          height,
+          waist: number(item.waist),
+          neck: number(item.neck),
+          hip: number(item.hip)
+        })
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date))
+  }, [S.healthCheckIns, sex, height])
+  
   const fatMass = bfp != null && latest.weight
     ? latest.weight * bfp / 100
     : null
