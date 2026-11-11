@@ -1597,6 +1597,24 @@ health-analytics-training-summary strong {
         </div>
       </div>
 
+      <nav className="health-analytics-nav">
+  <a href="#body-composition-trends">
+    {tx('Body', 'ترکیب بدن')}
+  </a>
+
+  <a href="#training-overview">
+    {tx('Training', 'تمرین')}
+  </a>
+
+  <a href="#health-recovery">
+    {tx('Recovery', 'سلامت')}
+  </a>
+
+  <a href="#protocol-overview">
+    {tx('Protocols', 'پروتکل‌ها')}
+  </a>
+</nav>
+      
       <section className="health-card health-analytics-section">
         <h3>{tx('Weekly review', 'مرور هفتگی')}</h3>
 
