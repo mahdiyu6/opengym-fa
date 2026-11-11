@@ -2270,7 +2270,7 @@ health-analytics-training-summary strong {
 
 <WeeklyBarChart
   title={tx('Training volume', 'حجم تمرین')}
-  unit="kg × reps"
+  unit={`${weightUnit} × reps`}
   data={weeklyTraining.map(w => ({
     date: w.date,
     value: w.volume
