@@ -107,6 +107,14 @@ export default function HealthHome() {
       desc: fa ? 'ثبت وزن، دور کمر، خواب، انرژی و غیره ' : 'Record weight, waist, sleep, energy and etc',
       path: '/health/check-in'
     }
+    {
+  icon: '⚖️',
+  title: fa ? 'ترکیب بدن' : 'Body Composition',
+  desc: fa
+    ? 'تحلیل وزن، چربی و ترکیب بدن'
+    : 'Analyze weight, body fat and body composition',
+  path: '/health/body-composition'
+    }
   ]
 
   return (
