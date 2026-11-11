@@ -1615,7 +1615,7 @@ health-analytics-training-summary strong {
   </a>
 </nav>
       
-      <section className="health-card health-analytics-section">
+      <section id="health-recovery" className="health-card health-analytics-section">
         <h3>{tx('Weekly review', 'مرور هفتگی')}</h3>
 
         {!current ? (
@@ -1726,7 +1726,7 @@ health-analytics-training-summary strong {
       </section>
 
       
-<section className="health-card health-analytics-section">
+<section id="body-composition-trends" className="health-card health-analytics-section">
   <h3>{tx('Body Composition Trends', 'روند ترکیب بدن')}</h3>
 
   <p className="health-muted">
@@ -1903,7 +1903,7 @@ health-analytics-training-summary strong {
       </section>
 
 
-<section className="health-card health-analytics-section">
+<section id="protocol-overview" className="health-card health-analytics-section">
   <h3>{tx('Side-effect overview', 'نمای کلی عوارض جانبی')}</h3>
 
   <div className="health-analytics-effects-summary">
@@ -2059,7 +2059,7 @@ health-analytics-training-summary strong {
   </p>
 </section>
 
-      <section className="health-card health-analytics-section">
+      <section id="training-overview" className="health-card health-analytics-section">
         <h3>{tx('Training Overview', 'نمای کلی تمرین')}</h3>
 
         <div className="health-analytics-training-summary">
