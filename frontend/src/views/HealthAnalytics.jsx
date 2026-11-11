@@ -349,9 +349,13 @@ function WeeklyBarChart({
                   key={`${item.date}-${index}`}
                   title={`${fmtDateFull(item.date, calendar)}: ${fmt(value)} ${unit}`}
                 >
-                  <span className="health-analytics-bar-value">
-                    {fmt(value)}
-                  </span>
+<span className="health-analytics-bar-value">
+  {value >= 10000
+    ? `${(value / 1000).toFixed(1)}k`
+    : value >= 1000
+      ? `${(value / 1000).toFixed(1)}k`
+      : fmt(value)}
+</span>
 
                   <div className="health-analytics-bar-track">
                     <div
@@ -360,9 +364,12 @@ function WeeklyBarChart({
                     />
                   </div>
 
-                  <span className="health-analytics-bar-label">
-                    {fa ? `هفته ${index + 1}` : `W${index + 1}`}
-                  </span>
+<span
+  className="health-analytics-bar-label"
+  aria-label={`${fa ? 'هفته' : 'Week'} ${index + 1}`}
+>
+  {index + 1}
+</span>
                 </div>
               )
             })}
