@@ -375,7 +375,7 @@ export default function HealthAnalytics() {
 
   const bodyProfile = useStore(s => s.S.bodyProfile || {})
   const weightUnit = useStore(s => s.S.unit || 'kg')
-  const bodySex = bodyProfile.sex || 'male'
+  const bodySex = bodyProfile.sex || useStore(s => s.S.body) || 'male'
   const bodyHeight = positiveNumber(bodyProfile.heightCm)
   
   const [range, setRange] = useState('90')
@@ -419,7 +419,7 @@ export default function HealthAnalytics() {
 
   // Full body-weight history
   ;[...bodyweight]
-    .filter(item => item.d && numeric(item.w))
+    .filter(item => item.d && positiveNumber(item.w))
     .sort((a, b) =>
       (a.d || '').localeCompare(b.d || '') ||
       Number(a.t || 0) - Number(b.t || 0)
@@ -441,9 +441,9 @@ export default function HealthAnalytics() {
 
     const previous = byDate.get(item.date) || {}
 
-    const weight = numeric(item.weight)
-      ? Number(item.weight)
-      : previous.weight ?? null
+    const weight = positiveNumber(item.weight)
+     ?? previous.weight
+     ?? null
 
     const waist = positiveNumber(item.waist)
 
