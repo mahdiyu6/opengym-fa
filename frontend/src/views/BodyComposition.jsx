@@ -145,13 +145,6 @@ export default function BodyComposition() {
     ? Math.ceil(fatToLose / weeklyLossMin)
     : null
 
-  const lossRateLabel = weeklyLossMin != null && weeklyLossMax != null
-    ? `${displayWeight(weeklyLossMin)}–${displayWeight(weeklyLossMax)} ${weightUnit}`
-    : null
-
-  const timelineLabel = estimatedWeeksMin != null && estimatedWeeksMax != null
-    ? `${estimatedWeeksMin}–${estimatedWeeksMax}`
-    : null
   const bmr = age && height && latest.weight
     ? (10 * latest.weight) + (6.25 * height) - (5 * age) + (sex === 'female' ? -161 : 5)
     : null
@@ -180,6 +173,14 @@ export default function BodyComposition() {
     return (S.unit === 'lb' ? value * 2.20462262 : value).toFixed(1)
   }
 
+  const lossRateLabel = weeklyLossMin != null && weeklyLossMax != null
+    ? `${displayWeight(weeklyLossMin)}–${displayWeight(weeklyLossMax)} ${weightUnit}`
+    : null
+
+  const timelineLabel = estimatedWeeksMin != null && estimatedWeeksMax != null
+    ? `${estimatedWeeksMin}–${estimatedWeeksMax}`
+    : null
+  
   function saveProfile(key, value) {
     update(s => {
       s.bodyProfile = { ...(s.bodyProfile || {}), [key]: value }
