@@ -2267,36 +2267,39 @@ health-analytics-training-summary strong {
           </p>
         ) : (
           <div className="health-analytics-charts">
-            <TrendChart
-              title={tx('Training volume', 'حجم تمرین')}
-              unit="kg × reps"
-              data={weeklyTraining.map(w => ({
-                date: w.date,
-                value: w.volume
-              }))}
-              emptyText={tx(
-                'At least two weeks of data are needed.',
-                'برای نمایش روند حداقل دو هفته داده لازم است.'
-              )}
-              fa={fa}
-              calendar={calendar}
-            />
 
-            <TrendChart
-              title={tx('Completed sets', 'ست‌های تکمیل‌شده')}
-              unit={tx('sets', 'ست')}
-              data={weeklyTraining.map(w => ({
-                date: w.date,
-                value: w.sets
-              }))}
-              emptyText={tx(
-                'At least two weeks of data are needed.',
-                'برای نمایش روند حداقل دو هفته داده لازم است.'
-              )}
-              fa={fa}
-              calendar={calendar}
-            />
+<WeeklyBarChart
+  title={tx('Training volume', 'حجم تمرین')}
+  unit="kg × reps"
+  data={weeklyTraining.map(w => ({
+    date: w.date,
+    value: w.volume
+  }))}
+  emptyText={tx(
+    'At least two weeks of data are needed.',
+    'برای نمایش روند حداقل دو هفته داده لازم است.'
+  )}
+  fa={fa}
+  calendar={calendar}
+  accent="#8b5cf6"
+/>
 
+<WeeklyBarChart
+  title={tx('Completed sets', 'ست‌های تکمیل‌شده')}
+  unit={tx('sets', 'ست')}
+  data={weeklyTraining.map(w => ({
+    date: w.date,
+    value: w.sets
+  }))}
+  emptyText={tx(
+    'At least two weeks of data are needed.',
+    'برای نمایش روند حداقل دو هفته داده لازم است.'
+  )}
+  fa={fa}
+  calendar={calendar}
+  accent="#0d9488"
+/>
+            
             <TrendChart
               title={tx('Workout frequency', 'تعداد جلسات')}
               unit={tx('sessions', 'جلسه')}
