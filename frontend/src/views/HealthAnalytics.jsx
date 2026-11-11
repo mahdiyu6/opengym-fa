@@ -757,6 +757,53 @@ const value = ({
           margin: 16px 0;
         }
 
+.health-analytics-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.health-analytics-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 48px;
+  padding: 9px 5px;
+  border: 1px solid var(--sep);
+  border-radius: 13px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 11px;
+  font-weight: 650;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.5;
+  transition: .2s ease;
+}
+
+.health-analytics-nav a:active {
+  border-color: var(--green);
+  color: var(--green);
+  transform: scale(.97);
+}
+
+.health-analytics-section[id] {
+  scroll-margin-top: 18px;
+}
+
+@media(max-width: 380px) {
+  .health-analytics-nav {
+    gap: 5px;
+  }
+
+  .health-analytics-nav a {
+    font-size: 10px;
+    padding: 8px 3px;
+  }
+}
+
         .health-analytics-range {
           display: flex;
           flex-wrap: wrap;
