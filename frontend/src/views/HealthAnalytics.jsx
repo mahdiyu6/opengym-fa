@@ -691,11 +691,67 @@ export default function HealthAnalytics() {
     }
   }, [filteredWorkouts, range])
 
+  
   const weeklyTraining = useMemo(() => {
+    const today = new Date(`${localToday()}T12:00:00`)
+
+    // Start from the selected date range.
+    const rangeStart = new Date(today)
+
+    if (range !== 'all') {
+      rangeStart.setDate(rangeStart.getDate() - Number(range))
+    } else {
+      rangeStart.setDate(rangeStart.getDate() - 11 * 7)
+    }
+
+    // Align both ends to Monday.
+    const startWeek = new Date(rangeStart)
+    startWeek.setDate(
+      startWeek.getDate() - ((startWeek.getDay() + 6) % 7)
+    )
+
+    const currentWeek = new Date(today)
+    currentWeek.setDate(
+      currentWeek.getDate() - ((currentWeek.getDay() + 6) % 7)
+    )
+
+    // Keep the chart limited to the latest 12 calendar weeks.
+    const earliestVisibleWeek = new Date(currentWeek)
+    earliestVisibleWeek.setDate(
+      earliestVisibleWeek.getDate() - 11 * 7
+    )
+
+    if (startWeek < earliestVisibleWeek) {
+      startWeek.setTime(earliestVisibleWeek.getTime())
+    }
+
     const weeks = new Map()
 
+    // Create every calendar week, including weeks with zero workouts.
+    const cursor = new Date(startWeek)
+
+    while (cursor <= currentWeek) {
+      const key = [
+        cursor.getFullYear(),
+        String(cursor.getMonth() + 1).padStart(2, '0'),
+        String(cursor.getDate()).padStart(2, '0')
+      ].join('-')
+
+      weeks.set(key, {
+        date: key,
+        volume: 0,
+        sets: 0,
+        sessions: 0
+      })
+
+      cursor.setDate(cursor.getDate() + 7)
+    }
+
+    // Add recorded workout data to its corresponding week.
     filteredWorkouts.forEach(w => {
-      const date = new Date(w.d + 'T12:00:00')
+      if (!w.d) return
+
+      const date = new Date(`${w.d}T12:00:00`)
       if (Number.isNaN(date.getTime())) return
 
       const weekday = (date.getDay() + 6) % 7
@@ -707,14 +763,17 @@ export default function HealthAnalytics() {
         String(date.getDate()).padStart(2, '0')
       ].join('-')
 
-      if (!weeks.has(key)) {
-        weeks.set(key, {
-          date: key,
-          volume: 0,
-          sets: 0,
-          sessions: 0
-        })
-      }
+      const item = weeks.get(key)
+      if (!item) return
+
+      item.volume += workoutVolume(w)
+      item.sets += setsDone(w)
+      item.sessions += 1
+    })
+
+    return [...weeks.values()]
+  }, [filteredWorkouts, range])
+
 
       const item = weeks.get(key)
 
