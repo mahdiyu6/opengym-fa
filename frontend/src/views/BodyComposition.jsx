@@ -334,6 +334,60 @@ export default function BodyComposition() {
         </div>
       </section>
 
+            <section className="health-card bc-section bc-fat-loss">
+        <div className="bc-section-heading">
+          <div>
+            <h2>{tx('Fat loss projection', 'پیش‌بینی کاهش چربی')}</h2>
+            <p>
+              {tx(
+                'Estimated progress toward your target body fat',
+                'برآورد مسیر رسیدن به درصد چربی هدف'
+              )}
+            </p>
+          </div>
+          <span className="bc-section-icon">↘</span>
+        </div>
+
+        {fatToLose != null && fatToLose > 0 ? (
+          <>
+            <div className="bc-metric-grid">
+              <Metric
+                label={tx('Estimated fat to lose', 'چربی قابل کاهش')}
+                value={displayWeight(fatToLose)}
+                unit={weightUnit}
+              />
+              <Metric
+                label={tx('Weekly weight-loss range', 'بازه کاهش وزن هفتگی')}
+                value={lossRateLabel}
+              />
+              <Metric
+                label={tx('Estimated time to target', 'زمان تخمینی رسیدن به هدف')}
+                value={timelineLabel}
+                unit={tx('weeks', 'هفته')}
+              />
+            </div>
+            <p className="bc-disclaimer">
+              {tx(
+                'This is a mathematical estimate assuming lean mass is maintained. Actual fat loss and timeline vary with nutrition, activity, health and individual response. The weekly range is a general reference, not a prescription.',
+                'این محاسبه با فرض حفظ توده بدون چربی انجام شده است. میزان و زمان واقعی کاهش چربی به تغذیه، فعالیت، وضعیت سلامت و واکنش بدن بستگی دارد. بازه هفتگی صرفاً یک معیار عمومی است و نسخه تجویزی نیست.'
+              )}
+            </p>
+          </>
+        ) : (
+          <p className="bc-disclaimer">
+            {bfp == null || targetBfp == null
+              ? tx(
+                  'Enter the required body measurements and target body-fat percentage to calculate your projection.',
+                  'برای محاسبه، اندازه‌های لازم بدن و درصد چربی هدف را ثبت کن.'
+                )
+              : tx(
+                  'Your target body-fat percentage is not below your current estimate. No fat-loss projection is needed.',
+                  'درصد چربی هدف پایین‌تر از تخمین فعلی نیست؛ بنابراین پیش‌بینی کاهش چربی نمایش داده نمی‌شود.'
+                )}
+          </p>
+        )}
+      </section>
+      
       <section className="health-card bc-section">
         <div className="bc-section-heading">
           <div>
