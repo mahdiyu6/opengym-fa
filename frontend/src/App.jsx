@@ -31,6 +31,7 @@ import HealthDoseLogHistory from './views/HealthDoseLogHistory.jsx'
 import HealthCheckInHistory from './views/HealthCheckInHistory.jsx'
 import HealthAnalytics from './views/HealthAnalytics.jsx'
 import Nutrition from './views/Nutrition.jsx'
+import BodyComposition from './views/BodyComposition.jsx'
 
 bindUI(useUI)   // lets the shared controls open sheets without importing the store at module scope
 
@@ -89,6 +90,7 @@ function Shell() {
               <Route path="/admin" element={user?.admin ? <Admin /> : <Navigate to="/home" replace />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
               <Route path="/health" element={<HealthHome />} />
+              <Route path="/health/body-composition" element={<BodyComposition />} />
               <Route path="/health/labs" element={<Health />} />
               <Route path="/health/performance" element={<PerformanceHealth />} />
               <Route path="/health/performance/logs" element={<HealthDoseLogHistory />} />
