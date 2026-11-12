@@ -1997,21 +1997,6 @@ export default function HealthAnalytics() {
   const latest = [...filteredCheckIns].reverse()
   const current = latest[0]
   const previous = latest[1]
-
- const metrics = [
-  {
-    key: 'stress',
-    title: tx('Stress level', 'سطح استرس'),
-    unit: '/5',
-    accent: '#f87171'
-  },
-  {
-    key: 'energy',
-    title: tx('Energy', 'انرژی'),
-    unit: '/5',
-    accent: '#facc15'
-  }
-]
  
 const weeklyLogCounts = useMemo(() => {
   const today = new Date()
