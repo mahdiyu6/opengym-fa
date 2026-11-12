@@ -1174,6 +1174,222 @@ function WeeklyBarChart({
   )
 }
 
+function StressEnergyTrendChart({ data, fa, calendar }) {
+  const points = [...data].sort((a, b) =>
+    a.date.localeCompare(b.date)
+  )
+
+  const series = [
+    {
+      key: 'stress',
+      title: fa ? 'استرس' : 'Stress',
+      color: '#f87171'
+    },
+    {
+      key: 'energy',
+      title: fa ? 'انرژی' : 'Energy',
+      color: '#facc15'
+    }
+  ]
+
+  const x = index =>
+    points.length <= 1
+      ? 250
+      : 42 + index / (points.length - 1) * 416
+
+  const y = value =>
+    158 - (Number(value) - 1) * 32
+
+  const getValues = key =>
+    points
+      .map((item, index) => ({
+        date: item.date,
+        value: item[key],
+        index
+      }))
+      .filter(item => numeric(item.value))
+
+  const latest = series.map(item => ({
+    ...item,
+    values: getValues(item.key)
+  }))
+
+  const hasData = latest.some(item => item.values.length > 0)
+
+  const dateLabels = points.length > 0
+    ? [...new Set([
+        0,
+        Math.floor((points.length - 1) / 2),
+        points.length - 1
+      ])]
+    : []
+
+  return (
+    <div className="health-stress-energy-card">
+      <div className="health-stress-energy-heading">
+        <div>
+          <strong>
+            {fa ? 'استرس و انرژی' : 'Stress & Energy'}
+          </strong>
+          <p>
+            {fa
+              ? 'روند تغییرات دو شاخص در کنار یکدیگر'
+              : 'Compare both indicators over time'}
+          </p>
+        </div>
+
+        <span>
+          {fa ? 'مقیاس ۱ تا ۵' : 'SCALE 1–5'}
+        </span>
+      </div>
+
+      <div className="health-stress-energy-summary">
+        {latest.map(item => {
+          const last = item.values[item.values.length - 1]
+
+          return (
+            <div
+              className="health-stress-energy-stat"
+              key={item.key}
+              style={{ '--series-color': item.color }}
+            >
+              <div>
+                <i />
+                <span>{item.title}</span>
+              </div>
+
+              <strong>
+                {last ? fmt(Number(last.value)) : '—'}
+                <small>/5</small>
+              </strong>
+
+              <small className="health-stress-energy-date">
+                {last
+                  ? fmtDateFull(last.date, calendar)
+                  : (fa ? 'بدون ثبت' : 'No records')}
+              </small>
+            </div>
+          )
+        })}
+      </div>
+
+      {!hasData ? (
+        <p className="health-muted">
+          {fa
+            ? 'هنوز اطلاعات استرس و انرژی ثبت نشده است.'
+            : 'No stress or energy records yet.'}
+        </p>
+      ) : (
+        <>
+          <div className="health-stress-energy-chart">
+            <svg
+              viewBox="0 0 500 205"
+              role="img"
+              aria-label={
+                fa
+                  ? 'نمودار روند استرس و انرژی'
+                  : 'Stress and energy trend chart'
+              }
+            >
+              {[1, 2, 3, 4, 5].map(value => (
+                <g key={value}>
+                  <line
+                    x1="34"
+                    y1={y(value)}
+                    x2="466"
+                    y2={y(value)}
+                    stroke="var(--sep)"
+                    strokeDasharray="4 5"
+                  />
+                  <text
+                    x="20"
+                    y={y(value) + 4}
+                    textAnchor="middle"
+                    fill="var(--label-3)"
+                    fontSize="11"
+                  >
+                    {value}
+                  </text>
+                </g>
+              ))}
+
+              {series.map(item => {
+                const values = getValues(item.key)
+
+                const path = values
+                  .map((point, index) =>
+                    `${index === 0 ? 'M' : 'L'} ${x(point.index)} ${y(point.value)}`
+                  )
+                  .join(' ')
+
+                return (
+                  <g key={item.key}>
+                    {values.length > 1 && (
+                      <path
+                        d={path}
+                        fill="none"
+                        stroke={item.color}
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    )}
+
+                    {values.map((point, index) => (
+                      <circle
+                        key={`${point.date}-${index}`}
+                        cx={x(point.index)}
+                        cy={y(point.value)}
+                        r="4.5"
+                        fill={item.color}
+                        stroke="var(--surface-2)"
+                        strokeWidth="2"
+                      >
+                        <title>
+                          {item.title}: {fmt(Number(point.value))}/5
+                          {' · '}
+                          {fmtDateFull(point.date, calendar)}
+                        </title>
+                      </circle>
+                    ))}
+                  </g>
+                )
+              })}
+
+              {dateLabels.map(index => (
+                <text
+                  key={index}
+                  x={x(index)}
+                  y="190"
+                  textAnchor="middle"
+                  fill="var(--label-3)"
+                  fontSize="10"
+                >
+                  {fmtDateFull(points[index].date, calendar)}
+                </text>
+              ))}
+            </svg>
+          </div>
+
+          <div className="health-stress-energy-legend">
+            {series.map(item => (
+              <span key={item.key}>
+                <i style={{ background: item.color }} />
+                {item.title}
+              </span>
+            ))}
+          </div>
+        </>
+      )}
+
+      <p className="health-stress-energy-footnote">
+        {fa
+          ? 'هر نقطه نشان‌دهنده یک ارزیابی ثبت‌شده است.'
+          : 'Each point represents a recorded check-in.'}
+      </p>
+    </div>
+  )
+}
 function BodyMeasurementsMap({ data, fa, calendar }) {
   const measurements = [
     {
@@ -2680,6 +2896,143 @@ health-analytics-training-summary strong {
   color: var(--label);
   font-size: 21px;
   margin-top: 6px;
+}
+
+.health-stress-energy-card {
+  min-width: 0;
+  margin-bottom: 14px;
+  padding: 15px;
+  border: 1px solid var(--sep);
+  border-radius: 17px;
+  background: var(--surface-2);
+}
+
+.health-stress-energy-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.health-stress-energy-heading strong {
+  color: var(--label);
+  font-size: 15px;
+}
+
+.health-stress-energy-heading p {
+  margin: 5px 0 0;
+  color: var(--label-3);
+  font-size: 11px;
+}
+
+.health-stress-energy-heading > span {
+  padding: 6px 9px;
+  border: 1px solid var(--sep);
+  border-radius: 20px;
+  color: var(--label-2);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.health-stress-energy-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.health-stress-energy-stat {
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid color-mix(in srgb, var(--series-color) 35%, var(--sep));
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--series-color) 8%, var(--surface));
+}
+
+.health-stress-energy-stat > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--label-2);
+  font-size: 11px;
+}
+
+.health-stress-energy-stat i,
+.health-stress-energy-legend i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: var(--series-color);
+}
+
+.health-stress-energy-stat > strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--label);
+  font-size: 27px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.health-stress-energy-stat > strong small {
+  margin-inline-start: 3px;
+  color: var(--label-3);
+  font-size: 11px;
+}
+
+.health-stress-energy-date {
+  display: block;
+  margin-top: 3px;
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-stress-energy-chart {
+  width: 100%;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.health-stress-energy-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.health-stress-energy-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 5px;
+}
+
+.health-stress-energy-legend span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--label-2);
+  font-size: 11px;
+}
+
+.health-stress-energy-footnote {
+  margin: 12px 0 0;
+  color: var(--label-3);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+@media(max-width:380px) {
+  .health-stress-energy-card {
+    padding: 11px;
+  }
+
+  .health-stress-energy-summary {
+    gap: 7px;
+  }
 }
 
 .health-body-map {
