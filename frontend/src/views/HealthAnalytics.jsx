@@ -562,7 +562,7 @@ function LineTrendChart({
       ))}
 
       <g
-        fill="var(--muted)"
+        fill="var(--trend-accent)"
         fontSize="9"
         textAnchor="end"
       >
@@ -2397,18 +2397,22 @@ health-analytics-training-summary strong {
   calendar={calendar}
 />
 
-      <TrendChart
-        title={tx('Waist circumference', 'دور کمر')}
-        unit="cm"
-        accent="#fb923c"
-        data={bodyCompositionTrends.map(item => ({
-          date: item.date,
-          value: item.waist
-        }))}
-        emptyText={tx('No waist data available.', 'داده دور کمر موجود نیست.')}
-        fa={fa}
-        calendar={calendar}
-      />
+<WeeklyBarChart
+  title={tx('Waist circumference', 'دور کمر')}
+  unit="cm"
+  accent="#fb923c"
+  rangeScale
+  data={bodyCompositionTrends.map(item => ({
+    date: item.date,
+    value: item.waist
+  }))}
+  emptyText={tx(
+    'No waist data available.',
+    'داده دور کمر موجود نیست.'
+  )}
+  fa={fa}
+  calendar={calendar}
+/>
 
       <TrendChart
         title={tx('Fat mass', 'توده چربی')}
