@@ -724,13 +724,12 @@ function BodyCompositionStackedChart({
   )
 
   const hasTrend = points.length >= 2
-  const totalChange = hasTrend
-    ? last.total - first.total
-    : null
-
+  const totalChange = hasTrend ? last.total - first.total : null
+  const fatChange = hasTrend ? last.fatMass - first.fatMass : null
+  const leanChange = hasTrend ? last.leanMass - first.leanMass : null
   const history = points.slice(-8).reverse()
 
-  const renderBars = () => (
+  const renderBars = (detailed = false) => (
     <div
       className="health-analytics-bar-chart"
       role="img"
@@ -743,11 +742,8 @@ function BodyCompositionStackedChart({
           ? Math.max(4, item.total / maxTotal * 100)
           : 4
 
-        const fatPercent =
-          item.fatMass / item.total * 100
-
-        const leanPercent =
-          item.leanMass / item.total * 100
+        const fatPercent = item.fatMass / item.total * 100
+        const leanPercent = item.leanMass / item.total * 100
 
         return (
           <div
@@ -762,24 +758,24 @@ function BodyCompositionStackedChart({
             <div
               className="health-analytics-bar-track"
               style={{
-                height: '88px',
+                height: detailed ? '140px' : '88px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'flex-end'
               }}
             >
-<div
-  style={{
-    width: 'min(76%, 22px)',
-    height: `${height}%`,
-    minHeight: '3px',
-    flexShrink: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',
-    borderRadius: '7px 7px 3px 3px'
-  }}
->
+              <div
+                style={{
+                  width: detailed ? 'min(82%, 30px)' : 'min(76%, 22px)',
+                  height: `${height}%`,
+                  minHeight: '3px',
+                  flexShrink: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  overflow: 'hidden',
+                  borderRadius: '7px 7px 3px 3px'
+                }}
+              >
                 <div
                   style={{
                     height: `${leanPercent}%`,
@@ -807,8 +803,57 @@ function BodyCompositionStackedChart({
     </div>
   )
 
+  const renderMetricComparison = (label, start, end, change, color) => (
+    <div
+      style={{
+        border: `1px solid color-mix(in srgb, ${color} 35%, var(--sep))`,
+        background: `color-mix(in srgb, ${color} 7%, var(--surface-2))`,
+        borderRadius: '13px',
+        padding: '12px',
+        minWidth: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '9px'
+      }}
+    >
+      <span style={{
+        color,
+        fontSize: '12px',
+        fontWeight: 700
+      }}>
+        {label}
+      </span>
+
+      <strong style={{
+        fontSize: '19px',
+        lineHeight: 1.3,
+        color: 'var(--text)'
+      }}>
+        {change > 0 ? '+' : ''}{fmt(change)} kg
+      </strong>
+
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        gap: '8px',
+        fontSize: '11px',
+        color: 'var(--muted)'
+      }}>
+        <span>
+          {fa ? 'ابتدا' : 'First'}: {fmt(start)}
+        </span>
+        <span>
+          {fa ? 'آخرین' : 'Latest'}: {fmt(end)}
+        </span>
+      </div>
+    </div>
+  )
+
   return (
-    <details className="health-analytics-trend-card health-analytics-bar-card health-analytics-composition-card">
+    <details
+      className="health-analytics-trend-card health-analytics-bar-card health-analytics-composition-card"
+      style={{ '--trend-accent': '#2dd4bf' }}
+    >
       <summary>
         <div className="health-analytics-trend-top">
           <div className="health-analytics-trend-heading">
@@ -870,9 +915,20 @@ function BodyCompositionStackedChart({
               : (fa ? 'بدون داده' : 'No data')}
           </span>
 
-          <span className="health-analytics-trend-expand">
+          <span
+            className="health-analytics-trend-expand"
+            style={{
+              color: '#2dd4bf',
+              fontWeight: 700
+            }}
+          >
             {fa ? 'مشاهده جزئیات' : 'View details'}
-            <span className="health-analytics-trend-chevron">⌄</span>
+            <span
+              className="health-analytics-trend-chevron"
+              style={{ color: '#2dd4bf' }}
+            >
+              ⌄
+            </span>
           </span>
         </div>
       </summary>
@@ -880,21 +936,41 @@ function BodyCompositionStackedChart({
       <div className="health-analytics-trend-details">
         {hasTrend ? (
           <>
-            <div className="health-analytics-trend-comparison">
-              <div>
-                <span>{fa ? 'اولین ثبت' : 'First record'}</span>
-                <strong>{fmt(first.total)} kg</strong>
-                <small>{fmtDateFull(first.date, calendar)}</small>
-              </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                gap: '10px'
+              }}
+            >
+              {renderMetricComparison(
+                fa ? 'تغییر توده چربی' : 'Fat mass change',
+                first.fatMass,
+                last.fatMass,
+                fatChange,
+                '#f87171'
+              )}
 
-              <div>
-                <span>{fa ? 'آخرین ثبت' : 'Latest record'}</span>
-                <strong>{fmt(last.total)} kg</strong>
-                <small>{fmtDateFull(last.date, calendar)}</small>
-              </div>
+              {renderMetricComparison(
+                fa ? 'تغییر توده بدون چربی' : 'Lean mass change',
+                first.leanMass,
+                last.leanMass,
+                leanChange,
+                '#2dd4bf'
+              )}
             </div>
 
-            {renderBars()}
+            <div style={{ marginTop: '18px' }}>
+              <strong style={{
+                display: 'block',
+                marginBottom: '10px',
+                fontSize: '13px'
+              }}>
+                {fa ? 'روند ترکیب بدن' : 'Body composition trend'}
+              </strong>
+
+              {renderBars(true)}
+            </div>
 
             <div className="health-analytics-trend-history">
               <strong>{fa ? 'آخرین ثبت‌ها' : 'Recent records'}</strong>
@@ -903,12 +979,16 @@ function BodyCompositionStackedChart({
                 <div key={`${item.date}-${index}`}>
                   <span>{fmtDateFull(item.date, calendar)}</span>
 
-                  <strong style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  <strong style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '8px'
+                  }}>
                     <span style={{ color: '#f87171' }}>
-                      {fmt(item.fatMass)} kg
+                      {fa ? 'چربی' : 'Fat'}: {fmt(item.fatMass)} kg
                     </span>
                     <span style={{ color: '#2dd4bf' }}>
-                      {fmt(item.leanMass)} kg
+                      {fa ? 'بدون چربی' : 'Lean'}: {fmt(item.leanMass)} kg
                     </span>
                   </strong>
                 </div>
