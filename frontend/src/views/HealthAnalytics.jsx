@@ -2450,13 +2450,19 @@ const value = ({
   transition: height .25s ease;
 }
 
-health-analytics-bar-wrap small {
-  color: var(--label-3);
-  font-size: 8px;
+.health-analytics-bar-wrap small {
+  display: block;
+  width: 100%;
+  min-height: 25px;
+  color: var(--label-2);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
-
 
         .health-analytics-note {
           font-size: 11px;
@@ -2855,32 +2861,44 @@ health-analytics-trend-history > div strong {
   color: var(--label);
 }
 
-health-analytics-training-summary {
+.health-analytics-training-summary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 9px;
-  margin: 12px 0 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0 18px;
 }
 
-health-analytics-training-summary > div {
+.health-analytics-training-summary > div {
   min-width: 0;
+  min-height: 88px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px;
   border: 1px solid var(--sep);
-  border-radius: 13px;
-  padding: 12px;
+  border-radius: 15px;
   background: var(--surface-2);
 }
 
-health-analytics-training-summary span {
+.health-analytics-training-summary span {
   display: block;
-  color: var(--label-3);
+  color: var(--label-2);
   font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
-health-analytics-training-summary strong {
+.health-analytics-training-summary strong {
   display: block;
   color: var(--label);
-  font-size: 21px;
-  margin-top: 6px;
+  font-size: 22px;
+  line-height: 1.25;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  direction: ltr;
+  text-align: left;
 }
 
 .health-stress-energy-card {
