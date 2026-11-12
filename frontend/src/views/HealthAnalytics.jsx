@@ -3551,34 +3551,19 @@ health-analytics-training-summary strong {
             )}
           </p>
         ) : (
-<>
+     <>
   <BodyMeasurementsMap
     data={filteredCheckIns}
     fa={fa}
     calendar={calendar}
   />
 
-  <div className="health-analytics-charts">
-    {metrics.map(metric => (
-      <TrendChart
-        key={metric.key}
-        title={metric.title}
-        unit={metric.unit}
-        fa={fa}
-        calendar={calendar}
-        accent={metric.accent}
-        data={filteredCheckIns.map(item => ({
-          date: item.date,
-          value: item[metric.key]
-        }))}
-        emptyText={tx(
-          'At least two data points are needed to show a trend.',
-          'برای نمایش روند، حداقل دو داده لازم است.'
-        )}
-      />
-    ))}
-  </div>
-</>
+  <StressEnergyTrendChart
+    data={filteredCheckIns}
+    fa={fa}
+    calendar={calendar}
+  />
+    </>
         )}
       </section>
 
