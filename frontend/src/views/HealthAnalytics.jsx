@@ -2682,6 +2682,190 @@ health-analytics-training-summary strong {
   margin-top: 6px;
 }
 
+.health-body-map {
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 15px;
+  border: 1px solid var(--sep);
+  border-radius: 17px;
+  background:
+    radial-gradient(
+      circle at 50% 28%,
+      color-mix(in srgb, var(--green) 9%, transparent),
+      transparent 55%
+    ),
+    var(--surface-2);
+}
+
+.health-body-map-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.health-body-map-intro strong {
+  color: var(--label);
+  font-size: 15px;
+}
+
+.health-body-map-intro p {
+  margin: 5px 0 0;
+  color: var(--label-3);
+  font-size: 11px;
+}
+
+.health-body-map-badge {
+  padding: 6px 9px;
+  border: 1px solid var(--sep);
+  border-radius: 20px;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.health-body-map-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 250px;
+  margin: 4px 0 14px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--bg) 65%, transparent);
+}
+
+.health-body-map-visual svg {
+  display: block;
+  width: min(100%, 260px);
+  height: 275px;
+  overflow: visible;
+}
+
+.health-body-map-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.health-body-map-metric {
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid color-mix(in srgb, var(--body-metric-color) 38%, var(--sep));
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--body-metric-color) 7%, var(--surface));
+}
+
+.health-body-map-metric-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.health-body-map-dot {
+  flex: 0 0 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--body-metric-color);
+}
+
+.health-body-map-metric-heading strong {
+  overflow: hidden;
+  color: var(--label-2);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.health-body-map-metric-heading small {
+  margin-inline-start: auto;
+  color: var(--label-3);
+  font-size: 10px;
+}
+
+.health-body-map-metric-value {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.health-body-map-metric-value > strong {
+  color: var(--label);
+  font-size: 24px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.health-body-map-metric-value > span {
+  font-size: 11px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.health-body-map-metric-value .increase {
+  color: #f59e0b;
+}
+
+.health-body-map-metric-value .decrease {
+  color: #2dd4bf;
+}
+
+.health-body-map-metric-value .unchanged {
+  color: var(--label-3);
+}
+
+.health-body-map-sparkline {
+  display: block;
+  width: 100%;
+  height: 30px;
+  margin-top: 5px;
+  overflow: visible;
+}
+
+.health-body-map-no-trend {
+  display: flex;
+  align-items: center;
+  min-height: 35px;
+  color: var(--label-3);
+  font-size: 9px;
+}
+
+.health-body-map-metric-date {
+  margin-top: 5px;
+  padding-top: 7px;
+  border-top: 1px solid var(--sep);
+  color: var(--label-3);
+  font-size: 9px;
+}
+
+.health-body-map-footnote {
+  margin: 12px 2px 0;
+  color: var(--label-3);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+@media(max-width:380px) {
+  .health-body-map {
+    padding: 11px;
+  }
+
+  .health-body-map-grid {
+    gap: 7px;
+  }
+
+  .health-body-map-metric {
+    padding: 9px;
+  }
+
+  .health-body-map-metric-value > strong {
+    font-size: 21px;
+  }
+}
 @media(max-width:600px) {
   .health-analytics-training-summary,
   .health-analytics-summary {
