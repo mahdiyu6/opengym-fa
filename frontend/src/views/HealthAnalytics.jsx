@@ -768,16 +768,18 @@ function BodyCompositionStackedChart({
                 justifyContent: 'flex-end'
               }}
             >
-              <div
-                style={{
-                  height: `${height}%`,
-                  minHeight: '3px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  overflow: 'hidden',
-                  borderRadius: '7px 7px 3px 3px'
-                }}
-              >
+<div
+  style={{
+    width: 'min(76%, 22px)',
+    height: `${height}%`,
+    minHeight: '3px',
+    flexShrink: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    borderRadius: '7px 7px 3px 3px'
+  }}
+>
                 <div
                   style={{
                     height: `${leanPercent}%`,
