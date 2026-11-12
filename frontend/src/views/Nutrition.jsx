@@ -950,16 +950,6 @@ setEditingFoodDraft({
                   />
                 </label>
               </article>
-
-              <article className="health-nutrition-tool">
-                <span className="health-nutrition-tool-icon">⚖️</span>
-                <strong>{tx('Body composition', 'آنالیز بدن')}</strong>
-                <p>{tx(
-                  'BMI, BMR, body fat and body type',
-                  'BMI، BMR، درصد چربی و تیپ بدنی'
-                )}</p>
-                <small>{tx('Based on body measurements', 'بر اساس اندازه‌گیری‌های بدن')}</small>
-              </article>
             </div>
           </section>
         </>
