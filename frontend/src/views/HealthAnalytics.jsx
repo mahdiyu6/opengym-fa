@@ -1784,30 +1784,6 @@ export default function HealthAnalytics() {
 
  const metrics = [
   {
-    key: 'chest',
-    title: tx('Chest circumference', 'دور سینه'),
-    unit: 'cm',
-    accent: '#fb923c'
-  },
-  {
-    key: 'arm',
-    title: tx('Arm circumference', 'دور بازو'),
-    unit: 'cm',
-    accent: '#a78bfa'
-  },
-  {
-    key: 'leg',
-    title: tx('Leg circumference', 'دور پا'),
-    unit: 'cm',
-    accent: '#2dd4bf'
-  },
-  {
-    key: 'sleep',
-    title: tx('Average sleep', 'میانگین خواب'),
-    unit: 'h',
-    accent: '#818cf8'
-  },
-  {
     key: 'stress',
     title: tx('Stress level', 'سطح استرس'),
     unit: '/5',
