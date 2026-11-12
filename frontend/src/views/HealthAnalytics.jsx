@@ -1174,6 +1174,272 @@ function WeeklyBarChart({
   )
 }
 
+function BodyMeasurementsMap({ data, fa, calendar }) {
+  const measurements = [
+    {
+      key: 'neck',
+      title: fa ? 'دور گردن' : 'Neck',
+      color: '#38bdf8',
+      y: 65
+    },
+    {
+      key: 'chest',
+      title: fa ? 'دور سینه' : 'Chest',
+      color: '#fb923c',
+      y: 112
+    },
+    {
+      key: 'arm',
+      title: fa ? 'دور بازو' : 'Arm',
+      color: '#a78bfa',
+      y: 142
+    },
+    {
+      key: 'hip',
+      title: fa ? 'دور هیپ' : 'Hip',
+      color: '#f472b6',
+      y: 185
+    },
+    {
+      key: 'leg',
+      title: fa ? 'دور پا' : 'Leg',
+      color: '#2dd4bf',
+      y: 252
+    }
+  ]
+
+  const getHistory = key =>
+    data
+      .filter(item => positiveNumber(item[key]) !== null)
+      .sort((a, b) => a.date.localeCompare(b.date))
+
+  const getSparkline = points => {
+    if (points.length < 2) return ''
+
+    const values = points.map(item => Number(item.value))
+    const min = Math.min(...values)
+    const max = Math.max(...values)
+    const spread = max - min || 1
+
+    return values
+      .map((value, index) => {
+        const x = 3 + index / (values.length - 1) * 94
+        const y = 23 - ((value - min) / spread) * 18
+        return `${x},${y}`
+      })
+      .join(' ')
+  }
+
+  return (
+    <div className="health-body-map">
+      <div className="health-body-map-intro">
+        <div>
+          <strong>
+            {fa ? 'نقشه اندازه‌های بدن' : 'Body Measurement Map'}
+          </strong>
+          <p>
+            {fa
+              ? 'تغییرات هر ناحیه را جداگانه دنبال کن'
+              : 'Track the progress of each body area independently'}
+          </p>
+        </div>
+
+        <span className="health-body-map-badge">
+          {fa ? '۵ ناحیه' : '5 AREAS'}
+        </span>
+      </div>
+
+      <div className="health-body-map-visual">
+        <svg
+          viewBox="0 0 280 310"
+          role="img"
+          aria-label={fa ? 'نقشه اندازه‌های بدن' : 'Body measurement map'}
+        >
+          <defs>
+            <linearGradient id="body-map-fill" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="var(--label-3)" stopOpacity=".24" />
+              <stop offset="100%" stopColor="var(--label-3)" stopOpacity=".07" />
+            </linearGradient>
+          </defs>
+
+          {/* Body silhouette */}
+          <circle
+            cx="140"
+            cy="27"
+            r="18"
+            fill="url(#body-map-fill)"
+            stroke="var(--label-3)"
+            strokeOpacity=".55"
+            strokeWidth="1.5"
+          />
+
+          <path
+            d="
+              M125 49
+              C115 53 101 58 91 65
+              C80 73 76 91 72 111
+              L58 157
+              C56 164 60 169 66 170
+              C72 171 76 167 79 159
+              L96 117
+              L103 151
+              L99 194
+              C98 205 103 211 113 212
+              L119 270
+              C120 282 127 287 133 284
+              C139 281 138 273 138 265
+              L140 218
+              L142 265
+              C142 273 141 281 147 284
+              C153 287 160 282 161 270
+              L167 212
+              C177 211 182 205 181 194
+              L177 151
+              L184 117
+              L201 159
+              C204 167 208 171 214 170
+              C220 169 224 164 222 157
+              L208 111
+              C204 91 200 73 189 65
+              C179 58 165 53 155 49
+              Z
+            "
+            fill="url(#body-map-fill)"
+            stroke="var(--label-3)"
+            strokeOpacity=".55"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+
+          {/* Measurement rings */}
+          {measurements.map(item => (
+            <g key={item.key}>
+              <ellipse
+                cx="140"
+                cy={item.y}
+                rx={item.key === 'arm' ? 65 : item.key === 'leg' ? 35 : 48}
+                ry={item.key === 'leg' ? 7 : 9}
+                fill="none"
+                stroke={item.color}
+                strokeWidth="2.5"
+                strokeDasharray="4 3"
+                opacity=".95"
+              />
+              <circle
+                cx="140"
+                cy={item.y}
+                r="3.5"
+                fill={item.color}
+              />
+            </g>
+          )}
+
+          <text
+            x="140"
+            y="305"
+            fill="var(--label-3)"
+            fontSize="8"
+            textAnchor="middle"
+          >
+            {fa ? 'نمای شماتیک بدن' : 'BODY REFERENCE'}
+          </text>
+        </svg>
+      </div>
+
+      <div className="health-body-map-grid">
+        {measurements.map(metric => {
+          const history = getHistory(metric.key)
+          const latest = history[history.length - 1]
+          const previous = history.length > 1
+            ? history[history.length - 2]
+            : null
+
+          const currentValue = latest
+            ? Number(latest[metric.key])
+            : null
+
+          const delta = latest && previous
+            ? currentValue - Number(previous[metric.key])
+            : null
+
+          const sparkPoints = history
+            .slice(-8)
+            .map(item => ({
+              date: item.date,
+              value: Number(item[metric.key])
+            }))
+
+          return (
+            <div
+              className="health-body-map-metric"
+              key={metric.key}
+              style={{
+                '--body-metric-color': metric.color
+              }}
+            >
+              <div className="health-body-map-metric-heading">
+                <span className="health-body-map-dot" />
+                <strong>{metric.title}</strong>
+                <small>cm</small>
+              </div>
+
+              <div className="health-body-map-metric-value">
+                <strong>
+                  {currentValue !== null ? fmt(currentValue) : '—'}
+                </strong>
+
+                {delta !== null && (
+                  <span className={
+                    delta > 0 ? 'increase' :
+                    delta < 0 ? 'decrease' : 'unchanged'
+                  }>
+                    {delta > 0 ? '+' : ''}
+                    {fmt(delta)}
+                  </span>
+                )}
+              </div>
+
+              {sparkPoints.length > 1 ? (
+                <svg
+                  className="health-body-map-sparkline"
+                  viewBox="0 0 100 28"
+                  preserveAspectRatio="none"
+                  aria-label={`${metric.title} trend`}
+                >
+                  <polyline
+                    points={getSparkline(sparkPoints)}
+                    fill="none"
+                    stroke={metric.color}
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                <div className="health-body-map-no-trend">
+                  {fa ? 'برای نمایش روند، ثبت بیشتری لازم است' : 'More records needed for trend'}
+                </div>
+              )}
+
+              <div className="health-body-map-metric-date">
+                {latest
+                  ? fmtDateFull(latest.date, calendar)
+                  : (fa ? 'هنوز ثبت نشده' : 'Not recorded yet')}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <p className="health-body-map-footnote">
+        {fa
+          ? 'تغییر هر اندازه فقط با ثبت قبلی همان ناحیه مقایسه می‌شود.'
+          : 'Each measurement is compared only with its own previous record.'}
+      </p>
+    </div>
+  )
+}
+
 function ReviewValue({
   label,
   current,
