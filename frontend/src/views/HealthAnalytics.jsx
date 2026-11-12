@@ -495,6 +495,203 @@ function AreaTrendChart({
   )
 }
 
+
+function LineTrendChart({
+  title,
+  unit,
+  data,
+  emptyText,
+  fa,
+  calendar,
+  accent = '#f59e0b'
+}) {
+  const points = data
+    .filter(item => numeric(item.value))
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  const first = points[0]
+  const last = points[points.length - 1]
+  const hasTrend = points.length >= 2
+
+  const values = points.map(item => Number(item.value))
+  const min = values.length ? Math.min(...values) : 0
+  const max = values.length ? Math.max(...values) : 0
+  const spread = max - min || Math.max(Math.abs(max) * 0.08, 1)
+  const low = min - spread * 0.15
+  const high = max + spread * 0.15
+  const middle = (low + high) / 2
+
+  const x = index =>
+    points.length === 1
+      ? 163
+      : 36 + index / (points.length - 1) * 256
+
+  const y = value =>
+    82 - ((value - low) / (high - low)) * 64
+
+  const linePath = points
+    .map((item, index) =>
+      `${index === 0 ? 'M' : 'L'} ${x(index)} ${y(Number(item.value))}`
+    )
+    .join(' ')
+
+  const change = hasTrend
+    ? Number(last.value) - Number(first.value)
+    : null
+
+  const history = points.slice(-8).reverse()
+
+  const renderChart = () => (
+    <svg
+      className="health-analytics-trend-detail-chart"
+      viewBox="0 0 300 104"
+      role="img"
+      aria-label={`${title} line chart`}
+    >
+      {[18, 50, 82].map(level => (
+        <line
+          key={level}
+          x1="34"
+          y1={level}
+          x2="292"
+          y2={level}
+          stroke="var(--sep)"
+          strokeWidth="1"
+          strokeDasharray="3 4"
+        />
+      ))}
+
+      <g
+        fill="var(--muted)"
+        fontSize="9"
+        textAnchor="end"
+      >
+        <text x="29" y="21">{fmt(high)}</text>
+        <text x="29" y="53">{fmt(middle)}</text>
+        <text x="29" y="85">{fmt(low)}</text>
+      </g>
+
+      {hasTrend && (
+        <path
+          d={linePath}
+          fill="none"
+          stroke="var(--trend-accent)"
+          strokeWidth="2.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
+
+      {points.map((item, index) => (
+        <circle
+          key={`${item.date}-${index}`}
+          cx={x(index)}
+          cy={y(Number(item.value))}
+          r={index === points.length - 1 ? 4.8 : 3.2}
+          fill="var(--trend-accent)"
+          stroke="var(--surface-2)"
+          strokeWidth="1.5"
+        >
+          <title>
+            {fmtDateFull(item.date, calendar)}: {fmt(Number(item.value))} {unit}
+          </title>
+        </circle>
+      ))}
+    </svg>
+  )
+
+  return (
+    <details
+      className="health-analytics-trend-card health-analytics-line-card"
+      style={{ '--trend-accent': accent }}
+    >
+      <summary>
+        <div className="health-analytics-trend-top">
+          <div className="health-analytics-trend-heading">
+            <span className="health-analytics-trend-indicator" />
+            <strong>{title}</strong>
+          </div>
+
+          <span className="health-analytics-trend-unit">{unit}</span>
+        </div>
+
+        <div className="health-analytics-trend-main">
+          <strong>{last ? fmt(Number(last.value)) : '—'}</strong>
+
+          {hasTrend && (
+            <span className="health-analytics-trend-change">
+              {change > 0 ? '+' : ''}
+              {fmt(change)} {unit}
+            </span>
+          )}
+        </div>
+
+        {points.length > 0
+          ? renderChart()
+          : (
+            <p className="health-muted health-analytics-trend-empty">
+              {emptyText}
+            </p>
+          )}
+
+        <div className="health-analytics-trend-footer">
+          <span>
+            {last
+              ? `${fa ? 'آخرین ثبت' : 'Latest'}: ${fmtDateFull(last.date, calendar)}`
+              : (fa ? 'بدون داده' : 'No data')}
+          </span>
+
+          <span className="health-analytics-trend-expand">
+            {fa ? 'مشاهده جزئیات' : 'View details'}
+            <span className="health-analytics-trend-chevron">⌄</span>
+          </span>
+        </div>
+      </summary>
+
+      <div className="health-analytics-trend-details">
+        {hasTrend && (
+          <>
+            <div className="health-analytics-trend-comparison">
+              <div>
+                <span>{fa ? 'اولین مقدار' : 'First value'}</span>
+                <strong>{fmt(Number(first.value))} {unit}</strong>
+                <small>{fmtDateFull(first.date, calendar)}</small>
+              </div>
+
+              <div>
+                <span>{fa ? 'آخرین مقدار' : 'Latest value'}</span>
+                <strong>{fmt(Number(last.value))} {unit}</strong>
+                <small>{fmtDateFull(last.date, calendar)}</small>
+              </div>
+            </div>
+
+            {renderChart()}
+
+            <div className="health-analytics-trend-history">
+              <strong>{fa ? 'آخرین ثبت‌ها' : 'Recent records'}</strong>
+
+              {history.map((item, index) => (
+                <div key={`${item.date}-${index}`}>
+                  <span>{fmtDateFull(item.date, calendar)}</span>
+                  <strong>{fmt(Number(item.value))} {unit}</strong>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {!hasTrend && (
+          <p className="health-muted">
+            {points.length === 1
+              ? (fa ? 'برای نمایش روند به داده بیشتری نیاز است' : 'More data is needed to show a trend')
+              : emptyText}
+          </p>
+        )}
+      </div>
+    </details>
+  )
+}
+
 function WeeklyBarChart({
   title,
   unit,
@@ -2184,22 +2381,21 @@ health-analytics-training-summary strong {
   calendar={calendar}
 />
 
-
-      <TrendChart
-        title={tx('Body fat percentage', 'درصد چربی بدن')}
-        unit="%"
-        accent="#f59e0b"
-        data={bodyCompositionTrends.map(item => ({
-          date: item.date,
-          value: item.bfp
-        }))}
-        emptyText={tx(
-          'Complete waist, neck and height measurements are needed.',
-          'برای محاسبه، اندازه‌های کامل دور کمر، گردن و قد لازم است.'
-        )}
-        fa={fa}
-        calendar={calendar}
-      />
+<LineTrendChart
+  title={tx('Body fat percentage', 'درصد چربی بدن')}
+  unit="%"
+  accent="#f59e0b"
+  data={bodyCompositionTrends.map(item => ({
+    date: item.date,
+    value: item.bfp
+  }))}
+  emptyText={tx(
+    'Complete waist, neck and height measurements are needed.',
+    'برای محاسبه، اندازه‌های کامل دور کمر، گردن و قد لازم است.'
+  )}
+  fa={fa}
+  calendar={calendar}
+/>
 
       <TrendChart
         title={tx('Waist circumference', 'دور کمر')}
