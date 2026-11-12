@@ -699,7 +699,8 @@ function WeeklyBarChart({
   emptyText,
   fa,
   calendar,
-  accent = '#8b5cf6'
+  accent = '#8b5cf6',
+  rangeScale = false
 }) {
   const points = data
     .filter(item => numeric(item.value))
@@ -709,6 +710,8 @@ function WeeklyBarChart({
   const first = points[0]
   const last = points[points.length - 1]
   const max = Math.max(0, ...visiblePoints.map(item => Number(item.value)))
+  const min = Math.min(...visiblePoints.map(item => Number(item.value)))
+  const range = max - min || Math.max(Math.abs(max) * 0.05, 1)
 
   const hasTrend = points.length >= 2
   const change = hasTrend
