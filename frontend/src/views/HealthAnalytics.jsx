@@ -1548,7 +1548,7 @@ function BodyMeasurementsMap({ data, fa, calendar }) {
                 fill={item.color}
               />
             </g>
-          )}
+          ))}
 
           <text
             x="140"
