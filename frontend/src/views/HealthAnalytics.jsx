@@ -755,7 +755,9 @@ function WeeklyBarChart({
           >
             {visiblePoints.map((item, index) => {
               const value = Math.max(0, Number(item.value))
-              const height = max > 0
+              const height = rangeScale
+                ? 24 + ((value - min) / range) * 76
+                : max > 0
                 ? Math.max(3, value / max * 100)
                 : 3
 
