@@ -692,6 +692,241 @@ function LineTrendChart({
   )
 }
 
+
+function BodyCompositionStackedChart({
+  title,
+  data,
+  emptyText,
+  fa,
+  calendar
+}) {
+  const points = data
+    .filter(item =>
+      numeric(item.fatMass) &&
+      numeric(item.leanMass) &&
+      Number(item.fatMass) > 0 &&
+      Number(item.leanMass) > 0
+    )
+    .map(item => ({
+      ...item,
+      fatMass: Number(item.fatMass),
+      leanMass: Number(item.leanMass),
+      total: Number(item.fatMass) + Number(item.leanMass)
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  const visiblePoints = points.slice(-10)
+  const first = points[0]
+  const last = points[points.length - 1]
+  const maxTotal = Math.max(
+    0,
+    ...visiblePoints.map(item => item.total)
+  )
+
+  const hasTrend = points.length >= 2
+  const totalChange = hasTrend
+    ? last.total - first.total
+    : null
+
+  const history = points.slice(-8).reverse()
+
+  const renderBars = () => (
+    <div
+      className="health-analytics-bar-chart"
+      role="img"
+      aria-label={fa
+        ? 'نمودار ترکیبی توده چربی و بدون چربی'
+        : 'Stacked fat and lean mass chart'}
+    >
+      {visiblePoints.map((item, index) => {
+        const height = maxTotal > 0
+          ? Math.max(4, item.total / maxTotal * 100)
+          : 4
+
+        const fatPercent =
+          item.fatMass / item.total * 100
+
+        const leanPercent =
+          item.leanMass / item.total * 100
+
+        return (
+          <div
+            className="health-analytics-bar-column"
+            key={`${item.date}-${index}`}
+            title={`${fmtDateFull(item.date, calendar)} · ${fa ? 'چربی' : 'Fat'}: ${fmt(item.fatMass)} kg · ${fa ? 'بدون چربی' : 'Lean'}: ${fmt(item.leanMass)} kg`}
+          >
+            <span className="health-analytics-bar-value">
+              {fmt(item.total)}
+            </span>
+
+            <div
+              className="health-analytics-bar-track"
+              style={{
+                height: '88px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end'
+              }}
+            >
+              <div
+                style={{
+                  height: `${height}%`,
+                  minHeight: '3px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  overflow: 'hidden',
+                  borderRadius: '7px 7px 3px 3px'
+                }}
+              >
+                <div
+                  style={{
+                    height: `${leanPercent}%`,
+                    background: '#2dd4bf',
+                    minHeight: '1px'
+                  }}
+                />
+
+                <div
+                  style={{
+                    height: `${fatPercent}%`,
+                    background: '#f87171',
+                    minHeight: '1px'
+                  }}
+                />
+              </div>
+            </div>
+
+            <span className="health-analytics-bar-label">
+              {index + 1}
+            </span>
+          </div>
+        )
+      })}
+    </div>
+  )
+
+  return (
+    <details className="health-analytics-trend-card health-analytics-bar-card health-analytics-composition-card">
+      <summary>
+        <div className="health-analytics-trend-top">
+          <div className="health-analytics-trend-heading">
+            <span
+              className="health-analytics-trend-indicator"
+              style={{
+                background: 'linear-gradient(90deg, #f87171 50%, #2dd4bf 50%)'
+              }}
+            />
+            <strong>{title}</strong>
+          </div>
+
+          <span className="health-analytics-trend-unit">kg</span>
+        </div>
+
+        <div className="health-analytics-trend-main">
+          <strong>{last ? fmt(last.total) : '—'}</strong>
+
+          {hasTrend && (
+            <span className="health-analytics-trend-change">
+              {totalChange > 0 ? '+' : ''}
+              {fmt(totalChange)} kg
+            </span>
+          )}
+        </div>
+
+        {visiblePoints.length > 0 ? (
+          renderBars()
+        ) : (
+          <p className="health-muted health-analytics-trend-empty">
+            {emptyText}
+          </p>
+        )}
+
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '12px',
+            marginTop: '12px',
+            fontSize: '12px'
+          }}
+        >
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            <i style={{ width: 8, height: 8, borderRadius: 3, background: '#f87171' }} />
+            {fa ? 'توده چربی' : 'Fat mass'}
+          </span>
+
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            <i style={{ width: 8, height: 8, borderRadius: 3, background: '#2dd4bf' }} />
+            {fa ? 'توده بدون چربی' : 'Lean body mass'}
+          </span>
+        </div>
+
+        <div className="health-analytics-trend-footer">
+          <span>
+            {last
+              ? `${fa ? 'آخرین ثبت' : 'Latest'}: ${fmtDateFull(last.date, calendar)}`
+              : (fa ? 'بدون داده' : 'No data')}
+          </span>
+
+          <span className="health-analytics-trend-expand">
+            {fa ? 'مشاهده جزئیات' : 'View details'}
+            <span className="health-analytics-trend-chevron">⌄</span>
+          </span>
+        </div>
+      </summary>
+
+      <div className="health-analytics-trend-details">
+        {hasTrend ? (
+          <>
+            <div className="health-analytics-trend-comparison">
+              <div>
+                <span>{fa ? 'اولین ثبت' : 'First record'}</span>
+                <strong>{fmt(first.total)} kg</strong>
+                <small>{fmtDateFull(first.date, calendar)}</small>
+              </div>
+
+              <div>
+                <span>{fa ? 'آخرین ثبت' : 'Latest record'}</span>
+                <strong>{fmt(last.total)} kg</strong>
+                <small>{fmtDateFull(last.date, calendar)}</small>
+              </div>
+            </div>
+
+            {renderBars()}
+
+            <div className="health-analytics-trend-history">
+              <strong>{fa ? 'آخرین ثبت‌ها' : 'Recent records'}</strong>
+
+              {history.map((item, index) => (
+                <div key={`${item.date}-${index}`}>
+                  <span>{fmtDateFull(item.date, calendar)}</span>
+
+                  <strong style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    <span style={{ color: '#f87171' }}>
+                      {fmt(item.fatMass)} kg
+                    </span>
+                    <span style={{ color: '#2dd4bf' }}>
+                      {fmt(item.leanMass)} kg
+                    </span>
+                  </strong>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className="health-muted">
+            {points.length === 1
+              ? (fa
+                ? 'برای نمایش روند به ثبت‌های بیشتری نیاز است.'
+                : 'More records are needed to show a trend.')
+              : emptyText}
+          </p>
+        )}
+      </div>
+    </details>
+  )
+}
+
 function WeeklyBarChart({
   title,
   unit,
@@ -2419,37 +2654,16 @@ health-analytics-training-summary strong {
   calendar={calendar}
 />
 
-      <TrendChart
-        title={tx('Fat mass', 'توده چربی')}
-        unit="kg"
-        accent="#f87171"
-        data={bodyCompositionTrends.map(item => ({
-          date: item.date,
-          value: item.fatMass
-        }))}
-        emptyText={tx(
-          'Body fat and weight measurements are needed.',
-          'اندازه‌گیری وزن و درصد چربی لازم است.'
-        )}
-        fa={fa}
-        calendar={calendar}
-      />
-
-      <TrendChart
-        title={tx('Lean body mass', 'توده بدون چربی')}
-        unit="kg"
-        accent="#2dd4bf"
-        data={bodyCompositionTrends.map(item => ({
-          date: item.date,
-          value: item.leanMass
-        }))}
-        emptyText={tx(
-          'Body fat and weight measurements are needed.',
-          'اندازه‌گیری وزن و درصد چربی لازم است.'
-        )}
-        fa={fa}
-        calendar={calendar}
-      />
+<BodyCompositionStackedChart
+  title={tx('Fat & Lean Mass', 'توده چربی و بدون چربی')}
+  data={bodyCompositionTrends}
+  emptyText={tx(
+    'Body weight and body fat measurements are needed.',
+    'برای نمایش، ثبت وزن و درصد چربی بدن لازم است.'
+  )}
+  fa={fa}
+  calendar={calendar}
+/> 
     </div>
   )}
 </section>
