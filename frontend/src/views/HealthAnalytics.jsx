@@ -1527,28 +1527,61 @@ function BodyMeasurementsMap({ data, fa, calendar }) {
             strokeLinejoin="round"
           />
 
+          
           {/* Measurement rings */}
           {measurements.map(item => (
             <g key={item.key}>
-              <ellipse
-                cx="140"
-                cy={item.y}
-                rx={item.key === 'arm' ? 65 : item.key === 'leg' ? 35 : 48}
-                ry={item.key === 'leg' ? 7 : 9}
-                fill="none"
-                stroke={item.color}
-                strokeWidth="2.5"
-                strokeDasharray="4 3"
-                opacity=".95"
-              />
-              <circle
-                cx="140"
-                cy={item.y}
-                r="3.5"
-                fill={item.color}
-              />
+              {item.key === 'arm' ? (
+                <>
+                  <ellipse
+                    cx="82"
+                    cy="88"
+                    rx="11"
+                    ry="5"
+                    transform="rotate(22 82 88)"
+                    fill="none"
+                    stroke={item.color}
+                    strokeWidth="2.5"
+                    strokeDasharray="4 3"
+                    opacity=".95"
+                  />
+                  <ellipse
+                    cx="198"
+                    cy="88"
+                    rx="11"
+                    ry="5"
+                    transform="rotate(-22 198 88)"
+                    fill="none"
+                    stroke={item.color}
+                    strokeWidth="2.5"
+                    strokeDasharray="4 3"
+                    opacity=".95"
+                  />
+                </>
+              ) : (
+                <>
+                  <ellipse
+                    cx="140"
+                    cy={item.y}
+                    rx={item.key === 'leg' ? 35 : 48}
+                    ry={item.key === 'leg' ? 7 : 9}
+                    fill="none"
+                    stroke={item.color}
+                    strokeWidth="2.5"
+                    strokeDasharray="4 3"
+                    opacity=".95"
+                  />
+                  <circle
+                    cx="140"
+                    cy={item.y}
+                    r="3.5"
+                    fill={item.color}
+                  />
+                </>
+              )}
             </g>
           ))}
+
 
           <text
             x="140"
