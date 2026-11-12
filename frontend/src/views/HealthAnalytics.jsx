@@ -2873,6 +2873,24 @@ health-analytics-training-summary strong {
     accent="#fb923c"
   />
 
+    <ReviewValue
+    label={tx('Neck', 'دور گردن')}
+    current={current.neck}
+    previous={previous?.neck}
+    unit="cm"
+    fa={fa}
+    accent="#38bdf8"
+  />
+
+  <ReviewValue
+    label={tx('Hip', 'دور هیپ')}
+    current={current.hip}
+    previous={previous?.hip}
+    unit="cm"
+    fa={fa}
+    accent="#f472b6"
+  />
+  
   <ReviewValue
     label={tx('Arm', 'دور بازو')}
     current={current.arm}
@@ -2889,15 +2907,6 @@ health-analytics-training-summary strong {
     unit="cm"
     fa={fa}
     accent="#2dd4bf"
-  />
-
-  <ReviewValue
-    label={tx('Average sleep', 'میانگین خواب')}
-    current={current.sleep}
-    previous={previous?.sleep}
-    unit="h"
-    fa={fa}
-    accent="#818cf8"
   />
 
   <ReviewValue
