@@ -1531,8 +1531,22 @@ export const USDA_CORE_MACROS = Object.freeze(
 // USDA IDs are source references only. Food records use stable internal keys.
 // -----------------------------------------------------------------------------
 
+
 const createInternalNutrientKey = (nutrient) => {
   if (nutrient.storage === 'macro') return nutrient.macroKey;
+
+  // Distinguish energy measured in kJ from energy measured in kcal.
+  if (nutrient.number === '268') return 'energy-kj';
+
+  const base = nutrient.name
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  return base || 'other-nutrient';
+};
 
   const base = nutrient.name
     .toLowerCase()
@@ -1551,9 +1565,17 @@ export const NUTRIENT_CATALOG = Object.freeze(
     let key = createInternalNutrientKey(nutrient);
 
     // Resolve duplicate names without making USDA IDs the normal storage key.
-    if (usedNutrientKeys.has(key)) {
-      key = `${key}-${nutrient.number}`;
-    }
+if (usedNutrientKeys.has(key)) {
+  const unitKey = String(nutrient.unit || 'unit')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '');
+
+  key = `${key}-${unitKey}`;
+
+  if (usedNutrientKeys.has(key)) {
+    key = `${key}-variant-${usedNutrientKeys.size + 1}`;
+  }
+}
 
     usedNutrientKeys.add(key);
 
