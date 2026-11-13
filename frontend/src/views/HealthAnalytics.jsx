@@ -2901,37 +2901,95 @@ health-analytics-trend-history > div strong {
 .health-analytics-training-summary {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin: 14px 0 18px;
+  gap: 11px;
+  margin: 16px 0 20px;
 }
 
 .health-analytics-training-summary > div {
+  --metric-accent: #8b5cf6;
+  position: relative;
+  isolation: isolate;
   min-width: 0;
-  min-height: 88px;
+  min-height: 104px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 12px;
-  padding: 13px;
-  border: 1px solid var(--sep);
-  border-radius: 15px;
-  background: var(--surface-2);
+  gap: 14px;
+  padding: 14px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--metric-accent) 22%, var(--sep));
+  border-radius: 16px;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--metric-accent) 9%, var(--surface-2)),
+    var(--surface-2) 75%
+  );
+}
+
+.health-analytics-training-summary > div::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 76px;
+  height: 76px;
+  top: -30px;
+  right: -25px;
+  border-radius: 50%;
+  background: var(--metric-accent);
+  opacity: .07;
+}
+
+.health-analytics-training-summary > div::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 14px;
+  width: 32px;
+  height: 3px;
+  border-radius: 0 0 5px 5px;
+  background: var(--metric-accent);
+  opacity: .9;
+}
+
+.health-analytics-training-summary > div:nth-child(1) {
+  --metric-accent: #38bdf8;
+}
+
+.health-analytics-training-summary > div:nth-child(2) {
+  --metric-accent: #a78bfa;
+}
+
+.health-analytics-training-summary > div:nth-child(3) {
+  --metric-accent: #2dd4bf;
+}
+
+.health-analytics-training-summary > div:nth-child(4) {
+  --metric-accent: #8b5cf6;
+}
+
+.health-analytics-training-summary > div:nth-child(5) {
+  --metric-accent: #f59e0b;
+}
+
+.health-analytics-training-summary > div:nth-child(6) {
+  --metric-accent: #fb7185;
 }
 
 .health-analytics-training-summary span {
   display: block;
   color: var(--label-2);
   font-size: 11px;
-  font-weight: 600;
-  line-height: 1.5;
+  font-weight: 650;
+  line-height: 1.45;
+  letter-spacing: .1px;
 }
 
 .health-analytics-training-summary strong {
   display: block;
-  color: var(--label);
-  font-size: 22px;
-  line-height: 1.25;
-  font-weight: 750;
+  color: var(--metric-accent);
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
   direction: ltr;
