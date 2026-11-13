@@ -84,13 +84,29 @@ export default function HealthHome() {
 
   const tiles = [
     {
-      icon: '🧪',
+      icon: '🌮🍗🥣🍳🍕',
+      title: fa ? 'تغذیه و کالری' : 'Nutrition & Calories',
+      desc: fa
+        ? 'مدیریت کالری، وعده‌ها و ارزش غذایی'
+        : 'Track calories, meals and nutrition',
+      path: '/health/nutrition'
+    },
+    {
+  icon: '⚖️🦾💪💪🏻🏃🏻‍♂️',
+  title: fa ? 'ترکیب بدن' : 'Body Composition',
+  desc: fa
+    ? 'تحلیل وزن، چربی و ترکیب بدن'
+    : 'Analyze weight, body fat and body composition',
+  path: '/health/body-composition'
+    },
+    {
+      icon: '🧪🩸',
       title: fa ? 'آزمایش‌ها' : 'Lab Tests',
       desc: fa ? 'ثبت و بررسی نتایج آزمایش‌ها' : 'Record and review lab results',
       path: '/health/labs'
     },
     {
-      icon: '📈',
+      icon: '💊',
       title: fa ? 'پایش عملکرد' : 'Performance',
       desc: fa ? 'پیگیری پروتکل‌ها، عوارض و روند تغییرات' : 'Track protocols, side effects and progress',
       path: '/health/performance'
@@ -102,18 +118,10 @@ export default function HealthHome() {
       path: '/health/analytics'
     },
     {
-      icon: '📝',
+      icon: '📝✏️🗒️🗓️📆',
       title: fa ? 'ثبت هفتگی' : 'Weekly /n Check-in',
       desc: fa ? 'ثبت وزن، دور کمر، خواب، انرژی و غیره ' : 'Record weight, waist, sleep, energy and etc',
       path: '/health/check-in'
-    },
-    {
-  icon: '⚖️',
-  title: fa ? 'ترکیب بدن' : 'Body Composition',
-  desc: fa
-    ? 'تحلیل وزن، چربی و ترکیب بدن'
-    : 'Analyze weight, body fat and body composition',
-  path: '/health/body-composition'
     }
   ]
 
