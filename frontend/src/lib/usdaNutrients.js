@@ -1524,3 +1524,94 @@ export const USDA_CORE_MACROS = Object.freeze(
       .map(item => [item.number, item.macroKey])
   )
 )
+
+
+// -----------------------------------------------------------------------------
+// OpenGym's source-independent nutrient catalog
+// USDA IDs are source references only. Food records use stable internal keys.
+// -----------------------------------------------------------------------------
+
+const createInternalNutrientKey = (nutrient) => {
+  if (nutrient.storage === 'macro') return nutrient.macroKey;
+
+  const base = nutrient.name
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  return base || `nutrient-${nutrient.rank}`;
+};
+
+const usedNutrientKeys = new Set();
+
+export const NUTRIENT_CATALOG = Object.freeze(
+  USDA_NUTRIENTS.map((nutrient) => {
+    let key = createInternalNutrientKey(nutrient);
+
+    // Resolve duplicate names without making USDA IDs the normal storage key.
+    if (usedNutrientKeys.has(key)) {
+      key = `${key}-${nutrient.number}`;
+    }
+
+    usedNutrientKeys.add(key);
+
+    return Object.freeze({
+      ...nutrient,
+      key,
+      source: Object.freeze({
+        provider: 'usda-sr-legacy',
+        nutrientId: nutrient.id,
+        nutrientNumber: nutrient.number
+      })
+    });
+  })
+);
+
+export const MICRONUTRIENT_CATALOG = Object.freeze(
+  NUTRIENT_CATALOG.filter(
+    nutrient => nutrient.storage !== 'macro'
+  )
+);
+
+export const NUTRIENT_BY_KEY = Object.freeze(
+  Object.fromEntries(
+    NUTRIENT_CATALOG.map(nutrient => [nutrient.key, nutrient])
+  )
+);
+
+export const CORE_MACRO_KEYS = Object.freeze([
+  'calories',
+  'protein',
+  'carbs',
+  'fat'
+]);
+
+// Missing values remain missing. They are never converted to zero.
+export const normalizeMicronutrients = (values = {}) => {
+  if (!values || typeof values !== 'object' || Array.isArray(values)) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(values).filter(
+      ([, value]) =>
+        value !== null &&
+        value !== '' &&
+        Number.isFinite(Number(value))
+    ).map(([key, value]) => [key, Number(value)])
+  );
+};
+
+export const scaleMicronutrients = (values = {}, factor = 1) => {
+  const normalized = normalizeMicronutrients(values);
+
+  if (!Number.isFinite(Number(factor))) return normalized;
+
+  return Object.fromEntries(
+    Object.entries(normalized).map(
+      ([key, value]) => [key, value * Number(factor)]
+    )
+  );
+};
