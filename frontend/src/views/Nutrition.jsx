@@ -14,6 +14,27 @@ import './health-hub.css'
 
 const EMPTY_NUTRITION = Object.freeze({})
 const EMPTY_WORKOUTS = Object.freeze([])
+const getFoodMicronutrients = (food) => {
+  if (!food || typeof food !== 'object') return {}
+
+  // New generic structure
+  if (food.micronutrients && typeof food.micronutrients === 'object') {
+    return normalizeMicronutrients(food.micronutrients)
+  }
+
+  // Temporary compatibility with the old 29-field structure
+  return normalizeMicronutrients(
+    Object.fromEntries(
+      MICRONUTRIENTS
+        .filter(item =>
+          food[item.id] !== null &&
+          food[item.id] !== undefined &&
+          food[item.id] !== ''
+        )
+        .map(item => [item.id, food[item.id]])
+    )
+  )
+}
 
 const MICRONUTRIENTS = [
   { id: 'fiber', en: 'Fiber', fa: 'فیبر', unit: 'gr' },
