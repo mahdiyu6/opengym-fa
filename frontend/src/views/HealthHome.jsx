@@ -120,7 +120,7 @@ export default function HealthHome() {
     {
       icon: '🗓️',
       title: fa ? 'ثبت هفتگی' : 'Weekly Check-in',
-      desc: fa ? 'ثبت وزن، دور کمر، خواب، انرژی و غیره ' : 'Record weight, waist, sleep, energy and etc',
+      desc: fa ? 'ثبت وضعیت هفتگی و اندازه‌گیری‌های بدن' : 'Track weekly wellness and body measurements',
       path: '/health/check-in'
     }
   ]
