@@ -6217,3 +6217,16 @@
     font-size: 8px;
   }
 }
+
+/* Keep weekly chart values on a single line */
+
+#training-overview .health-analytics-bar-value {
+  white-space: nowrap;
+  overflow: visible;
+  width: max-content;
+  max-width: none;
+  flex-shrink: 0;
+  font-size: 8px;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+}
