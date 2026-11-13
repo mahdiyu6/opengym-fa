@@ -4,6 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import { useLang, getLang } from '../lib/i18n.js'
 import { useStore } from '../store/useStore.js'
 import { fmtDateFull, todayISO, fmtNum } from '../lib/format.js'
+import {
+  MICRONUTRIENT_CATALOG,
+  MICRONUTRIENT_GROUPS,
+  normalizeMicronutrients,
+  scaleMicronutrients
+} from '../lib/usdaNutrients.js'
 import './health-hub.css'
 
 const EMPTY_NUTRITION = Object.freeze({})
