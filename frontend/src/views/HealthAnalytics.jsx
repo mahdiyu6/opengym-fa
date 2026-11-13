@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { workoutVolume, setsDone } from '../lib/history.js'
 import { getLang, useLang } from '../lib/i18n.js'
-import { fmtDateFull } from '../lib/format.js'
+import { fmtDate, fmtDateFull } from '../lib/format.js'
 import './health-hub.css'
 
 const DAY = 24 * 60 * 60 * 1000
@@ -2054,7 +2054,7 @@ const weeklyLogCounts = useMemo(() => {
       String(date.getMonth() + 1).padStart(2, '0'),
       String(date.getDate()).padStart(2, '0')
     ].join('-')
-    const label = fmtDateFull(dateISO, calendar)
+    const label = fmtDate(dateISO, false, calendar)
 
     return {
       label,
