@@ -6217,3 +6217,380 @@
   letter-spacing: -0.4px;
   line-height: 1.2;
 }
+
+
+/* =========================================
+   HEALTH HOME — Modern Dashboard Refresh
+========================================= */
+
+.health-dashboard {
+  padding-bottom: 28px;
+}
+
+/* Header */
+.health-dashboard > .health-header {
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.health-dashboard > .health-header h1 {
+  font-size: 27px;
+  font-weight: 850;
+  letter-spacing: -0.7px;
+}
+
+.health-dashboard > .health-header .health-muted {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.health-dashboard-date {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 8px 11px;
+  border: 1px solid var(--sep);
+  border-radius: 11px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Daily overview hero */
+.health-dashboard-daily {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 17px;
+  padding: 19px;
+  border: 1px solid color-mix(in srgb, var(--green) 23%, var(--sep));
+  border-radius: 23px;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      color-mix(in srgb, var(--green) 13%, transparent),
+      transparent 48%
+    ),
+    var(--surface);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, .07);
+}
+
+.health-dashboard-daily-heading h2 {
+  font-size: 19px;
+  font-weight: 850;
+  letter-spacing: -.3px;
+}
+
+.health-dashboard-eyebrow {
+  color: var(--green);
+  font-size: 9px;
+  letter-spacing: 1.4px;
+}
+
+.health-dashboard-daily-heading > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 8px 11px;
+  border: 1px solid color-mix(in srgb, var(--green) 24%, transparent);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--green) 10%, transparent);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* Progress ring */
+.health-dashboard-progress-row {
+  gap: 19px;
+  margin: 25px 0 18px;
+}
+
+.health-dashboard-ring {
+  flex: 0 0 116px;
+  width: 116px;
+  height: 116px;
+  background: conic-gradient(
+    var(--green) 0 var(--daily-progress),
+    color-mix(in srgb, var(--green) 12%, var(--surface-2)) var(--daily-progress) 100%
+  );
+  filter: drop-shadow(0 4px 9px color-mix(in srgb, var(--green) 14%, transparent));
+}
+
+.health-dashboard-ring > div {
+  width: 92px;
+  height: 92px;
+  background: var(--surface);
+}
+
+.health-dashboard-ring strong {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.health-dashboard-ring span {
+  font-size: 8px;
+}
+
+.health-dashboard-progress-copy > strong {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.health-dashboard-progress-copy p {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.health-dashboard-progress-legend {
+  gap: 12px;
+  margin-top: 13px;
+}
+
+.health-dashboard-progress-legend span {
+  font-size: 10px;
+  font-weight: 650;
+}
+
+/* Today's scheduled items */
+.health-dashboard-today-list {
+  padding-top: 10px;
+  border-top: 1px solid var(--sep);
+}
+
+.health-dashboard-today-item {
+  min-height: 49px;
+  padding: 10px 2px;
+}
+
+.health-dashboard-today-item strong {
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.health-dashboard-today-item small {
+  font-size: 10px;
+}
+
+.health-dashboard-item-state {
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.health-dashboard-item-state.done {
+  background: color-mix(in srgb, var(--green) 11%, transparent);
+}
+
+.health-dashboard-more {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* Stats cards */
+.health-dashboard-stats {
+  gap: 10px;
+  margin: 17px 0 27px;
+}
+
+.health-dashboard-stats > div {
+  position: relative;
+  overflow: hidden;
+  min-height: 91px;
+  padding: 14px;
+  border: 1px solid var(--sep);
+  border-radius: 17px;
+  background: var(--surface);
+}
+
+.health-dashboard-stats > div::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 4px;
+  background: var(--stat-accent, var(--green));
+}
+
+.health-dashboard-stats > div:nth-child(1) {
+  --stat-accent: #22c55e;
+  background: linear-gradient(145deg, color-mix(in srgb, #22c55e 9%, var(--surface)), var(--surface) 75%);
+}
+
+.health-dashboard-stats > div:nth-child(2) {
+  --stat-accent: #f59e0b;
+  background: linear-gradient(145deg, color-mix(in srgb, #f59e0b 9%, var(--surface)), var(--surface) 75%);
+}
+
+.health-dashboard-stats > div:nth-child(3) {
+  --stat-accent: #38bdf8;
+  background: linear-gradient(145deg, color-mix(in srgb, #38bdf8 9%, var(--surface)), var(--surface) 75%);
+}
+
+.health-dashboard-stats > div:nth-child(4) {
+  --stat-accent: #a78bfa;
+  background: linear-gradient(145deg, color-mix(in srgb, #a78bfa 9%, var(--surface)), var(--surface) 75%);
+}
+
+.health-dashboard-stats span {
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.health-dashboard-stats strong {
+  margin-top: 9px;
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: -.5px;
+}
+
+.health-dashboard-stats .health-dashboard-last-checkin {
+  font-size: 12px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+/* Health tools */
+.health-dashboard-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 13px;
+}
+
+.health-dashboard-section-heading h2 {
+  font-size: 18px;
+  font-weight: 850;
+  letter-spacing: -.3px;
+}
+
+.health-dashboard .health-hub-grid {
+  gap: 11px;
+  margin-top: 0;
+}
+
+.health-dashboard .health-hub-tile {
+  min-height: 166px;
+  padding: 16px 14px;
+  gap: 9px;
+  overflow: hidden;
+  border: 1px solid var(--sep);
+  border-radius: 19px;
+  background: var(--surface);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .045);
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.health-dashboard .health-hub-tile:active {
+  transform: scale(.975);
+  background: var(--surface-2);
+}
+
+.health-dashboard .health-hub-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 14px;
+  background: var(--tile-tint, color-mix(in srgb, var(--green) 11%, var(--surface-2)));
+  font-size: 25px;
+  line-height: 1;
+}
+
+.health-dashboard .health-hub-tile:nth-child(1) {
+  --tile-tint: color-mix(in srgb, #f59e0b 13%, var(--surface-2));
+}
+
+.health-dashboard .health-hub-tile:nth-child(2) {
+  --tile-tint: color-mix(in srgb, #38bdf8 13%, var(--surface-2));
+}
+
+.health-dashboard .health-hub-tile:nth-child(3) {
+  --tile-tint: color-mix(in srgb, #f87171 13%, var(--surface-2));
+}
+
+.health-dashboard .health-hub-tile:nth-child(4) {
+  --tile-tint: color-mix(in srgb, #a78bfa 13%, var(--surface-2));
+}
+
+.health-dashboard .health-hub-tile:nth-child(5) {
+  --tile-tint: color-mix(in srgb, #34d399 13%, var(--surface-2));
+}
+
+.health-dashboard .health-hub-tile:nth-child(6) {
+  --tile-tint: color-mix(in srgb, #fb7185 13%, var(--surface-2));
+}
+
+.health-dashboard .health-hub-tile strong {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.health-dashboard .health-hub-tile small {
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.health-dashboard .health-hub-arrow {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--label-3);
+}
+
+/* Compact screens */
+@media (max-width: 380px) {
+  .health-dashboard > .health-header h1 {
+    font-size: 24px;
+  }
+
+  .health-dashboard-date {
+    padding: 7px 8px;
+    font-size: 9px;
+  }
+
+  .health-dashboard-daily {
+    padding: 14px;
+  }
+
+  .health-dashboard-progress-row {
+    gap: 12px;
+  }
+
+  .health-dashboard-ring {
+    flex-basis: 98px;
+    width: 98px;
+    height: 98px;
+  }
+
+  .health-dashboard-ring > div {
+    width: 78px;
+    height: 78px;
+  }
+
+  .health-dashboard-ring strong {
+    font-size: 23px;
+  }
+
+  .health-dashboard .health-hub-tile {
+    min-height: 158px;
+    padding: 13px 11px;
+  }
+
+  .health-dashboard .health-hub-tile strong {
+    font-size: 13px;
+  }
+}
