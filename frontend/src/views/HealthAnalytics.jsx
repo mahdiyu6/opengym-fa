@@ -2486,15 +2486,19 @@ const value = ({
 .health-analytics-bar-wrap small {
   display: block;
   width: 100%;
-  min-height: 25px;
-  color: var(--label-2);
-  font-size: 9px;
-  font-weight: 600;
-  line-height: 1.4;
+  min-height: 22px;
+  padding-top: 3px;
+  color: var(--label-3);
+  font-size: 8px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.15px;
   text-align: center;
   font-variant-numeric: tabular-nums;
-  white-space: normal;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: visible;
+  direction: auto;
+  unicode-bidi: plaintext;
 }
 
         .health-analytics-note {
