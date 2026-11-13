@@ -83,6 +83,8 @@ const [editingMealItemId, setEditingMealItemId] = useState(null)
 const [editingMealQuantity, setEditingMealQuantity] = useState('')
 const [editingFoodId, setEditingFoodId] = useState(null)
 const [editingFoodDraft, setEditingFoodDraft] = useState(emptyFoodDraft)
+const [foodBankImportMessage, setFoodBankImportMessage] = useState('')
+const [foodBankImporting, setFoodBankImporting] = useState(false)
   
   const [page, setPage] = useState('dashboard')
   const [editingTarget, setEditingTarget] = useState(false)
