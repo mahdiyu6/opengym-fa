@@ -144,6 +144,107 @@ const progress = target > 0
     s.nutrition.days[today].meals = nextMeals
   })
 }
+
+  async function importFoodBankJSON(event) {
+  const file = event.target.files?.[0]
+  event.target.value = ''
+
+  if (!file) return
+
+  setFoodBankImportMessage('')
+  setFoodBankImporting(true)
+
+  try {
+    const parsed = JSON.parse(await file.text())
+    const records = Array.isArray(parsed)
+      ? parsed
+      : Array.isArray(parsed.foods)
+        ? parsed.foods
+        : []
+
+    if (!records.length) {
+      throw new Error('No food records found')
+    }
+
+    const validFoods = records.filter(food =>
+      food &&
+      (food.fdcId || food.id) &&
+      (food.name || food.nameEn) &&
+      Number.isFinite(Number(food.calories)) &&
+      Number.isFinite(Number(food.protein)) &&
+      Number.isFinite(Number(food.carbs)) &&
+      Number.isFinite(Number(food.fat))
+    )
+
+    if (!validFoods.length) {
+      throw new Error('No valid food records')
+    }
+
+    const importedFoods = validFoods.map(food => ({
+      ...food,
+      id: food.id || `usda-fdc-${food.fdcId}`,
+      name: food.name || food.nameEn,
+      nameEn: food.nameEn || food.name || '',
+      nutritionBasis: 'per100g',
+      unit: 'g',
+      unsaturatedFat:
+        food.unsaturatedFat ??
+        (
+          Number(food.fattyAcidsSourceComponents?.monounsaturated || 0) +
+          Number(food.fattyAcidsSourceComponents?.polyunsaturated || 0)
+        )
+    }))
+
+    let added = 0
+    let skipped = 0
+
+    updateStore(s => {
+      s.nutrition ||= {}
+      s.nutrition.foods ||= []
+
+      const existingIds = new Set(
+        s.nutrition.foods.map(food => String(food.id))
+      )
+
+      const existingFdcIds = new Set(
+        s.nutrition.foods
+          .filter(food => food.fdcId)
+          .map(food => String(food.fdcId))
+      )
+
+      for (const food of importedFoods) {
+        if (
+          existingIds.has(String(food.id)) ||
+          (food.fdcId && existingFdcIds.has(String(food.fdcId)))
+        ) {
+          skipped++
+          continue
+        }
+
+        s.nutrition.foods.push(food)
+        existingIds.add(String(food.id))
+        if (food.fdcId) existingFdcIds.add(String(food.fdcId))
+        added++
+      }
+    })
+
+    setFoodBankImportMessage(
+      tx(
+        `Import complete: ${added} added, ${skipped} already existed.`,
+        `ورود اطلاعات انجام شد: ${added} غذا اضافه شد و ${skipped} مورد تکراری رد شد.`
+      )
+    )
+  } catch (error) {
+    setFoodBankImportMessage(
+      tx(
+        'Import failed. Please check the JSON file format.',
+        'ورود ناموفق بود؛ ساختار فایل JSON را بررسی کن.'
+      )
+    )
+  } finally {
+    setFoodBankImporting(false)
+  }
+}
   
   function saveNewFood() {
   const name = foodDraft.name.trim()
@@ -448,6 +549,24 @@ const tabs = [
     <div className="health-nutrition-section-title">
       <span>{foodBank.length} {tx('saved foods', 'غذای ذخیره‌شده')}</span>
     </div>
+    <label className="health-nutrition-add-food">
+  {foodBankImporting
+    ? tx('Importing...', 'در حال ورود اطلاعات...')
+    : tx('Import food bank JSON', 'ورود فایل بانک غذا')}
+  <input
+    type="file"
+    accept=".json,application/json"
+    disabled={foodBankImporting}
+    onChange={importFoodBankJSON}
+    style={{ display: 'none' }}
+  />
+</label>
+
+{foodBankImportMessage && (
+  <p className="health-muted" role="status">
+    {foodBankImportMessage}
+  </p>
+)}
 <button
   type="button"
   className="health-nutrition-add-food"
