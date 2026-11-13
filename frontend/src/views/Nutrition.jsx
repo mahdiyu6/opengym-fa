@@ -651,7 +651,7 @@ export default function Nutrition() {
           <button
             type="button"
             className="secondary"
-            onClick={() => setAddingFoodFor(null)}
+            onClick={onCancel}
           >
             {cancelLabel}
           </button>
