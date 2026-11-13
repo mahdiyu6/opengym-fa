@@ -6094,3 +6094,126 @@
   }
 }
 
+/* Training analytics – unified weekly chart design */
+
+#training-overview .health-analytics-charts {
+  gap: 12px;
+  align-items: stretch;
+}
+
+#training-overview .health-analytics-trend-card {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--trend-accent) 24%,
+    var(--sep)
+  );
+  border-radius: 17px;
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--trend-accent) 6%, var(--surface-2)),
+    var(--surface-2) 65%
+  );
+}
+
+#training-overview .health-analytics-trend-indicator {
+  background: var(--trend-accent);
+  box-shadow: 0 0 0 4px color-mix(
+    in srgb,
+    var(--trend-accent) 13%,
+    transparent
+  );
+}
+
+#training-overview .health-analytics-trend-main > strong {
+  color: var(--trend-accent);
+  font-size: 27px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+
+#training-overview .health-analytics-bar-chart {
+  height: 158px;
+  gap: 7px;
+  padding: 12px 3px 0;
+  margin-top: 14px;
+}
+
+#training-overview .health-analytics-bar-column {
+  gap: 8px;
+}
+
+#training-overview .health-analytics-bar-value {
+  color: var(--label);
+  font-size: 10px;
+  font-weight: 750;
+  overflow: visible;
+}
+
+#training-overview .health-analytics-bar-track {
+  height: 102px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--trend-accent) 12%,
+    var(--sep)
+  );
+  border-radius: 8px 8px 5px 5px;
+  background: color-mix(
+    in srgb,
+    var(--trend-accent) 7%,
+    var(--surface)
+  );
+}
+
+#training-overview .health-analytics-bar-fill {
+  width: min(78%, 25px);
+  border-radius: 7px 7px 4px 4px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--trend-accent) 72%, white),
+    var(--trend-accent)
+  );
+  box-shadow: 0 0 12px color-mix(
+    in srgb,
+    var(--trend-accent) 18%,
+    transparent
+  );
+}
+
+#training-overview .health-analytics-bar-label {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  color: var(--label-2);
+  background: var(--surface);
+  font-size: 10px;
+  font-weight: 750;
+}
+
+#training-overview .health-analytics-trend-card:last-child {
+  grid-column: 1 / -1;
+}
+
+#training-overview .health-analytics-trend-footer {
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid var(--sep);
+}
+
+@media (max-width: 380px) {
+  #training-overview .health-analytics-trend-card {
+    padding: 12px;
+  }
+
+  #training-overview .health-analytics-bar-chart {
+    gap: 4px;
+  }
+
+  #training-overview .health-analytics-bar-value {
+    font-size: 8px;
+  }
+}
