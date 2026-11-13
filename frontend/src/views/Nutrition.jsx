@@ -950,8 +950,9 @@ export default function Nutrition() {
                     editingFoodDraft,
                     setEditingFoodDraft,
                     saveFoodBankEdit,
-                    tx('Cancel', 'انصراف')
-                  )}
+                    tx('Cancel', 'انصراف'),
+                    () => setEditingFoodId(null)
+                   )}
 
                   <details className="health-nutrition-micro-editor">
                     <summary>{tx('Nutrient details', 'جزئیات مواد مغذی')}</summary>
