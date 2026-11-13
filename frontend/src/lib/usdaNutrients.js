@@ -1548,16 +1548,6 @@ const createInternalNutrientKey = (nutrient) => {
   return base || 'other-nutrient';
 };
 
-  const base = nutrient.name
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-  return base || `nutrient-${nutrient.rank}`;
-};
-
 const usedNutrientKeys = new Set();
 
 export const NUTRIENT_CATALOG = Object.freeze(
