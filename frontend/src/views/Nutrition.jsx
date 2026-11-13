@@ -418,6 +418,7 @@ export default function Nutrition() {
     if (editingFoodId === foodId) setEditingFoodId(null)
   }
 
+  
   async function importFoodBankJSON(event) {
     const file = event.target.files?.[0]
     event.target.value = ''
@@ -426,19 +427,25 @@ export default function Nutrition() {
     setImporting(true)
     setImportMessage('')
 
+    const hasNumericValue = value =>
+      value !== null &&
+      value !== undefined &&
+      value !== '' &&
+      Number.isFinite(Number(value))
+
     try {
       const parsed = JSON.parse(await file.text())
       const records = Array.isArray(parsed)
         ? parsed
-        : Array.isArray(parsed.foods) ? parsed.foods : []
+        : Array.isArray(parsed?.foods) ? parsed.foods : []
 
       const valid = records.filter(food =>
         food &&
         (food.name || food.nameEn) &&
-        Number.isFinite(Number(food.calories)) &&
-        Number.isFinite(Number(food.protein)) &&
-        Number.isFinite(Number(food.carbs)) &&
-        Number.isFinite(Number(food.fat))
+        hasNumericValue(food.calories) &&
+        hasNumericValue(food.protein) &&
+        hasNumericValue(food.carbs) &&
+        hasNumericValue(food.fat)
       )
 
       if (!valid.length) throw new Error('No valid food records')
@@ -449,9 +456,11 @@ export default function Nutrition() {
       updateStore(s => {
         s.nutrition ||= {}
         s.nutrition.foods ||= []
+
         const existingIds = new Set(
           s.nutrition.foods.map(food => String(food.id))
         )
+
         const existingSources = new Set(
           s.nutrition.foods
             .map(food => food.source?.externalId)
@@ -461,7 +470,7 @@ export default function Nutrition() {
 
         for (const food of valid) {
           const externalId = food.source?.externalId
-          const id = food.id || `food-${Date.now()}-${added}`
+          const id = food.id || `food-import-${Date.now()}-${added}`
 
           if (
             existingIds.has(String(id)) ||
@@ -475,17 +484,22 @@ export default function Nutrition() {
             id,
             name: food.name || food.nameEn,
             nameEn: food.nameEn || food.name || '',
+            category: food.category || 'other',
             nutritionBasis: food.nutritionBasis || 'per100g',
             unit: food.unit || 'g',
-            calories: Number(food.calories) || 0,
-            protein: Number(food.protein) || 0,
-            carbs: Number(food.carbs) || 0,
-            fat: Number(food.fat) || 0,
-            micronutrients: cleanMicronutrients(food.micronutrients),
+            calories: Number(food.calories),
+            protein: Number(food.protein),
+            carbs: Number(food.carbs),
+            fat: Number(food.fat),
+            micronutrients: cleanMicronutrients(
+              food.micronutrients
+            ),
             source: food.source || null,
             preparation: food.preparation || null,
-            referenceWeightGrams: food.referenceWeightGrams ?? null
+            referenceWeightGrams:
+              food.referenceWeightGrams ?? null
           })
+
           existingIds.add(String(id))
           if (externalId) existingSources.add(String(externalId))
           added++
