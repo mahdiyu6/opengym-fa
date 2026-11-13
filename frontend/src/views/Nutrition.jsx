@@ -577,7 +577,7 @@ export default function Nutrition() {
     { key: 'fat', label: tx('Fat', 'چربی') }
   ]
 
-  function renderFoodForm(draft, setter, onSave, cancelLabel) {
+  function renderFoodForm(draft, setter, onSave, cancelLabel, onCancel = () => setAddingFoodFor(null)) {
     return (
       <div className="health-nutrition-food-form">
         <h3 className="health-nutrition-form-title">
