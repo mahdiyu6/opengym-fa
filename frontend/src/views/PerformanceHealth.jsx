@@ -702,7 +702,7 @@ const timelineStartDate = new Date(timelineStartTime)
                 
                 const totalWeeks = Math.max(
                   1,
-                  Math.ceil((endTime - startTime) / 604800000)
+                  Math.ceil((timelineEndTime - timelineStartTime) / 604800000)
                 )
 
                 const nowTime = toTime(today())
@@ -725,7 +725,7 @@ const timelineStartDate = new Date(timelineStartTime)
                   0,
                   Math.min(
                     100,
-                    ((nowTime - startTime) / (endTime - startTime)) * 100
+                    ((nowTime - startTime) / (timelineEndTime - timelineStartTime)) * 100
                   )
                 )
 
@@ -778,10 +778,10 @@ const timelineStartDate = new Date(timelineStartTime)
                         <div className="health-timeline-chart">
                           <div className="health-timeline-rows">
                             {compoundRanges.map(({ compound, index, start, end }) => {
-                              const left = ((start - startTime) / (endTime - startTime)) * 100
+                              const left = ((start - startTime) / (timelineEndTime - timelineStartTime) * 100
                               const width = Math.max(
                                 1.2,
-                                ((end - start) / (endTime - startTime)) * 100
+                                ((end - start) / (timelineEndTime - timelineStartTime)) * 100
                               )
 
                               const color = getCompoundColor(compound.name)
