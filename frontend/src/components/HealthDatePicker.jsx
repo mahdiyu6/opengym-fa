@@ -213,13 +213,17 @@ export default function HealthDatePicker({
               </button>
             )}
 
-            <button
-              type="button"
-              className="health-secondary"
-              onClick={() => setOpen(false)}
-            >
-              {fa ? 'بستن' : 'Close'}
-            </button>
+<button
+  type="button"
+  className="health-secondary"
+  onClick={event => {
+    event.preventDefault()
+    event.stopPropagation()
+    setOpen(false)
+  }}
+>
+  {fa ? 'بستن' : 'Close'}
+</button>
           </div>
         </div>
       )}
