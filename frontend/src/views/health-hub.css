@@ -6653,3 +6653,21 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.health-timeline-half-life {
+  flex-shrink: 0;
+  margin-left: 3px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 9px;
+  font-weight: 700;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+[dir="rtl"] .health-timeline-half-life {
+  margin-left: 0;
+  margin-right: 3px;
+}
