@@ -977,7 +977,23 @@ const compoundCount = protocols.reduce(
                       {tx('Remove', 'حذف')}
                     </button>
                   </div>
-            
+<div className="health-compound-date-range">
+  <label>
+    {tx('Compound start date', 'تاریخ شروع ترکیب')}
+    <HealthDatePicker
+      value={compound.startDate || ''}
+      onChange={value => updateCompound(compound.id, 'startDate', value)}
+    />
+  </label>
+
+  <label>
+    {tx('Compound end date', 'تاریخ پایان ترکیب')}
+    <HealthDatePicker
+      value={compound.endDate || ''}
+      onChange={value => updateCompound(compound.id, 'endDate', value)}
+    />
+  </label>
+</div>
               <div className="health-dose-block">
   <div className="health-dose-fields">
     <label>
