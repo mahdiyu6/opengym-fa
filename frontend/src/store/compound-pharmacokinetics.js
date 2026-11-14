@@ -58,7 +58,39 @@ export const PK_EVIDENCE_LABELS = {
 
 export function getCompoundPk(name) {
   if (!name) return null
+
   const key = String(name).trim().toLowerCase()
-  const match = Object.keys(COMPOUND_PK).find(item => item.toLowerCase() === key)
-  return match ? COMPOUND_PK[match] : null
+  const match = Object.keys(COMPOUND_PK).find(
+    item => item.toLowerCase() === key
+  )
+
+  if (!match) return null
+
+  const pk = COMPOUND_PK[match]
+
+  return {
+    ...pk,
+
+    // Elimination data: already present in the bank
+    elimination: {
+      halfLifeHours: pk.halfLifeHours,
+      evidence: pk.evidence,
+      sourceType: pk.sourceType
+    },
+
+    // Absorption data: deliberately unknown until supported
+    // by reliable compound-specific pharmacokinetic evidence.
+    absorption: {
+      model: 'unknown',
+      halfLifeHours: null,
+      evidence: 'not_available'
+    },
+
+    // Prevent unsupported compounds from being presented
+    // as measured systemic blood-level estimates.
+    modelSupport: {
+      totalActive: Array.isArray(pk.halfLifeHours),
+      releaseRate: false
+    }
+  }
 }
