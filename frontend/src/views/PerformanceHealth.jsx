@@ -715,7 +715,7 @@ const timelineStartDate = new Date(timelineStartTime)
                   1,
                   Math.min(
                     totalWeeks,
-                    Math.floor((nowTime - startTime) / 604800000) + 1
+                    Math.floor((nowTime - timelineStartTime) / 604800000) + 1
                   )
                 )
 
@@ -725,7 +725,7 @@ const timelineStartDate = new Date(timelineStartTime)
                   0,
                   Math.min(
                     100,
-                    ((nowTime - startTime) / (timelineEndTime - timelineStartTime)) * 100
+                    ((nowTime - timelineStartTime) / (timelineEndTime - timelineStartTime)) * 100
                   )
                 )
 
