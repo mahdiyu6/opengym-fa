@@ -6,6 +6,7 @@ import { getLang, useLang } from '../lib/i18n.js'
 import { fmtDateFull } from '../lib/format.js'
 import HealthDoseSchedule from './HealthDoseSchedule.jsx'
 import HealthSideEffects from './HealthSideEffects.jsx'
+import { getCompoundPk, PK_EVIDENCE_LABELS } from '../store/compound-pharmacokinetics.js'
 import './health-hub.css'
 
 const today = () => new Date().toISOString().slice(0, 10)
@@ -785,7 +786,8 @@ const timelineStartDate = new Date(timelineStartTime)
                               )
 
                               const color = getCompoundColor(compound.name)
-
+                              const pk = getCompoundPk(compound.name)
+                              const pkEvidence = pk ? PK_EVIDENCE_LABELS[pk.evidence] : null
                               return (
                                 <div
                                   className="health-timeline-row"
