@@ -708,8 +708,8 @@ const timelineStartDate = new Date(timelineStartTime)
                 const nowTime = toTime(today())
                 const isActive = protocol.status === 'active'
                 const showNow = isActive &&
-                  nowTime >= startTime &&
-                  nowTime <= endTime
+                  nowTime >= timelineStartTime &&
+                  nowTime <= timelineEndTime
 
                 const currentWeek = Math.max(
                   1,
