@@ -6621,3 +6621,35 @@
   width: 100%;
   margin: 0 0 14px !important;
 }
+
+.health-compound-date-range {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+  padding: 13px;
+  border: 1px solid var(--sep);
+  border-radius: 13px;
+  background: var(--surface-2);
+}
+
+.health-compound-date-range label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  color: var(--label-2);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.health-compound-date-range .health-date-picker-trigger {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .health-compound-date-range {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
