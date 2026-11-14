@@ -650,54 +650,56 @@ const compoundCount = protocols.reduce(
                   typeof value === 'string' &&
                   /^\d{4}-\d{2}-\d{2}$/.test(value)
 
-                const startDate = validDate(protocol.startDate)
-                  ? protocol.startDate
-                  : protocolLogs
-                      .map(log => log.date)
-                      .filter(validDate)
-                      .sort()[0] || today()
+                const protocolStart = validDate(protocol.startDate)
+  ? protocol.startDate
+  : protocolLogs
+      .map(log => log.date)
+      .filter(validDate)
+      .sort()[0] || today()
 
-                const protocolEnd = validDate(protocol.endDate)
-                  ? protocol.endDate
-                  : protocol.status === 'completed' &&
-                      validDate(String(protocol.completedAt || '').slice(0, 10))
-                    ? String(protocol.completedAt).slice(0, 10)
-                    : today()
+const protocolEnd = validDate(protocol.endDate)
+  ? protocol.endDate
+  : protocol.status === 'completed' &&
+      validDate(String(protocol.completedAt || '').slice(0, 10))
+    ? String(protocol.completedAt).slice(0, 10)
+    : today()
 
-                const toTime = date =>
-                  new Date(`${date}T12:00:00`).getTime()
+const toTime = date =>
+  new Date(`${date}T12:00:00`).getTime()
 
-                const startTime = toTime(startDate)
+const compoundRanges = compounds.map((compound, index) => {
+  const compoundStartDate = validDate(compound.startDate)
+    ? compound.startDate
+    : protocolStart
 
-                const compoundRanges = compounds.map((compound, index) => {
-                  const compoundStart = validDate(compound.startDate)
-                    ? compound.startDate
-                    : startDate
+  const compoundEndDate = validDate(compound.endDate)
+    ? compound.endDate
+    : protocolEnd
 
-                  const compoundEnd = validDate(compound.endDate)
-                    ? compound.endDate
-                    : protocolEnd
+  const start = toTime(compoundStartDate)
 
-                  return {
-                    compound,
-                    index,
-                    start: Math.max(startTime, toTime(compoundStart)),
-                    end: Math.max(
-                      Math.max(startTime, toTime(compoundStart)),
-                      toTime(compoundEnd)
-                    )
-                  }
-                })
+  return {
+    compound,
+    index,
+    start,
+    end: Math.max(start, toTime(compoundEndDate))
+  }
+})
 
-                const lastBarEnd = compoundRanges.length
-                  ? Math.max(...compoundRanges.map(item => item.end))
-                  : toTime(protocolEnd)
+const timelineStartTime = compoundRanges.length
+  ? Math.min(...compoundRanges.map(item => item.start))
+  : toTime(protocolStart)
 
-                const endTime = Math.max(
-                  startTime + 86400000,
-                  lastBarEnd
-                )
+const timelineEndTime = Math.max(
+  timelineStartTime + 86400000,
+  compoundRanges.length
+    ? Math.max(...compoundRanges.map(item => item.end))
+    : toTime(protocolEnd)
+)
 
+const timelineStartDate = new Date(timelineStartTime)
+  .toISOString().slice(0, 10)
+                
                 const totalWeeks = Math.max(
                   1,
                   Math.ceil((endTime - startTime) / 604800000)
