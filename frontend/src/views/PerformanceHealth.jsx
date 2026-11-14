@@ -796,6 +796,14 @@ const timelineStartDate = new Date(timelineStartTime)
                                   <div className="health-timeline-row-name" title={compound.name}>
                                     <i style={{ background: color }} />
                                     <span>{compound.name}</span>
+{pk && (
+  <small
+    className="health-timeline-half-life"
+    title={pk.note || pkEvidence?.en || ''}
+  >
+    t½ {pk.display}
+  </small>
+)}
                                   </div>
 
                                   <div className="health-timeline-track">
