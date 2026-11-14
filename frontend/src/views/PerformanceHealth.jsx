@@ -832,12 +832,12 @@ const timelineStartDate = new Date(timelineStartTime)
 
   <div className="health-timeline-date-track">
     <span className="health-timeline-start-date">
-      {fmtDateFull(startDate, calendar)}
+      fmtDateFull(timelineStartDate, calendar)
     </span>
 
     <span className="health-timeline-end-date">
       {fmtDateFull(
-        new Date(endTime).toISOString().slice(0, 10),
+        new Date(timelineEndTime).toISOString().slice(0, 10)
         calendar
       )}
     </span>
