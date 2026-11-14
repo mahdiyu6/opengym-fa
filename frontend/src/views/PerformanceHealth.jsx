@@ -778,7 +778,7 @@ const timelineStartDate = new Date(timelineStartTime)
                         <div className="health-timeline-chart">
                           <div className="health-timeline-rows">
                             {compoundRanges.map(({ compound, index, start, end }) => {
-                              const left = ((start - timelineStartTime) / (timelineEndTime - timelineStartTime) * 100
+                              const left = ((start - timelineStartTime) / (timelineEndTime - timelineStartTime)) * 100
                               const width = Math.max(
                                 1.2,
                                 ((end - start) / (timelineEndTime - timelineStartTime)) * 100
@@ -831,16 +831,16 @@ const timelineStartDate = new Date(timelineStartTime)
   <div className="health-timeline-date-spacer" />
 
   <div className="health-timeline-date-track">
-    <span className="health-timeline-start-date">
-      fmtDateFull(timelineStartDate, calendar)
-    </span>
+<span className="health-timeline-start-date">
+  {fmtDateFull(timelineStartDate, calendar)}
+</span>
 
-    <span className="health-timeline-end-date">
-      {fmtDateFull(
-        new Date(timelineEndTime).toISOString().slice(0, 10)
-        calendar
-      )}
-    </span>
+<span className="health-timeline-end-date">
+  {fmtDateFull(
+    new Date(timelineEndTime).toISOString().slice(0, 10),
+    calendar
+  )}
+</span>
   </div>
 </div>
                       </>
