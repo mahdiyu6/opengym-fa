@@ -778,7 +778,7 @@ const timelineStartDate = new Date(timelineStartTime)
                         <div className="health-timeline-chart">
                           <div className="health-timeline-rows">
                             {compoundRanges.map(({ compound, index, start, end }) => {
-                              const left = ((start - startTime) / (timelineEndTime - timelineStartTime) * 100
+                              const left = ((start - timelineStartTime) / (timelineEndTime - timelineStartTime) * 100
                               const width = Math.max(
                                 1.2,
                                 ((end - start) / (timelineEndTime - timelineStartTime)) * 100
