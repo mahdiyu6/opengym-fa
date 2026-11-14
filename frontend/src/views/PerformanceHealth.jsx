@@ -145,6 +145,8 @@ const makeCompound = (name, category, subcategory = '') => ({
   amountBasis: 'per_week',
   frequency: 'daily',
   days: [],
+  startDate: '',
+  endDate: '',
   notes: ''
 })
 
