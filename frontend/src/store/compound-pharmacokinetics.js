@@ -178,6 +178,7 @@ const ALIASES = {
   'tne': 'TNE',
   'tpp': 'Testosterone Phenylpropionate',
   'ment': 'MENT (Trestolone Acetate)',
+  'nandrolone (deca)': 'Nandrolone Decanoate',
   'npp': 'Nandrolone Phenylpropionate (NPP)',
   'tren a': 'Trenbolone Acetate',
   'tren e': 'Trenbolone Enanthate',
