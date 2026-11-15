@@ -246,11 +246,19 @@ export const PK_EVIDENCE_LABELS = {
   }
 }
 
+const NORMALIZED_ALIASES = new Map(
+  Object.entries(ALIASES).map(([alias, target]) => [
+    normalize(alias),
+    target
+  ])
+)
+
 export function getCompoundPk(name) {
   if (!name) return null
 
   const normalized = normalize(name)
-  const aliasTarget = ALIASES[normalized]
+  const aliasTarget = NORMALIZED_ALIASES.get(normalized)
+
   const key =
     (aliasTarget && NORMALIZED_KEYS.get(normalize(aliasTarget))) ||
     NORMALIZED_KEYS.get(normalized)
@@ -258,7 +266,8 @@ export function getCompoundPk(name) {
   if (!key) return null
 
   const pk = COMPOUND_PK[key]
-  const systemic = Array.isArray(pk.halfLifeHours) &&
+  const systemic =
+    Array.isArray(pk.halfLifeHours) &&
     Array.isArray(pk.absorptionHalfLifeHours)
 
   return {
