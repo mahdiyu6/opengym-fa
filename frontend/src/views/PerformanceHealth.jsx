@@ -787,8 +787,6 @@ const timelineStartDate = new Date(timelineStartTime)
                               )
 
                               const color = getCompoundColor(compound.name)
-                              const pk = getCompoundPk(compound.name)
-                              const pkEvidence = pk ? PK_EVIDENCE_LABELS[pk.evidence] : null
                               return (
                                 <div
                                   className="health-timeline-row"
@@ -797,14 +795,6 @@ const timelineStartDate = new Date(timelineStartTime)
                                   <div className="health-timeline-row-name" title={compound.name}>
                                     <i style={{ background: color }} />
                                     <span>{compound.name}</span>
-{pk && (
-  <small
-    className="health-timeline-half-life"
-    title={pk.note || pkEvidence?.en || ''}
-  >
-    t½ {pk.display}
-  </small>
-)}
                                   </div>
 
                                   <div className="health-timeline-track">
