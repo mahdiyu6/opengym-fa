@@ -6839,3 +6839,381 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Protocol PK charts */
+
+.pk-charts-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  margin-top: 18px;
+}
+
+.pk-charts-heading h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.pk-model-caveat,
+.pk-chart-note {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--sep);
+  border-radius: 11px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 10px;
+  line-height: 1.8;
+}
+
+.pk-metric-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid var(--sep);
+  border-radius: 13px;
+  background: var(--surface-2);
+}
+
+.pk-metric-tabs button {
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--label-2);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.4;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.pk-metric-tabs button.active {
+  border-color: color-mix(in srgb, var(--acc) 30%, var(--sep));
+  background: var(--surface);
+  color: var(--acc);
+  box-shadow: 0 2px 7px rgba(0, 0, 0, .055);
+}
+
+.pk-chart-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pk-chart-heading strong {
+  color: var(--label);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.pk-chart-heading span {
+  color: var(--label-2);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.pk-chart-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+  padding: 13px 11px;
+  border: 1px solid var(--sep);
+  border-radius: 15px;
+  background: var(--surface);
+}
+
+.pk-chart-lane {
+  min-width: 0;
+}
+
+.pk-chart-lane + .pk-chart-lane {
+  padding-top: 15px;
+  border-top: 1px solid var(--sep);
+}
+
+.pk-chart-lane-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0 2px 8px;
+}
+
+.pk-chart-lane-heading strong {
+  color: var(--label);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.pk-chart-lane-heading span {
+  color: var(--label-2);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.pk-chart-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--label-3) transparent;
+}
+
+.pk-chart-svg {
+  display: block;
+  max-width: none;
+  overflow: visible;
+}
+
+.pk-chart-grid-line {
+  stroke: var(--sep);
+  stroke-width: 1;
+  opacity: .9;
+}
+
+.pk-chart-grid-vertical {
+  stroke-dasharray: 3 4;
+  opacity: .72;
+}
+
+.pk-chart-axis-line {
+  stroke: var(--label-3);
+  stroke-width: 1;
+  opacity: .8;
+}
+
+.pk-chart-axis-label {
+  fill: var(--label-2);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pk-chart-week-label {
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.pk-chart-unit-label {
+  fill: var(--label-2);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.pk-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 13px;
+  padding: 2px 3px 0;
+}
+
+.pk-chart-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--label-2);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.pk-chart-legend i,
+.pk-compound-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+}
+
+.pk-chart-legend strong {
+  color: var(--label);
+  font-weight: 700;
+}
+
+.pk-chart-peak {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 10px 11px;
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  background: var(--surface-2);
+  font-size: 10px;
+}
+
+.pk-chart-peak span {
+  color: var(--label-2);
+}
+
+.pk-chart-peak strong {
+  color: var(--label);
+  font-weight: 850;
+  direction: ltr;
+  font-variant-numeric: tabular-nums;
+}
+
+.pk-compound-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pk-accordion-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 2px;
+}
+
+.pk-accordion-heading strong {
+  color: var(--label);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.pk-accordion-heading span {
+  color: var(--label-2);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.pk-compound-accordion {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--sep);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.pk-compound-accordion > summary {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 10px 12px;
+  list-style: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pk-compound-accordion > summary::-webkit-details-marker {
+  display: none;
+}
+
+.pk-compound-accordion > summary > strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--label);
+  font-size: 11px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pk-compound-accordion > summary > small {
+  margin-left: auto;
+  color: var(--label-2);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pk-accordion-chevron {
+  flex: 0 0 auto;
+  color: var(--label-2);
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 160ms ease;
+}
+
+.pk-compound-accordion[open] .pk-accordion-chevron {
+  transform: rotate(180deg);
+}
+
+.pk-compound-accordion-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 10px 12px;
+  border-top: 1px solid var(--sep);
+}
+
+.pk-compound-accordion-body .pk-chart-card {
+  padding: 9px 2px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.pk-compound-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 13px;
+  padding: 10px;
+  border-radius: 9px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.pk-compound-meta strong {
+  color: var(--label);
+  font-weight: 800;
+}
+
+.pk-empty,
+.pk-unsupported {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 11px 12px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.pk-unsupported strong {
+  color: var(--label);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.pk-unsupported small {
+  color: var(--label-3);
+  font-size: 9px;
+}
+
+@media (max-width: 380px) {
+  .pk-chart-card {
+    padding: 10px 8px;
+  }
+
+  .pk-metric-tabs button {
+    min-height: 40px;
+    padding-inline: 6px;
+    font-size: 10px;
+  }
+
+  .pk-chart-heading strong {
+    font-size: 11px;
+  }
+
+  .pk-compound-accordion > summary {
+    gap: 7px;
+    padding-inline: 9px;
+  }
+}
