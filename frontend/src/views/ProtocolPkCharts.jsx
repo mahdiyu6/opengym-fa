@@ -508,7 +508,6 @@ const chartEnd = latestEnd + 56 * DAY
         total: 'Total Active · مقدار کل فعال',
         releaseDesc: 'مقدار تخمینی آزادشده از مخزن جذب در هر روز',
         totalDesc: 'مجموع مقدار موجود در مخزن جذب و بخش مرکزی مدل',
-        disclaimer: 'تمام منحنی‌ها و مقادیر تخمینی هستند و مبنای بالینی یا تجویزی ندارند. این نمودارها غلظت پلاسمایی را اندازه‌گیری نمی‌کنند و راهنمای مصرف یا تنظیم دوز نیستند. هر ترکیب با واحد ثبت‌شده خودش نمایش داده می‌شود؛ واحدهای متفاوت با هم جمع یا مستقیماً مقایسه نمی‌شوند.',
         individual: 'نمودار اختصاصی هر ترکیب',
         individualDesc: 'برای مشاهده نمودار هر ترکیب باز کنید',
         unavailable: 'برای این ترکیبات داده کافی یا اطلاعات معتبر پروتکل جهت رسم نمودار وجود ندارد.',
@@ -521,7 +520,6 @@ const chartEnd = latestEnd + 56 * DAY
         total: 'Total Active',
         releaseDesc: 'Estimated amount released from the absorption depot per day',
         totalDesc: 'Combined amount in the absorption depot and central compartment',
-        disclaimer: 'All curves and values are estimates and have no clinical or prescribing basis. These charts do not measure plasma concentration and are not dosing guidance. Each compound retains its recorded unit; unlike units are never added or directly compared.',
         individual: 'Individual compound charts',
         individualDesc: 'Expand a compound to view its own chart',
         unavailable: 'There is not enough reference data or valid protocol information to plot these compounds.',
@@ -536,8 +534,6 @@ const chartEnd = latestEnd + 56 * DAY
       <div className="pk-charts-heading">
         <h3>{labels.title}</h3>
       </div>
-
-      <p className="pk-model-caveat">{labels.disclaimer}</p>
 
       {model.supported.length > 0 ? (
         <>
