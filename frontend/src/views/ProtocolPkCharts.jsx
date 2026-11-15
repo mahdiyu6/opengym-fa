@@ -1,12 +1,16 @@
-import { getCompoundPk } from '../store/compound-pharmacokinetics.js'
+import { useMemo, useState } from 'react'
+import { getCompoundPk } from '../store/compound-pharmacokinetics'
 
 const HOUR = 60 * 60 * 1000
 const DAY = 24 * HOUR
-const STEP_HOURS = 1
 const LN2 = Math.LN2
 
-function dateAtNoon(value) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return null
+function validDate(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || ''))
+}
+
+function dateTime(value) {
+  if (!validDate(value)) return null
   return Date.parse(`${value}T12:00:00Z`)
 }
 
@@ -14,224 +18,172 @@ function midpoint(value) {
   if (Array.isArray(value) && value.length === 2) {
     const a = Number(value[0])
     const b = Number(value[1])
-    if (a > 0 && b > 0) return (a + b) / 2
+    return a > 0 && b > 0 ? (a + b) / 2 : null
   }
 
   const n = Number(value)
   return n > 0 ? n : null
 }
 
-function formatHours(value) {
-  if (!Array.isArray(value)) return '—'
+function numberText(value, decimals = 2) {
+  if (!Number.isFinite(value)) return '0'
 
-  const [a, b] = value
-  const fmt = n => {
-    if (n < 1) return `${Math.round(n * 60)} min`
-    if (n >= 24) {
-      const days = n / 24
-      return `${Number(days.toFixed(1))} d`
-    }
-    return `${Number(n.toFixed(2))} h`
-  }
-
-  return a === b ? fmt(a) : `${fmt(a)}–${fmt(b)}`
+  return Number(value.toFixed(decimals)).toLocaleString('en-US', {
+    maximumFractionDigits: decimals
+  })
 }
 
-function getProtocolEnd(protocol, compound) {
-  if (compound.endDate) return compound.endDate
-  if (protocol.endDate) return protocol.endDate
+function hoursText(value) {
+  if (!Array.isArray(value)) return '—'
 
-  if (protocol.status === 'completed' && protocol.completedAt) {
-    return String(protocol.completedAt).slice(0, 10)
+  const format = n => {
+    if (n < 1) return `${Math.round(n * 60)} min`
+    if (n >= 24) return `${numberText(n / 24, 1)} d`
+    return `${numberText(n, 2)} h`
   }
 
+  return value[0] === value[1]
+    ? format(value[0])
+    : `${format(value[0])}–${format(value[1])}`
+}
+
+function protocolEndDate(protocol, compound) {
+  if (validDate(compound.endDate)) return compound.endDate
+  if (validDate(protocol.endDate)) return protocol.endDate
   return new Date().toISOString().slice(0, 10)
 }
 
-function scheduledOn(compound, date, dayIndex) {
-  const frequency = String(compound.frequency || '').toLowerCase()
+function getWeeklyDose(compound) {
+  const amount = Number.parseFloat(compound.amount)
 
-  if (
-    frequency === 'daily' ||
-    frequency === 'every_day' ||
-    frequency === 'per_day'
-  ) {
-    return true
+  if (!Number.isFinite(amount) || amount <= 0) return null
+  if (compound.amountBasis !== 'per_week') return amount
+
+  const frequency = compound.frequency || 'daily'
+
+  let dosesPerWeek = 7
+
+  if (frequency === 'every_other_day') {
+    dosesPerWeek = 3.5
+  } else if (frequency === 'selected_days') {
+    dosesPerWeek = (compound.days || []).length
   }
 
-  if (
-    frequency === 'every_other_day' ||
-    frequency === 'eod'
-  ) {
+  return dosesPerWeek > 0 ? amount / dosesPerWeek : null
+}
+
+function isScheduled(compound, date, dayIndex) {
+  const frequency = compound.frequency || 'daily'
+
+  if (frequency === 'daily') return true
+
+  if (frequency === 'every_other_day') {
     return dayIndex % 2 === 0
   }
 
   if (frequency === 'selected_days') {
-    const names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    return (compound.days || []).includes(names[date.getUTCDay()])
-  }
-
-  if (frequency === 'weekly' || frequency === 'once_weekly') {
-    return dayIndex % 7 === 0
-  }
-
-  if (frequency === 'twice_weekly') {
-    return dayIndex % 3 === 0 || dayIndex % 3 === 1
-  }
-
-  if (frequency === 'three_times_weekly') {
-    return dayIndex % 2 === 0 && dayIndex % 7 !== 6
-  }
-
-  // Preserve a visible event for protocols whose frequency is not
-  // represented by one of the known schedule values.
-  if (!frequency || frequency === 'per_dose') {
-    return dayIndex === 0
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    return (compound.days || []).includes(weekdays[date.getUTCDay()])
   }
 
   return false
 }
 
-function getDoseAmount(compound) {
-  const amount = Number.parseFloat(compound.amount)
-
-  if (!Number.isFinite(amount) || amount <= 0) return null
-
-  if (compound.amountBasis !== 'per_week') {
-    return amount
-  }
-
-  let weeklyEvents = 7
-
-  if (
-    compound.frequency === 'every_other_day' ||
-    compound.frequency === 'eod'
-  ) {
-    weeklyEvents = 3.5
-  } else if (compound.frequency === 'selected_days') {
-    weeklyEvents = (compound.days || []).length
-  } else if (compound.frequency === 'weekly') {
-    weeklyEvents = 1
-  } else if (compound.frequency === 'twice_weekly') {
-    weeklyEvents = 2
-  } else if (compound.frequency === 'three_times_weekly') {
-    weeklyEvents = 3
-  }
-
-  return weeklyEvents > 0 ? amount / weeklyEvents : null
-}
-
-function buildCompoundSeries(compound, protocol) {
+function buildSeries(compound, protocol, chartStart, chartEnd) {
   const pk = getCompoundPk(compound.name)
 
-  if (!pk?.modelSupport?.totalActive) {
-    return {
-      supported: false,
-      compound,
-      reason: 'no_pk_data'
-    }
+  if (
+    !pk?.modelSupport?.totalActive ||
+    !pk?.modelSupport?.releaseRate
+  ) {
+    return { supported: false, compound }
   }
 
   const absorptionHalfLife = midpoint(pk.absorptionHalfLifeHours)
   const eliminationHalfLife = midpoint(pk.halfLifeHours)
 
-  if (
-    !absorptionHalfLife ||
-    !eliminationHalfLife ||
-    absorptionHalfLife <= 0 ||
-    eliminationHalfLife <= 0
-  ) {
-    return {
-      supported: false,
-      compound,
-      reason: 'invalid_pk_data'
-    }
+  if (!absorptionHalfLife || !eliminationHalfLife) {
+    return { supported: false, compound }
   }
 
-  const startDate = compound.startDate || protocol.startDate
-  const endDate = getProtocolEnd(protocol, compound)
+  const startDate = validDate(compound.startDate)
+    ? compound.startDate
+    : protocol.startDate
 
-  const start = dateAtNoon(startDate)
-  const end = dateAtNoon(endDate)
-  const doseAmount = getDoseAmount(compound)
+  const endDate = protocolEndDate(protocol, compound)
+
+  const start = dateTime(startDate)
+  const end = dateTime(endDate)
+  const dose = getWeeklyDose(compound)
 
   if (
     !start ||
     !end ||
     end < start ||
-    !doseAmount ||
-    !compound.unit
+    !dose ||
+    !compound.unit ||
+    !chartStart ||
+    !chartEnd
   ) {
-    return {
-      supported: false,
-      compound,
-      reason: 'missing_protocol_data'
-    }
+    return { supported: false, compound }
   }
-
-  const ka = LN2 / absorptionHalfLife
-  const ke = LN2 / eliminationHalfLife
-  const route = String(pk.route || '').toLowerCase()
-  const isIV = route === 'iv'
 
   const events = []
   const totalDays = Math.floor((end - start) / DAY)
 
   for (let day = 0; day <= totalDays; day++) {
-    const date = new Date(start + day * DAY)
+    const time = start + day * DAY
+    const date = new Date(time)
 
-    if (scheduledOn(compound, date, day)) {
-      events.push({
-        time: date.getTime(),
-        amount: doseAmount
-      })
+    if (isScheduled(compound, date, day)) {
+      events.push({ time, amount: dose })
     }
   }
 
   if (!events.length) {
-    return {
-      supported: false,
-      compound,
-      reason: 'no_scheduled_doses'
-    }
+    return { supported: false, compound }
   }
+
+  const ka = LN2 / absorptionHalfLife
+  const ke = LN2 / eliminationHalfLife
+
+  const isIV = String(pk.route || '').toLowerCase() === 'iv'
+
+  const depotFactor = Math.exp(-ka)
+  const eliminationFactor = Math.exp(-ke)
 
   let depot = 0
   let circulating = 0
   let eventIndex = 0
 
   const samples = []
-  const endTime = end + DAY
-  const stepMs = STEP_HOURS * HOUR
-  const depotFactor = Math.exp(-ka * STEP_HOURS)
-  const eliminationFactor = Math.exp(-ke * STEP_HOURS)
 
-  for (let time = start; time <= endTime; time += stepMs) {
+  for (let time = chartStart; time <= chartEnd; time += HOUR) {
     while (
       eventIndex < events.length &&
       events[eventIndex].time <= time
     ) {
-      const event = events[eventIndex]
-
       if (isIV) {
-        // IV bolus: direct entry into the circulating compartment.
-        circulating += event.amount
+        circulating += events[eventIndex].amount
       } else {
-        // Oral, SC, IM and intranasal routes use the estimated depot model.
-        depot += event.amount
+        depot += events[eventIndex].amount
       }
 
       eventIndex++
     }
 
+    const releaseRate = isIV
+      ? 0
+      : depot * (1 - depotFactor) * 24
+
     samples.push({
       time,
-      release: circulating,
-      total: depot + circulating
+      releaseRate,
+      totalActive: depot + circulating
     })
 
     const absorbed = Math.abs(ka - ke) < 0.000001
-      ? depot * ka * STEP_HOURS * eliminationFactor
+      ? depot * ka * eliminationFactor
       : depot *
         ka /
         (ka - ke) *
@@ -249,205 +201,449 @@ function buildCompoundSeries(compound, protocol) {
     samples,
     unit: compound.unit,
     pk,
-    absorptionHalfLife,
-    eliminationHalfLife
+    isIV
   }
 }
 
-function makePath(samples, key) {
-  if (!samples?.length) return ''
+function niceStep(maxValue) {
+  if (!Number.isFinite(maxValue) || maxValue <= 0) return 1
 
-  const values = samples.map(item => item[key])
-  const max = Math.max(...values, 0.000001)
+  const rough = maxValue / 5
+  const power = Math.pow(10, Math.floor(Math.log10(rough)))
+  const fraction = rough / power
 
-  return values.map((value, index) => {
-    const x = (index / Math.max(1, values.length - 1)) * 100
-    const y = 42 - (value / max) * 36
+  let nice = 1
 
-    return `${index === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`
-  }).join(' ')
+  if (fraction > 1 && fraction <= 2) nice = 2
+  else if (fraction > 2 && fraction <= 2.5) nice = 2.5
+  else if (fraction > 2.5 && fraction <= 5) nice = 5
+  else if (fraction > 5) nice = 10
+
+  return nice * power
 }
 
-function CompoundCurve({ item, metric, fa }) {
-  const path = makePath(item.samples, metric)
-  const color = item.compound.color || '#38bdf8'
+function ChartLane({
+  items,
+  metric,
+  fa,
+  chartStart,
+  chartEnd,
+  individual = false
+}) {
+  if (!items.length) return null
 
-  const peak = Math.max(
-    ...item.samples.map(sample => sample[metric]),
-    0
+  const duration = Math.max(DAY, chartEnd - chartStart)
+  const weeks = Math.max(1, Math.ceil(duration / (7 * DAY)))
+
+  const left = 66
+  const right = 18
+  const top = 20
+  const bottom = 43
+  const plotHeight = 190
+  const plotWidth = Math.max(620, weeks * 92)
+
+  const width = left + plotWidth + right
+  const height = top + plotHeight + bottom
+
+  const values = items.flatMap(item =>
+    item.samples.map(sample => sample[metric])
   )
 
-  const pk = item.pk
-  const tmax = formatHours(pk.tmaxHours)
-  const absorption = formatHours(pk.absorptionHalfLifeHours)
-  const elimination = formatHours(pk.halfLifeHours)
+  const rawMax = Math.max(0, ...values)
+  const step = niceStep(rawMax || 1)
+  const yMax = Math.max(step, Math.ceil(rawMax / step) * step)
+
+  const x = time =>
+    left + ((time - chartStart) / duration) * plotWidth
+
+  const y = value =>
+    top + plotHeight - (value / yMax) * plotHeight
+
+  const yTicks = []
+
+  for (let value = 0; value <= yMax + step * 0.001; value += step) {
+    yTicks.push(value)
+  }
+
+  const xTicks = []
+
+  for (let week = 0; week <= weeks; week++) {
+    const time = chartStart + week * 7 * DAY
+
+    if (time <= chartEnd + DAY * 0.05) {
+      xTicks.push({ time, week: week + 1 })
+    }
+  }
+
+  const unit = items[0].unit
+  const axisUnit = metric === 'releaseRate'
+    ? `${unit}/${fa ? 'روز' : 'day'}`
+    : unit
+
+  const pathFor = item => item.samples.map((sample, index) => {
+    const px = x(sample.time)
+    const py = y(sample[metric])
+
+    return `${index === 0 ? 'M' : 'L'} ${px.toFixed(2)} ${py.toFixed(2)}`
+  }).join(' ')
 
   return (
-    <div className="pk-curve">
-      <div className="pk-curve-heading">
-        <span
-          className="pk-curve-dot"
-          style={{ background: color }}
-        />
+    <div className="pk-chart-lane">
+      {!individual && (
+        <div className="pk-chart-lane-heading">
+          <strong>{fa ? 'واحد' : 'Unit'}: {unit}</strong>
+          <span>
+            {fa
+              ? 'مقیاس عمودی مستقل برای ترکیبات با این واحد'
+              : 'Independent vertical scale for compounds using this unit'}
+          </span>
+        </div>
+      )}
 
-        <strong>{item.compound.name}</strong>
-        <small>{item.unit}</small>
+      <div className="pk-chart-scroll" dir="ltr">
+        <svg
+          className="pk-chart-svg"
+          width={width}
+          height={height}
+          viewBox={`0 0 ${width} ${height}`}
+          role="img"
+          aria-label={`${metric} - ${axisUnit}`}
+        >
+          {yTicks.map(value => {
+            const py = y(value)
+
+            return (
+              <g key={`y-${value}`}>
+                <line
+                  className="pk-chart-grid-line"
+                  x1={left}
+                  x2={left + plotWidth}
+                  y1={py}
+                  y2={py}
+                />
+                <text
+                  className="pk-chart-axis-label"
+                  x={left - 10}
+                  y={py + 4}
+                  textAnchor="end"
+                >
+                  {numberText(value)}
+                </text>
+              </g>
+            )
+          })}
+
+          {xTicks.map(tick => {
+            const px = x(tick.time)
+
+            return (
+              <g key={`x-${tick.week}`}>
+                <line
+                  className="pk-chart-grid-line pk-chart-grid-vertical"
+                  x1={px}
+                  x2={px}
+                  y1={top}
+                  y2={top + plotHeight}
+                />
+                <text
+                  className="pk-chart-axis-label pk-chart-week-label"
+                  x={px}
+                  y={top + plotHeight + 25}
+                  textAnchor="middle"
+                >
+                  {fa ? `هفته ${tick.week}` : `Week ${tick.week}`}
+                </text>
+              </g>
+            )
+          })}
+
+          <line
+            className="pk-chart-axis-line"
+            x1={left}
+            x2={left}
+            y1={top}
+            y2={top + plotHeight}
+          />
+
+          <line
+            className="pk-chart-axis-line"
+            x1={left}
+            x2={left + plotWidth}
+            y1={top + plotHeight}
+            y2={top + plotHeight}
+          />
+
+          <text
+            className="pk-chart-unit-label"
+            x={left}
+            y={12}
+          >
+            {axisUnit}
+          </text>
+
+          {items.map(item => (
+            <path
+              key={item.compound.id || item.compound.name}
+              d={pathFor(item)}
+              fill="none"
+              stroke={item.compound.color || '#38bdf8'}
+              strokeWidth={individual ? 2.8 : 2.25}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+        </svg>
       </div>
 
-      <svg
-        className="pk-curve-svg"
-        viewBox="0 0 100 46"
-        preserveAspectRatio="none"
-        role="img"
-        aria-label={`${item.compound.name} ${metric} curve`}
-      >
-        <path
-          className="pk-curve-grid"
-          d="M0 6 H100 M0 24 H100 M0 42 H100"
-        />
-
-        <path
-          d={path}
-          fill="none"
-          stroke={color}
-          strokeWidth="1.8"
-          vectorEffect="non-scaling-stroke"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-
-      <div className="pk-curve-footer">
-        <span>
-          {metric === 'release'
-            ? (fa ? 'اوج مقدار در گردش' : 'Circulating peak')
-            : (fa ? 'اوج مقدار کل فعال' : 'Total active peak')}
-        </span>
-
-        <strong>
-          {Number(peak.toFixed(3)).toString()} {item.unit}
-        </strong>
+      <div className="pk-chart-legend">
+        {items.map(item => (
+          <span key={item.compound.id || item.compound.name}>
+            <i style={{ background: item.compound.color || '#38bdf8' }} />
+            <strong>{item.compound.name}</strong>
+          </span>
+        ))}
       </div>
 
-      <div className="pk-curve-meta">
-        <span>
-          {fa ? 'Tmax' : 'Tmax'}: <strong>{tmax}</strong>
-        </span>
-        <span>
-          {fa ? 'نیمه‌عمر جذب' : 'Absorption t½'}: <strong>{absorption}</strong>
-        </span>
-        <span>
-          {fa ? 'نیمه‌عمر حذف' : 'Elimination t½'}: <strong>{elimination}</strong>
-        </span>
-        <span>
-          {fa ? 'مسیر' : 'Route'}: <strong>{pk.route}</strong>
-        </span>
-      </div>
+      {individual && (
+        <div className="pk-chart-peak">
+          <span>{fa ? 'بیشینه مدل‌شده' : 'Modeled peak'}</span>
+          <strong>
+            {numberText(Math.max(
+              0,
+              ...items[0].samples.map(sample => sample[metric])
+            ), 3)} {axisUnit}
+          </strong>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ChartPanel({
+  items,
+  metric,
+  fa,
+  chartStart,
+  chartEnd,
+  individual = false
+}) {
+  const groups = useMemo(() => {
+    const map = new Map()
+
+    items.forEach(item => {
+      const unit = String(item.unit || '—')
+
+      if (!map.has(unit)) map.set(unit, [])
+      map.get(unit).push(item)
+    })
+
+    return Array.from(map.entries())
+  }, [items])
+
+  return (
+    <div className="pk-chart-card">
+      {groups.map(([unit, unitItems]) => (
+        <ChartLane
+          key={unit}
+          items={unitItems}
+          metric={metric}
+          fa={fa}
+          chartStart={chartStart}
+          chartEnd={chartEnd}
+          individual={individual}
+        />
+      ))}
     </div>
   )
 }
 
 export default function ProtocolPkCharts({ protocol, fa = false }) {
+  const [metric, setMetric] = useState('releaseRate')
+
   const compounds = Array.isArray(protocol?.compounds)
     ? protocol.compounds
     : []
 
-  const results = compounds.map(compound =>
-    buildCompoundSeries(compound, protocol)
-  )
+  const model = useMemo(() => {
+    const starts = compounds
+      .map(item => validDate(item.startDate) ? item.startDate : protocol.startDate)
+      .filter(validDate)
 
-  const supported = results.filter(item => item.supported)
-  const unsupported = results.filter(item => !item.supported)
+    const ends = compounds
+      .map(item => protocolEndDate(protocol, item))
+      .filter(validDate)
+
+    const startDate = validDate(protocol.startDate)
+      ? protocol.startDate
+      : (starts.sort()[0] || new Date().toISOString().slice(0, 10))
+
+    const endDate = ends.sort().slice(-1)[0] || startDate
+
+    const chartStart = dateTime(startDate)
+    const chartEnd = Math.max(
+      dateTime(endDate) || chartStart,
+      ...ends.map(dateTime).filter(Boolean)
+    )
+
+    const results = compounds.map(item =>
+      buildSeries(item, protocol, chartStart, chartEnd)
+    )
+
+    return {
+      supported: results.filter(item => item.supported),
+      unsupported: results.filter(item => !item.supported),
+      chartStart,
+      chartEnd
+    }
+  }, [compounds, protocol])
 
   const labels = fa
     ? {
         title: 'مدل فارماکوکینتیک پروتکل',
-        release: 'مقدار در گردش خون',
-        total: 'مقدار کل فعال مدل‌شده',
-        releaseSub: 'مقدار تخمینی ترکیب در بخش مرکزی مدل',
-        totalSub: 'مجموع مقدار در مخزن جذب و بخش مرکزی مدل',
-        note: 'تمام مقادیر و منحنی‌ها تخمینی هستند و مبنای بالینی یا تجویزی ندارند.',
-        caveat: 'برآوردها بر اساس ساختار شیمیایی، استر متصل‌شده (در صورت وجود) و مسیر مصرف یا تزریق انجام شده‌اند. این نمودارها اندازه‌گیری واقعی غلظت پلاسمایی نیستند.',
-        unavailable: 'برای این ترکیبات داده کافی در بانک موجود نیست.',
-        unsupported: 'ترکیبات نمایش‌داده‌نشده',
-        noData: 'برای این پروتکل داده‌ای جهت رسم نمودار وجود ندارد.'
+        release: 'Release Rate · نرخ آزادسازی',
+        total: 'Total Active · مقدار کل فعال',
+        releaseDesc: 'مقدار تخمینی آزادشده از مخزن جذب در هر روز',
+        totalDesc: 'مجموع مقدار موجود در مخزن جذب و بخش مرکزی مدل',
+        disclaimer: 'تمام منحنی‌ها و مقادیر تخمینی هستند و مبنای بالینی یا تجویزی ندارند. این نمودارها غلظت پلاسمایی را اندازه‌گیری نمی‌کنند و راهنمای مصرف یا تنظیم دوز نیستند. هر ترکیب با واحد ثبت‌شده خودش نمایش داده می‌شود؛ واحدهای متفاوت با هم جمع یا مستقیماً مقایسه نمی‌شوند.',
+        individual: 'نمودار اختصاصی هر ترکیب',
+        individualDesc: 'برای مشاهده نمودار هر ترکیب باز کنید',
+        unavailable: 'برای این ترکیبات داده کافی یا اطلاعات معتبر پروتکل جهت رسم نمودار وجود ندارد.',
+        noData: 'برای این پروتکل داده‌ای جهت رسم نمودار وجود ندارد.',
+        iv: 'در مسیر IV، ورود مستقیماً به بخش مرکزی مدل می‌شود؛ بنابراین آزادسازی از مخزن جذب صفر است.'
       }
     : {
         title: 'Protocol Pharmacokinetic Model',
-        release: 'Circulating Amount',
-        total: 'Total Modeled Active Amount',
-        releaseSub: 'Estimated amount in the central compartment',
-        totalSub: 'Combined amount in the absorption depot and central compartment',
-        note: 'All values and curves are estimates and have no clinical or prescribing basis.',
-        caveat: 'Estimates are based on chemical structure, attached ester (where applicable), and administration or injection route. These charts are not measurements of actual plasma concentrations.',
-        unavailable: 'There is not enough reference data for these compounds.',
-        unsupported: 'Compounds not displayed',
-        noData: 'There is no data available to plot for this protocol.'
+        release: 'Release Rate',
+        total: 'Total Active',
+        releaseDesc: 'Estimated amount released from the absorption depot per day',
+        totalDesc: 'Combined amount in the absorption depot and central compartment',
+        disclaimer: 'All curves and values are estimates and have no clinical or prescribing basis. These charts do not measure plasma concentration and are not dosing guidance. Each compound retains its recorded unit; unlike units are never added or directly compared.',
+        individual: 'Individual compound charts',
+        individualDesc: 'Expand a compound to view its own chart',
+        unavailable: 'There is not enough reference data or valid protocol information to plot these compounds.',
+        noData: 'There is no data available to plot for this protocol.',
+        iv: 'For IV routes, input is modeled directly into the central compartment, so depot release is zero.'
       }
+
+  const isRelease = metric === 'releaseRate'
 
   return (
     <section className="pk-charts-section">
       <div className="pk-charts-heading">
-        <div>
-          <h3>{labels.title}</h3>
-          <p>{labels.note}</p>
-        </div>
+        <h3>{labels.title}</h3>
       </div>
 
-      <p className="pk-model-caveat">
-        {labels.caveat}
-      </p>
+      <p className="pk-model-caveat">{labels.disclaimer}</p>
 
-      {supported.length > 0 ? (
-        <div className="pk-charts-grid">
-          <article className="pk-chart-card pk-release-card">
-            <div className="pk-chart-title">
-              <span className="pk-chart-icon">↗</span>
-              <div>
-                <h4>{labels.release}</h4>
-                <p>{labels.releaseSub}</p>
-              </div>
+      {model.supported.length > 0 ? (
+        <>
+          <div className="pk-metric-tabs" role="tablist">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={isRelease}
+              className={isRelease ? 'active' : ''}
+              onClick={() => setMetric('releaseRate')}
+            >
+              {labels.release}
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              aria-selected={!isRelease}
+              className={!isRelease ? 'active' : ''}
+              onClick={() => setMetric('totalActive')}
+            >
+              {labels.total}
+            </button>
+          </div>
+
+          <div className="pk-chart-heading">
+            <strong>{isRelease ? labels.release : labels.total}</strong>
+            <span>{isRelease ? labels.releaseDesc : labels.totalDesc}</span>
+          </div>
+
+          <ChartPanel
+            items={model.supported}
+            metric={metric}
+            fa={fa}
+            chartStart={model.chartStart}
+            chartEnd={model.chartEnd}
+          />
+
+          {isRelease && model.supported.some(item => item.isIV) && (
+            <p className="pk-chart-note">{labels.iv}</p>
+          )}
+
+          <div className="pk-compound-accordion-list">
+            <div className="pk-accordion-heading">
+              <strong>{labels.individual}</strong>
+              <span>{labels.individualDesc}</span>
             </div>
 
-            {supported.map(item => (
-              <CompoundCurve
+            {model.supported.map(item => (
+              <details
+                className="pk-compound-accordion"
                 key={item.compound.id || item.compound.name}
-                item={item}
-                metric="release"
-                fa={fa}
-              />
-            ))}
-          </article>
+              >
+                <summary>
+                  <span
+                    className="pk-compound-dot"
+                    style={{ background: item.compound.color || '#38bdf8' }}
+                  />
+                  <strong>{item.compound.name}</strong>
+                  <small>{item.unit}</small>
+                  <span className="pk-accordion-chevron">⌄</span>
+                </summary>
 
-          <article className="pk-chart-card pk-total-card">
-            <div className="pk-chart-title">
-              <span className="pk-chart-icon">◉</span>
-              <div>
-                <h4>{labels.total}</h4>
-                <p>{labels.totalSub}</p>
-              </div>
-            </div>
+                <div className="pk-compound-accordion-body">
+                  <ChartPanel
+                    items={[item]}
+                    metric={metric}
+                    fa={fa}
+                    chartStart={model.chartStart}
+                    chartEnd={model.chartEnd}
+                    individual
+                  />
 
-            {supported.map(item => (
-              <CompoundCurve
-                key={item.compound.id || item.compound.name}
-                item={item}
-                metric="total"
-                fa={fa}
-              />
+                  <div className="pk-compound-meta">
+                    <span>
+                      Tmax: <strong>{hoursText(item.pk.tmaxHours)}</strong>
+                    </span>
+                    <span>
+                      {fa ? 'نیمه‌عمر جذب' : 'Absorption t½'}:
+                      {' '}
+                      <strong>{hoursText(item.pk.absorptionHalfLifeHours)}</strong>
+                    </span>
+                    <span>
+                      {fa ? 'نیمه‌عمر حذف' : 'Elimination t½'}:
+                      {' '}
+                      <strong>{hoursText(item.pk.halfLifeHours)}</strong>
+                    </span>
+                    <span>
+                      {fa ? 'مسیر' : 'Route'}:
+                      {' '}
+                      <strong>{item.pk.route}</strong>
+                    </span>
+                  </div>
+                </div>
+              </details>
             ))}
-          </article>
-        </div>
+          </div>
+        </>
       ) : (
         <p className="pk-empty">{labels.noData}</p>
       )}
 
-      {unsupported.length > 0 && (
+      {model.unsupported.length > 0 && (
         <div className="pk-unsupported">
-          <strong>{labels.unsupported}</strong>
+          <strong>{fa ? 'ترکیبات بدون نمودار' : 'Compounds without charts'}</strong>
           <span>
-            {unsupported.map(item => item.compound.name).join(' · ')}
+            {model.unsupported.map(item => item.compound.name).join(' · ')}
           </span>
+          <small>{labels.unavailable}</small>
         </div>
       )}
     </section>
