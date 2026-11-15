@@ -481,10 +481,13 @@ export default function ProtocolPkCharts({ protocol, fa = false }) {
     const endDate = ends.sort().slice(-1)[0] || startDate
 
     const chartStart = dateTime(startDate)
-    const chartEnd = Math.max(
-      dateTime(endDate) || chartStart,
-      ...ends.map(dateTime).filter(Boolean)
-    )
+const latestEnd = Math.max(
+  dateTime(endDate) || chartStart,
+  ...ends.map(dateTime).filter(Boolean)
+)
+
+// Extend the PK chart by 8 weeks after the last compound ends.
+const chartEnd = latestEnd + 56 * DAY
 
     const results = compounds.map(item =>
       buildSeries(item, protocol, chartStart, chartEnd)
