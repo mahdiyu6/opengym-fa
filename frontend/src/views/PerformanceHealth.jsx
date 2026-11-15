@@ -6,6 +6,7 @@ import { getLang, useLang } from '../lib/i18n.js'
 import { fmtDateFull } from '../lib/format.js'
 import HealthDoseSchedule from './HealthDoseSchedule.jsx'
 import HealthSideEffects from './HealthSideEffects.jsx'
+import ProtocolPkCharts from './ProtocolPkCharts.jsx'
 import { getCompoundPk, PK_EVIDENCE_LABELS } from '../store/compound-pharmacokinetics.js'
 import './health-hub.css'
 
@@ -853,6 +854,10 @@ const timelineStartDate = new Date(timelineStartTime)
 </span>
   </div>
 </div>
+ <ProtocolPkCharts
+  protocol={{ ...protocol, compounds }}
+  fa={fa}
+ /> 
                       </>
                     )}
                   </article>
