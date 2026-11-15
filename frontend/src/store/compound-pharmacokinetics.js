@@ -1,96 +1,284 @@
-// Pharmacokinetic reference data used by PerformanceHealth charts.
-// Educational reference only. halfLifeHours is [minimum, maximum].
-// null means no defensible systemic half-life; local persistence is stored separately.
+// Estimated pharmacokinetic reference bank.
+// ALL values are estimates for visualization only.
+// They are NOT clinical measurements, prescribing guidance, or dosing advice.
+//
+// Time units: hours.
+// Ranges are stored as [minimum, maximum].
+// Tmax is descriptive reference data. The curve uses absorption and
+// elimination half-lives in a first-order depot/central-compartment model.
 
-export const COMPOUND_PK = {
-  'Boldenone Cypionate': { halfLifeHours: [192, 288], display: '8–12 days', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected estimate; formulation-specific human PK is not established.' },
-  'CJC-1295 (with DAC)': { halfLifeHours: [144, 192], display: '6–8 days', evidence: 'human_clinical', sourceType: 'published_human_pk', note: 'Human clinical PK reports a prolonged half-life; values vary by study.' },
-  'CJC-1295 (NO DAC)': { halfLifeHours: [0.5, 0.5], display: '~30 min', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected analogue estimate; no reliable human PK value established for this exact analogue.' },
-  'IGF-1 LR3': { halfLifeHours: [20, 30], display: '20–30 hours', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected estimate; not a verified human plasma half-life.' },
-  'TB-500': { halfLifeHours: [8, 12], display: '8–12 hours', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected estimate; reliable human PK is not established.' },
-  'SLU-PP-332': { halfLifeHours: [2, 4], display: '2–4 hours', evidence: 'preclinical_estimate', sourceType: 'user_estimate', note: 'User-selected estimate; human PK is not established.' },
-  'Epistane': { halfLifeHours: [6, 6], display: '~6 hours', evidence: 'estimate', sourceType: 'user_estimate' },
-  'M1T': { halfLifeHours: [6, 8], display: '6–8 hours', evidence: 'estimate', sourceType: 'user_estimate' },
-  'Superdrol': { halfLifeHours: [8, 12], display: '8–12 hours', evidence: 'estimate', sourceType: 'user_estimate' },
-  'GHK-Cu': { halfLifeHours: [0.5, 1], display: '30–60 minutes', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected estimate; downstream signalling may outlast plasma presence.' },
-  'Epithalon': { halfLifeHours: [2, 4], display: '2–4 hours', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected subcutaneous estimate; human PK is not established.' },
-  'DSIP': { halfLifeHours: [8 / 60, 15 / 60], display: '8–15 min', evidence: 'animal_or_indirect', sourceType: 'user_estimate', note: 'User-selected IV estimate; robust human PK is not established.' },
-  'Selank': { halfLifeHours: [2 / 60, 5 / 60], display: '2–5 min', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected estimate; reliable human PK is not established.' },
-  'Semax': { halfLifeHours: [12, 24], display: '12–24 hours', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected estimate; not a measured human plasma half-life.' },
-  'MOTS-c': { halfLifeHours: [0.5, 1], display: '30–60 min', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected estimate; bloodstream clearance and downstream signalling duration are distinct.' },
-  'BPC-157': { halfLifeHours: [0.25, 0.5], display: '<30 min', evidence: 'animal', sourceType: 'animal_pk', note: 'Short plasma half-life reported in animal models; no established human PK.' },
-  'Melanotan II': { halfLifeHours: [1, 2.4], display: '1–2.4 hours', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected estimate; do not substitute bremelanotide PK.' },
-  'HGH Frag 176-191': { halfLifeHours: [0.5, 2], display: '30 min–2 hours', evidence: 'estimate', sourceType: 'user_estimate', note: 'User-selected estimate; human PK is not established.' },
-  'Mediphorm': { halfLifeHours: null, display: 'Local persistence: 3–5 days', evidence: 'estimate', sourceType: 'user_estimate', localPersistenceDays: [3, 5], note: 'Local persistence only, not systemic half-life. Composition needs confirmation.' },
-  'Semaglutide': { halfLifeHours: [144, 168], display: '6–7 days', evidence: 'regulatory_label', sourceType: 'fda_label', note: 'Approximate one-week elimination half-life in FDA prescribing information.' },
-  'Tirzepatide': { halfLifeHours: [120, 120], display: '~5 days', evidence: 'regulatory_label', sourceType: 'regulatory_label' },
-  'Liraglutide': { halfLifeHours: [13, 13], display: '~13 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label' },
-  'Dutasteride': { halfLifeHours: [840, 840], display: '~5 weeks', evidence: 'regulatory_label', sourceType: 'regulatory_label', note: 'Long terminal half-life; accumulation and washout are prolonged.' },
-  'Finasteride': { halfLifeHours: [5, 6], display: '5–6 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label' },
-  'Minoxidil Oral': { halfLifeHours: [3, 4], display: '3–4 hours', evidence: 'published_human', sourceType: 'published_pk' },
-  'Atorvastatin': { halfLifeHours: [14, 14], display: '~14 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label', note: 'Active metabolites contribute to longer inhibitory activity.' },
-  'Rosuvastatin': { halfLifeHours: [19, 19], display: '~19 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label' },
-  'Ezetimibe': { halfLifeHours: [22, 22], display: '~22 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label' },
-  'Telmisartan': { halfLifeHours: [24, 24], display: '~24 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label' },
-  'Lisinopril': { halfLifeHours: [12, 12], display: '~12 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label' },
-  'Carvedilol': { halfLifeHours: [7, 10], display: '7–10 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label' },
-  'Sildenafil': { halfLifeHours: [4, 4], display: '~4 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label' },
-  'Tadalafil': { halfLifeHours: [17.5, 17.5], display: '~17.5 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label' },
-  'Isotretinoin': { halfLifeHours: [10, 20], display: '10–20 hours', evidence: 'regulatory_label', sourceType: 'regulatory_label', note: 'Parent compound and metabolites have different elimination profiles.' },
-  'NAC': { halfLifeHours: [5.6, 5.6], display: '~5.6 hours', evidence: 'published_human', sourceType: 'published_pk' },
-  'T3': { halfLifeHours: [24, 24], display: '~1 day', evidence: 'published_human', sourceType: 'published_pk' },
-  'T4': { halfLifeHours: [144, 168], display: '6–7 days', evidence: 'published_human', sourceType: 'published_pk' },
-  'MK-677': { halfLifeHours: [4, 6], display: '4–6 hours', evidence: 'estimate', sourceType: 'published_or_estimated_pk' },
-  'PT-141': { halfLifeHours: [1.9, 4], display: '1.9–4 hours', evidence: 'regulatory_label', sourceType: 'fda_label', note: 'Bremelanotide (PT-141) label range; not Melanotan II.' },
-  'GHRP-6': { halfLifeHours: [1.4, 3.6], display: '1.4–3.6 hours', evidence: 'human_clinical', sourceType: 'published_human_pk', note: 'Human IV study; route-specific.' },
-  'Thymosin Alpha-1': { halfLifeHours: [1, 3], display: '1–3 hours', evidence: 'human_clinical', sourceType: 'published_human_pk' }
+const H = (min, max = min) => [min, max]
+
+const rows = [
+  // Cardiovascular, metabolic, supplements
+  ['Atorvastatin', 'oral', H(1,2), H(.5), H(14), '14 h'],
+  ['Berberine', 'oral', H(2,4), H(.75,1), H(4,5), '4–5 h'],
+  ['Carvedilol', 'oral', H(1,2), H(.33,.5), H(6,10), '6–10 h'],
+  ['DHEA', 'oral', H(1,2), H(.5), H(.25,.5), '15–30 min', 'DHEA-S metabolite has a different, longer half-life (7–10 h).'],
+  ['Dutasteride', 'oral', H(2,3), H(.75), H(1200), '~5 weeks'],
+  ['Ezetimibe', 'oral', H(1,2), H(.5), H(22), '22 h'],
+  ['Finasteride', 'oral', H(1,2), H(.5), H(5,8), '5–8 h'],
+  ['Glutathione IV', 'IV', H(0), H(.01), H(.167,.25), '10–15 min'],
+  ['Glutathione IM', 'IM', H(.25,.5), H(.167), H(.167,.25), '10–15 min'],
+  ['L-Carnitine Injectable', 'IM', H(.5,1), H(.25,.333), H(15,17), '15–17 h'],
+  ['Isotretinoin', 'oral', H(2,4), H(.75,1), H(19,22), '19–22 h'],
+  ['Lisinopril', 'oral', H(6,8), H(2), H(12), '12 h'],
+  ['Metformin IR', 'oral', H(2,3), H(.75), H(4,9), '4–9 h'],
+  ['Minoxidil Oral', 'oral', H(1), H(.25,.333), H(3,4), '3–4 h'],
+  ['NAC', 'oral', H(1,2), H(.5), H(5.6), '5.6 h'],
+  ['NAD+', 'SC/IM', H(.25,.75), H(.167,.25), H(1,2), '1–2 h'],
+  ['Nebivolol', 'oral', H(1.5,4), H(.75), H(10,19), '10–19 h'],
+  ['Pregnenolone', 'oral', H(1,2), H(.5), H(3,4), '3–4 h'],
+  ['Rosuvastatin', 'oral', H(3,5), H(1), H(19), '19 h'],
+  ['Sildenafil', 'oral', H(.5,2), H(.25,.333), H(3,5), '3–5 h'],
+  ['SLU-PP-332', 'oral', H(1,2), H(.333,.5), H(2,4), '2–4 h', 'Preclinical estimate; human PK is not established.'],
+  ['Tadalafil', 'oral', H(2), H(.5,.75), H(17.5), '17.5 h'],
+  ['Telmisartan', 'oral', H(.5,1), H(.25,.333), H(24), '24 h'],
+  ['TUDCA', 'oral', H(1.5,3), H(.75), H(3,5), '3–5 h', 'Enterohepatic circulation may affect the observed profile.'],
+  ['Yohimbine HCL', 'oral', H(.75,1), H(.25), H(.583,1), '35–60 min'],
+
+  // Peptides
+  ['BPC-157', 'SC', H(.333,.667), H(.167,.25), H(.1,.5), '<30 min'],
+  ['Cagrilintide', 'SC', H(24,72), H(8,12), H(168,192), '7–8 days'],
+  ['CJC-1295 (NO DAC)', 'SC', H(.25,.5), H(.083,.167), H(.5), '~30 min'],
+  ['CJC-1295 (with DAC)', 'SC', H(24,48), H(6,12), H(144,192), '6–8 days'],
+  ['DSIP', 'SC', H(.25,.5), H(.083,.167), H(.133,.25), '8–15 min'],
+  ['Epithalon', 'SC', H(.5,1), H(.25,.333), H(2,4), '2–4 h'],
+  ['GHK-Cu', 'SC', H(.333,.75), H(.167,.25), H(.5,1), '30–60 min'],
+  ['GHRP-2', 'SC', H(.25,.5), H(.083,.167), H(.25,1), '15–60 min'],
+  ['GHRP-6', 'SC', H(.25,.5), H(.083,.167), H(.25,1), '15–60 min'],
+  ['Gonadorelin', 'SC', H(.25,.5), H(.083,.167), H(.167,.667), '10–40 min'],
+  ['Growth Hormone (HGH)', 'SC', H(2,6), H(1,1.5), H(2,3), '2–3 h'],
+  ['HCG', 'SC/IM', H(6,12), H(2,3), H(24,36), '24–36 h'],
+  ['HGH Frag 176-191', 'SC', H(.5,1), H(.25,.417), H(.5,2), '30 min–2 h'],
+  ['HMG', 'SC/IM', H(6,12), H(2,4), H(30,40), '30–40 h'],
+  ['IGF-1 LR3', 'SC', H(1,2), H(.333,.5), H(20,30), '20–30 h'],
+  ['Ipamorelin', 'SC', H(.25,.5), H(.083,.167), H(2), '2 h'],
+  ['Liraglutide', 'SC', H(8,12), H(2,3), H(13), '13 h'],
+  ['Melanotan II', 'SC', H(.5,1.5), H(.25,.5), H(1,2.4), '1–2.4 h'],
+  ['MOTS-c', 'SC', H(.5,1), H(.25,.417), H(.5,1), '30–60 min'],
+  ['PT-141', 'SC', H(.5,1), H(.25,.333), H(2.7), '2.7 h'],
+  ['Retatrutide', 'SC', H(12,48), H(6,10), H(144), '6 days'],
+  ['Selank', 'intranasal', H(.083,.25), H(.05,.083), H(.033,.083), '2–5 min'],
+  ['Semaglutide', 'SC', H(24,72), H(8,12), H(168), '~7 days'],
+  // Semax elimination range follows the user's explicitly selected 12–24 h estimate.
+  ['Semax', 'intranasal', H(.083,.25), H(.05,.083), H(12,24), '12–24 h'],
+  ['Sermorelin', 'SC', H(.083,.333), H(.083), H(.183,.2), '11–12 min'],
+  ['SS-31', 'SC', H(.5,1), H(.25,.333), H(3,4), '3–4 h'],
+  ['TB-500', 'SC', H(.5,1), H(.25,.417), H(48,72), '2–3 days'],
+  ['Tesamorelin', 'SC', H(.15,.25), H(.083), H(.433,.633), '26–38 min'],
+  ['Thymosin Alpha-1', 'SC', H(1,2), H(.333,.5), H(2), '2 h'],
+  ['Tirzepatide', 'SC', H(8,72), H(6,8), H(120), '5 days'],
+
+  // Hormonal, thyroid and stimulants
+  ['Anastrozole', 'oral', H(2), H(.5,.75), H(40,50), '40–50 h'],
+  ['Exemestane', 'oral', H(1.2,2.9), H(.5,.75), H(24), '24 h'],
+  ['Cabergoline', 'oral', H(2,3), H(.75), H(63,69), '63–69 h'],
+  ['Clenbuterol', 'oral', H(2,3), H(.75), H(25,39), '25–39 h'],
+  ['Clomiphene', 'oral', H(2,6), H(1), H(120,168), '5–7 days'],
+  ['Enclomiphene', 'oral', H(2,3), H(.75), H(10), '10 h'],
+  ['Ephedrine', 'oral', H(1.5,2), H(.5), H(3,6), '3–6 h'],
+  ['Humalog (Insulin Lispro)', 'SC', H(.5,1.5), H(.25), H(1), '~1 h'],
+  ['Lantus (Insulin Glargine)', 'SC', H(4,5), H(4,6), H(12,24), '12–24 h', 'Approximate plateau profile; no sharp defined peak.'],
+  ['Letrozole', 'oral', H(2), H(.5,.75), H(48,96), '2–4 days'],
+  ['Levemir (Insulin Detemir)', 'SC', H(6,8), H(2,3), H(5,7), '5–7 h', 'Reported duration of action may be longer than plasma half-life.'],
+  ['MK-677', 'oral', H(1,2), H(.333,.5), H(4,6), '4–6 h', 'Downstream IGF-1 response may outlast plasma presence.'],
+  ['Tamoxifen', 'oral', H(5), H(1,1.5), H(120,168), '5–7 days'],
+  ['NovoRapid (Insulin Aspart)', 'SC', H(.667,.833), H(.25), H(1.35), '~81 min'],
+  ['Pramipexole', 'oral', H(1,3), H(.5,.75), H(8,12), '8–12 h'],
+  ['Raloxifene', 'oral', H(6), H(1.5), H(27.7), '27.7 h'],
+  ['T3', 'oral', H(1,2), H(.333,.5), H(24,60), '1–2.5 days'],
+  ['T4', 'oral', H(2,4), H(.75,1), H(144,168), '6–7 days'],
+  ['Toremifene', 'oral', H(3), H(.75,1), H(120), '5 days'],
+
+  // Oral anabolic compounds
+  ['Oxymetholone (Anadrol)', 'oral', H(1,2), H(.333,.5), H(8,9), '8–9 h'],
+  ['Oxandrolone (Anavar)', 'oral', H(1,1.5), H(.25,.5), H(9,10), '9–10 h'],
+  ['Methandrostenolone (Dianabol)', 'oral', H(1,3), H(.333,.667), H(3,6), '3–6 h'],
+  ['Epistane', 'oral', H(1,1.5), H(.25,.5), H(6), '6 h'],
+  ['Fluoxymesterone (Halotestin)', 'oral', H(1,2), H(.333,.5), H(9,10), '9–10 h'],
+  ['M1T', 'oral', H(1,2), H(.333,.5), H(6,8), '6–8 h'],
+  ['Methenolone Acetate (Oral)', 'oral', H(1,2), H(.333,.5), H(4,6), '4–6 h'],
+  ['Mesterolone (Proviron)', 'oral', H(1.5,3), H(.5,.75), H(12,13), '12–13 h'],
+  ['Methasterone (Superdrol)', 'oral', H(1,3), H(.5), H(8,12), '8–12 h'],
+  ['Turinabol', 'oral', H(1.5,3), H(.5,.75), H(16), '16 h'],
+  ['Stanozolol Oral', 'oral', H(1,2), H(.333,.5), H(9), '9 h'],
+
+  // Injectable anabolic compounds
+  ['TNE', 'IM', H(1,2), H(.25,.5), H(2,4), '2–4 h'],
+  ['Winstrol Inj', 'IM', H(2,4), H(1), H(24), '24 h'],
+  ['MENT (Trestolone Acetate)', 'IM', H(4,8), H(2,3), H(8,12), '8–12 h'],
+  ['Testosterone Propionate', 'IM', H(12,24), H(4,6), H(48,72), '2–3 days'],
+  ['Testosterone Phenylpropionate', 'IM', H(24,36), H(8,12), H(72,108), '3–4.5 days'],
+  ['Trenbolone Acetate', 'IM', H(12,24), H(4,6), H(48,72), '2–3 days'],
+  ['Masteron Propionate', 'IM', H(12,24), H(4,6), H(48,72), '2–3 days'],
+  ['Nandrolone Phenylpropionate (NPP)', 'IM', H(24,48), H(8,12), H(72,108), '3–4.5 days'],
+  ['DHB', 'IM', H(48,96), H(24,36), H(192,240), '8–10 days'],
+  ['Testosterone Cypionate', 'IM', H(48,96), H(24,36), H(192,240), '8–10 days'],
+  ['Testosterone Enanthate', 'IM', H(48,72), H(24,36), H(168,216), '7–9 days'],
+  ['Masteron Enanthate', 'IM', H(48,72), H(24,36), H(168,240), '7–10 days'],
+  ['Trenbolone Enanthate', 'IM', H(48,72), H(24,36), H(168,240), '7–10 days'],
+  ['Primobolan Inj', 'IM', H(48,96), H(24,36), H(168,240), '7–10 days'],
+  ['Parabolan', 'IM', H(72,120), H(36,48), H(240,336), '10–14 days'],
+  ['Boldenone Cypionate', 'IM', H(48,96), H(24,36), H(192,288), '8–12 days'],
+  ['Equipoise (Boldenone Undecylenate)', 'IM', H(72,120), H(48,72), H(336), '14 days'],
+  ['Nandrolone Decanoate', 'IM', H(72,120), H(48,72), H(288,360), '12–15 days'],
+  ['Sustanon', 'IM', H(24,48), H(6,72), H(360,432), '15–18 days', 'Multi-ester profile simplified to one effective absorption compartment.'],
+  ['Testosterone Undecanoate', 'IM', H(168), H(72,120), H(504,816), '21–34 days', 'Oil vehicle may produce substantially longer apparent release in some formulations.'],
+
+  // Existing catalog entries retained
+  ['Semaglutide', 'SC', H(24,72), H(8,12), H(168), '~7 days'],
+  ['Tirzepatide', 'SC', H(8,72), H(6,8), H(120), '5 days'],
+  ['Liraglutide', 'SC', H(8,12), H(2,3), H(13), '13 h'],
+  ['PT-141', 'SC', H(.5,1), H(.25,.333), H(2.7), '2.7 h'],
+  ['Thymosin Alpha-1', 'SC', H(1,2), H(.333,.5), H(2), '2 h']
+]
+
+export const COMPOUND_PK = Object.fromEntries(
+  rows.map(([name, route, tmaxHours, absorptionHalfLifeHours, halfLifeHours, display, note]) => [
+    name,
+    {
+      route,
+      tmaxHours,
+      absorptionHalfLifeHours,
+      halfLifeHours,
+      display,
+      evidence: 'estimate',
+      sourceType: 'estimated_reference',
+      note: note || ''
+    }
+  ])
+)
+
+// Local-only persistence is intentionally not represented as systemic PK.
+COMPOUND_PK.Mediphorm = {
+  route: 'topical/local',
+  tmaxHours: null,
+  absorptionHalfLifeHours: null,
+  halfLifeHours: null,
+  display: 'Local persistence: 3–5 days',
+  localPersistenceDays: H(3,5),
+  evidence: 'estimate',
+  sourceType: 'local_persistence_only',
+  note: 'Local persistence only; no systemic curve is modeled.'
 }
 
+// Additional existing catalog names / aliases.
+const ALIASES = {
+  'eq': 'Equipoise (Boldenone Undecylenate)',
+  'boldenone': 'Equipoise (Boldenone Undecylenate)',
+  'sustanon 250': 'Sustanon',
+  'test p': 'Testosterone Propionate',
+  'testosterone propionate': 'Testosterone Propionate',
+  'test c': 'Testosterone Cypionate',
+  'testosterone cypionate': 'Testosterone Cypionate',
+  'test e': 'Testosterone Enanthate',
+  'testosterone enanthate': 'Testosterone Enanthate',
+  'test u': 'Testosterone Undecanoate',
+  'tne': 'TNE',
+  'tpp': 'Testosterone Phenylpropionate',
+  'ment': 'MENT (Trestolone Acetate)',
+  'npp': 'Nandrolone Phenylpropionate (NPP)',
+  'tren a': 'Trenbolone Acetate',
+  'tren e': 'Trenbolone Enanthate',
+  'parabolan': 'Parabolan',
+  'dhb': 'DHB',
+  'masteron propionate': 'Masteron Propionate',
+  'masteron enanthate': 'Masteron Enanthate',
+  'primobolan inj': 'Primobolan Inj',
+  'primobolan injectable': 'Primobolan Inj',
+  'primobolan oral': 'Methenolone Acetate (Oral)',
+  'winstrol inj': 'Winstrol Inj',
+  'winstrol': 'Stanozolol Oral',
+  'anadrol': 'Oxymetholone (Anadrol)',
+  'anavar': 'Oxandrolone (Anavar)',
+  'dianabol': 'Methandrostenolone (Dianabol)',
+  'halotestin': 'Fluoxymesterone (Halotestin)',
+  'proviron': 'Mesterolone (Proviron)',
+  'superdrol': 'Methasterone (Superdrol)',
+  'arimidex': 'Anastrozole',
+  'anastrozole': 'Anastrozole',
+  'aromasin': 'Exemestane',
+  'exemestane': 'Exemestane',
+  'clomid': 'Clomiphene',
+  'nolvadex': 'Tamoxifen',
+  'tamoxifen': 'Tamoxifen',
+  'humalog': 'Humalog (Insulin Lispro)',
+  'insulin lispro': 'Humalog (Insulin Lispro)',
+  'novorapid': 'NovoRapid (Insulin Aspart)',
+  'novolog': 'NovoRapid (Insulin Aspart)',
+  'insulin aspart': 'NovoRapid (Insulin Aspart)',
+  'lantus': 'Lantus (Insulin Glargine)',
+  'insulin glargine': 'Lantus (Insulin Glargine)',
+  'levemir': 'Levemir (Insulin Detemir)',
+  'insulin detemir': 'Levemir (Insulin Detemir)',
+  'hgh': 'Growth Hormone (HGH)',
+  'growth hormone': 'Growth Hormone (HGH)',
+  'cjc-1295 no dac': 'CJC-1295 (NO DAC)',
+  'cjc-1295 with dac': 'CJC-1295 (with DAC)',
+  'cjc-1295 (with dac)': 'CJC-1295 (with DAC)',
+  'metformin': 'Metformin IR',
+  'l-carnitine': 'L-Carnitine Injectable',
+  'nad': 'NAD+'
+}
+
+function normalize(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[()]/g, '')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+}
+
+const NORMALIZED_KEYS = new Map(
+  Object.keys(COMPOUND_PK).map(key => [normalize(key), key])
+)
+
 export const PK_EVIDENCE_LABELS = {
-  regulatory_label: { en: 'Regulatory label', fa: 'برچسب رسمی دارو' },
-  human_clinical: { en: 'Human clinical PK', fa: 'فارماکوکینتیک انسانی' },
-  published_human: { en: 'Published human data', fa: 'داده انسانی منتشرشده' },
-  animal: { en: 'Animal data only', fa: 'فقط داده حیوانی' },
-  animal_or_indirect: { en: 'Limited / indirect evidence', fa: 'شواهد محدود یا غیرمستقیم' },
-  preclinical_estimate: { en: 'Preclinical estimate', fa: 'تخمین پیش‌بالینی' },
-  estimate: { en: 'Estimated value', fa: 'مقدار تخمینی' }
+  estimate: {
+    en: 'Estimated reference data',
+    fa: 'داده مرجع تخمینی'
+  },
+  local: {
+    en: 'Local persistence only',
+    fa: 'ماندگاری موضعی'
+  }
 }
 
 export function getCompoundPk(name) {
   if (!name) return null
 
-  const key = String(name).trim().toLowerCase()
-  const match = Object.keys(COMPOUND_PK).find(
-    item => item.toLowerCase() === key
-  )
+  const normalized = normalize(name)
+  const aliasTarget = ALIASES[normalized]
+  const key =
+    (aliasTarget && NORMALIZED_KEYS.get(normalize(aliasTarget))) ||
+    NORMALIZED_KEYS.get(normalized)
 
-  if (!match) return null
+  if (!key) return null
 
-  const pk = COMPOUND_PK[match]
+  const pk = COMPOUND_PK[key]
+  const systemic = Array.isArray(pk.halfLifeHours) &&
+    Array.isArray(pk.absorptionHalfLifeHours)
 
   return {
     ...pk,
-
-    // Elimination data: already present in the bank
+    name: key,
     elimination: {
       halfLifeHours: pk.halfLifeHours,
       evidence: pk.evidence,
       sourceType: pk.sourceType
     },
-
-    // Absorption data: deliberately unknown until supported
-    // by reliable compound-specific pharmacokinetic evidence.
     absorption: {
-      model: 'unknown',
-      halfLifeHours: null,
-      evidence: 'not_available'
+      model: systemic ? 'first_order_depot' : 'not_systemic',
+      halfLifeHours: pk.absorptionHalfLifeHours,
+      tmaxHours: pk.tmaxHours,
+      route: pk.route,
+      evidence: pk.evidence
     },
-
-    // Prevent unsupported compounds from being presented
-    // as measured systemic blood-level estimates.
     modelSupport: {
-      totalActive: Array.isArray(pk.halfLifeHours),
-      releaseRate: false
+      totalActive: systemic,
+      releaseRate: systemic
     }
   }
 }
