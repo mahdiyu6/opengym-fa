@@ -6671,3 +6671,171 @@
   margin-left: 0;
   margin-right: 3px;
 }
+
+/* Protocol pharmacokinetic charts */
+.pk-charts-section {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.pk-charts-heading h3 {
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.pk-charts-heading p,
+.pk-chart-title p {
+  margin: 4px 0 0;
+  color: var(--label-2);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.pk-model-caveat {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 10px;
+  line-height: 1.8;
+}
+
+.pk-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.pk-chart-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--sep);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.pk-chart-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+}
+
+.pk-chart-title h4 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pk-chart-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: var(--surface-2);
+  color: var(--acc);
+}
+
+.pk-curve {
+  min-width: 0;
+  padding: 10px 0;
+  border-top: 1px solid var(--sep);
+}
+
+.pk-curve-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.pk-curve-heading strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.pk-curve-heading small {
+  margin-left: auto;
+  color: var(--label-2);
+  font-size: 9px;
+}
+
+.pk-curve-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.pk-curve-svg {
+  display: block;
+  width: 100%;
+  height: 72px;
+  margin-top: 8px;
+  overflow: visible;
+}
+
+.pk-curve-grid {
+  fill: none;
+  stroke: var(--sep);
+  stroke-width: .6;
+  stroke-dasharray: 2 2;
+}
+
+.pk-curve-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--label-2);
+  font-size: 9px;
+}
+
+.pk-curve-footer strong {
+  color: var(--label);
+  direction: ltr;
+}
+
+.pk-curve-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 9px;
+  color: var(--label-2);
+  font-size: 9px;
+}
+
+.pk-curve-meta strong {
+  color: var(--label);
+}
+
+.pk-empty,
+.pk-unsupported {
+  padding: 10px;
+  border-radius: 9px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.pk-unsupported {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+@media (max-width: 700px) {
+  .pk-charts-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
