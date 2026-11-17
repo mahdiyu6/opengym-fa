@@ -269,6 +269,16 @@ function goToCalendarToday() {
     updateCompound(id, 'days', days)
   }
 
+function removeDoseLog(id) {
+  if (!confirm(tx('Delete this entry?', 'این ثبت حذف شود؟'))) return
+
+  update(s => {
+    s.healthDoseLogs = (s.healthDoseLogs || []).filter(
+      entry => entry.id !== id
+    )
+  })
+}
+
   function saveProtocol(e) {
     e.preventDefault()
     if (!form.name.trim()) return
