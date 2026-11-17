@@ -174,7 +174,7 @@ function buildSeries(compound, protocol, chartStart, chartEnd) {
 
     const releaseRate = isIV
       ? 0
-      : depot * (1 - depotFactor) * 24
+      : depot
 
     samples.push({
       time,
