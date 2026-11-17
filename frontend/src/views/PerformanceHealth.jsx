@@ -165,22 +165,7 @@ export default function PerformanceHealth() {
   const [query, setQuery] = useState('')
   const [customName, setCustomName] = useState('')
   const [customCategory, setCustomCategory] = useState('Other')
-const [logForm, setLogForm] = useState({
-  protocolId: '',
-  compoundId: '',
-  date: today(),
-  amount: '',
-  unit: 'mg',
-  notes: ''
-})
 
-const selectedLogProtocol = protocols.find(
-  p => p.id === logForm.protocolId
-)
-
-const logCompounds = Array.isArray(selectedLogProtocol?.compounds)
-  ? selectedLogProtocol.compounds
-  : []
   const recentDoseLogs = useMemo(() => {
   return [...doseLogs]
     .sort((a, b) =>
