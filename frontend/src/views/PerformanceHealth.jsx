@@ -368,185 +368,80 @@ const compoundCount = protocols.reduce(
     <small>{tx('All personal records', 'تمام سوابق شخصی')}</small>
   </div>
 </div>
-      <section className="health-card health-log-section">
-  <div className="health-picker-heading">
-    <h3>{tx('Daily log', 'ثبت روزانه')}</h3>
-    <span>{tx('Personal record only', 'صرفاً ثبت سوابق شخصی')}</span>
-  </div>
-
-  <form className="health-log-form" onSubmit={saveDoseLog}>
-    <label>
-      {tx('Protocol', 'پروتکل')}
-      <select
-        value={logForm.protocolId}
-        onChange={e => setLogForm(old => ({
-          ...old,
-          protocolId: e.target.value,
-          compoundId: ''
-        }))}
-        required
-      >
-        <option value="">{tx('Select a protocol', 'انتخاب پروتکل')}</option>
-        {protocols.map(p => (
-          <option key={p.id} value={p.id}>{p.name}</option>
-        ))}
-      </select>
-    </label>
-
-    <label>
-      {tx('Compound', 'ترکیب')}
-      <select
-        value={logForm.compoundId}
-        onChange={e => setLogForm(old => ({
-          ...old,
-          compoundId: e.target.value
-        }))}
-        disabled={!logCompounds.length}
-        required
-      >
-        <option value="">{tx('Select a compound', 'انتخاب ترکیب')}</option>
-        {logCompounds.map(c => (
-          <option key={c.id} value={c.id}>{c.name}</option>
-        ))}
-      </select>
-    </label>
-
-    <div className="health-form-row">
-      <label>
-        {tx('Record date', 'تاریخ ثبت')}
-<HealthDatePicker
-  value={logForm.date}
-  onChange={value => setLogForm(old => ({
-    ...old,
-    date: value
-  }))}
-/>
-      </label>
-
-      <label>
-        {tx('Recorded amount', 'مقدار ثبت‌شده')}
-        <input
-          inputMode="decimal"
-          value={logForm.amount}
-          onChange={e => setLogForm(old => ({
-            ...old,
-            amount: e.target.value
-          }))}
-          placeholder="—"
-          required
-        />
-      </label>
-    </div>
-
-    <label>
-      {tx('Unit', 'واحد')}
-      <select
-        value={logForm.unit}
-        onChange={e => setLogForm(old => ({
-          ...old,
-          unit: e.target.value
-        }))}
-      >
-        <option>mg</option>
-        <option>mcg</option>
-        <option>ml</option>
-        <option>IU</option>
-        <option>g</option>
-        <option>capsule</option>
-        <option>tablet</option>
-        <option>other</option>
-      </select>
-    </label>
-
-    <label>
-      {tx('Notes (optional)', 'توضیحات (اختیاری)')}
-      <input
-        value={logForm.notes}
-        onChange={e => setLogForm(old => ({
-          ...old,
-          notes: e.target.value
-        }))}
-      />
-    </label>
-
-    <button
-      className="health-primary"
-      type="submit"
-      disabled={!protocols.length || !logCompounds.length}
-    >
-      {tx('Save log entry', 'ثبت در تاریخچه')}
-    </button>
-  </form>
-
-<HealthDoseSchedule />      
-        
-<div className="health-log-history">
-  <div className="health-history-title-row">
-    <h3>{tx('Recent entries', '۱۰ ثبت اخیر')}</h3>
-
-    <button
-      type="button"
-      className="health-view-all-link"
-      onClick={() => nav('/health/performance/logs')}
-    >
-      {tx('View all →', 'مشاهده همه ←')}
-    </button>
-  </div>
-
-  {doseLogs.length === 0 ? (
-    <p className="health-muted">
-      {tx('No entries recorded yet.', 'هنوز موردی ثبت نشده است.')}
-    </p>
-  ) : (
-    <>
-     <div className="health-log-preview-grid">
-  {recentDoseLogs.map(entry => (
-    <article
-      className="health-log-entry health-log-entry-compact"
-      key={entry.id}
-    >
-
-<div className="health-log-entry-content">
-  <div
-    className="health-log-compound-name"
-    style={{ '--compound-color': getCompoundColor(entry.compoundName) }}
-  >
-    <span className="health-log-compound-dot" />
-    <strong>{entry.compoundName}</strong>
-  </div>
-
- <small>{entry.protocolName} · {fmtDateFull(entry.date, calendar)}</small>
-
-  <span className="health-log-entry-amount">
-    {entry.amount} {entry.unit}
-  </span>
-
-  {entry.notes && <small>{entry.notes}</small>}
-</div>
       
+<section className="health-card health-log-section">
+  <HealthDoseSchedule />
+
+  <div className="health-log-history">
+    <div className="health-history-title-row">
+      <h3>{tx('Recent entries', '۶ ثبت اخیر')}</h3>
+
       <button
         type="button"
-        className="health-danger"
-        onClick={() => removeDoseLog(entry.id)}
+        className="health-view-all-link"
+        onClick={() => nav('/health/performance/logs')}
       >
-        {tx('Delete', 'حذف')}
+        {tx('View all →', 'مشاهده همه ←')}
       </button>
-    </article>
-  ))}
-</div>
+    </div>
 
-      {doseLogs.length > 10 && (
-        <p className="health-muted health-preview-count">
-          {tx(
-            `Showing 10 of ${doseLogs.length} entries`,
-            `نمایش ۱۰ مورد از ${doseLogs.length} ثبت`
-          )}
-        </p>
-      )}
-    </>
-  )}
-</div>
-       </section>
+    {doseLogs.length === 0 ? (
+      <p className="health-muted">
+        {tx('No entries recorded yet.', 'هنوز موردی ثبت نشده است.')}
+      </p>
+    ) : (
+      <>
+        <div className="health-log-preview-grid">
+          {recentDoseLogs.map(entry => (
+            <article
+              className="health-log-entry health-log-entry-compact"
+              key={entry.id}
+            >
+              <div className="health-log-entry-content">
+                <div
+                  className="health-log-compound-name"
+                  style={{
+                    '--compound-color': getCompoundColor(entry.compoundName)
+                  }}
+                >
+                  <span className="health-log-compound-dot" />
+                  <strong>{entry.compoundName}</strong>
+                </div>
+
+                <small>
+                  {entry.protocolName} · {fmtDateFull(entry.date, calendar)}
+                </small>
+
+                <span className="health-log-entry-amount">
+                  {entry.amount} {entry.unit}
+                </span>
+
+                {entry.notes && <small>{entry.notes}</small>}
+              </div>
+
+              <button
+                type="button"
+                className="health-danger"
+                onClick={() => removeDoseLog(entry.id)}
+              >
+                {tx('Delete', 'حذف')}
+              </button>
+            </article>
+          ))}
+        </div>
+
+        {doseLogs.length > 6 && (
+          <p className="health-muted health-preview-count">
+            {tx(
+              `Showing 6 of ${doseLogs.length} entries`,
+              `نمایش ۶ مورد از ${doseLogs.length} ثبت`
+            )}
+          </p>
+        )}
+      </>
+    )}
+  </div>
+</section>
 
          {/* Protocol Timeline */}
       <section className="health-timeline-section">
