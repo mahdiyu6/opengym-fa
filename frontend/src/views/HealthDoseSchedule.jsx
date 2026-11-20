@@ -141,24 +141,33 @@ export default function HealthDoseSchedule() {
         : []
 
       compounds.forEach(compound => {
-        if (!compound || typeof compound !== 'object' || compound.id == null) {
-          return
-        }
+  if (!compound || typeof compound !== 'object' || compound.id == null) {
+    return
+  }
 
-        const frequency = typeof compound.frequency === 'string'
-          ? compound.frequency
-          : 'daily'
+  const compoundStart =
+    parseISODate(compound.startDate) || start
 
-        const selectedDays = Array.isArray(compound.days)
-          ? compound.days.filter(x => typeof x === 'string')
-          : []
+  const compoundEnd =
+    parseISODate(compound.endDate) || end
 
-        days.forEach(date => {
-          if (date < start || (end && date > end)) return
+  const frequency = typeof compound.frequency === 'string'
+    ? compound.frequency
+    : 'daily'
 
-          const diff = Math.round(
-            (date.getTime() - start.getTime()) / 86400000
-          )
+  const selectedDays = Array.isArray(compound.days)
+    ? compound.days.filter(x => typeof x === 'string')
+    : []
+
+  days.forEach(date => {
+    if (
+      date < compoundStart ||
+      (compoundEnd && date > compoundEnd)
+    ) return
+
+    const diff = Math.round(
+      (date.getTime() - compoundStart.getTime()) / 86400000
+    )
 
           const scheduled = frequency === 'daily'
             ? true
