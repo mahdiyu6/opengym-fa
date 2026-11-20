@@ -765,13 +765,42 @@ const timelineStartDate = new Date(timelineStartTime)
 
           <div className="health-section-heading">
         <h2>{tx('My protocols', 'پروتکل‌های من')}</h2>
-        <button className="health-primary" onClick={() => setShowForm(v => !v)}>
-          {showForm ? tx('Cancel', 'انصراف') : tx('+ New protocol', '+ پروتکل جدید')}
-        </button>
+  <button
+  className="health-primary"
+  onClick={() => {
+    if (showForm) {
+      setShowForm(false)
+      setEditingProtocolId(null)
+      setForm(emptyForm)
+      setQuery('')
+      setCustomName('')
+    } else {
+      setForm(emptyForm)
+      setEditingProtocolId(null)
+      setShowForm(true)
+    }
+  }}
+>
+  {showForm
+    ? tx('Cancel', 'انصراف')
+    : tx('+ New protocol', '+ پروتکل جدید')}
+  </button>
       </div>
 
       {showForm && (
         <form className="health-card health-protocol-form" onSubmit={saveProtocol}>
+         <div className="health-picker-heading">
+  <h3>
+    {editingProtocolId
+      ? tx('Edit protocol', 'ویرایش پروتکل')
+      : tx('Create new protocol', 'ایجاد پروتکل جدید')}
+  </h3>
+  <span>
+    {editingProtocolId
+      ? tx('Update compounds and schedule', 'ویرایش ترکیبات و زمان‌بندی')
+      : tx('Add compounds and define their schedule', 'افزودن ترکیبات و تعیین زمان‌بندی')}
+  </span>
+         </div>
           <label>
             {tx('Protocol name', 'عنوان پروتکل')}
             <input value={form.name} onChange={e => change('name', e.target.value)}
