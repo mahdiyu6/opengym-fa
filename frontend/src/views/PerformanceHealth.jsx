@@ -162,6 +162,7 @@ export default function PerformanceHealth() {
   const update = useStore(s => s.update)
   const [form, setForm] = useState(emptyForm)
   const [showForm, setShowForm] = useState(false)
+  const [editingProtocolId, setEditingProtocolId] = useState(null)
   const [query, setQuery] = useState('')
   const [customName, setCustomName] = useState('')
   const [customCategory, setCustomCategory] = useState('Other')
@@ -279,22 +280,81 @@ function removeDoseLog(id) {
   })
 }
 
-  function saveProtocol(e) {
-    e.preventDefault()
-    if (!form.name.trim()) return
-    const item = {
-      ...form,
-      id: 'hp-' + Date.now(),
-      createdAt: new Date().toISOString(),
-      status: 'active',
-      compounds: form.compounds
-    }
-    update(s => { s.healthProtocols = [item, ...(s.healthProtocols || [])] })
-    setForm(emptyForm)
-    setQuery('')
-    setCustomName('')
-    setShowForm(false)
+function saveProtocol(e) {
+  e.preventDefault()
+  if (!form.name.trim()) return
+
+  const editingId = editingProtocolId
+
+  const payload = {
+    ...form,
+    name: form.name.trim(),
+    compounds: form.compounds.map(c => ({ ...c }))
   }
+
+  update(s => {
+    const current = s.healthProtocols || []
+
+    if (editingId) {
+      s.healthProtocols = current.map(item =>
+        item.id === editingId
+          ? {
+              ...item,
+              ...payload,
+              id: item.id,
+              createdAt: item.createdAt,
+              status: item.status,
+              completedAt: item.completedAt
+            }
+          : item
+      )
+    } else {
+      const item = {
+        ...payload,
+        id: 'hp-' + Date.now(),
+        createdAt: new Date().toISOString(),
+        status: 'active'
+      }
+
+      s.healthProtocols = [item, ...current]
+    }
+  })
+
+  setForm(emptyForm)
+  setEditingProtocolId(null)
+  setQuery('')
+  setCustomName('')
+  setShowForm(false)
+}
+
+  function editProtocol(item) {
+  setForm({
+    ...emptyForm,
+    ...item,
+    compounds: (item.compounds || []).map(c => ({
+      ...c,
+      id: c.id || (
+        'hc-' + Date.now() + '-' +
+        Math.random().toString(36).slice(2, 7)
+      ),
+      amount: c.amount ?? '',
+      unit: c.unit || 'mg',
+      concentration: c.concentration || '',
+      concentrationUnit: c.concentrationUnit || 'mg/ml',
+      amountBasis: c.amountBasis || 'per_week',
+      frequency: c.frequency || 'daily',
+      days: Array.isArray(c.days) ? [...c.days] : [],
+      startDate: c.startDate || '',
+      endDate: c.endDate || '',
+      notes: c.notes || ''
+    }))
+  })
+
+  setEditingProtocolId(item.id)
+  setQuery('')
+  setCustomName('')
+  setShowForm(true)
+}
 
   function removeProtocol(id) {
     if (!confirm(tx('Delete this protocol?', 'این پروتکل حذف شود؟'))) return
