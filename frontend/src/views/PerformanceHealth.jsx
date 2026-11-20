@@ -1054,7 +1054,11 @@ const timelineStartDate = new Date(timelineStartTime)
             </label>
           </div>
 
-          <button className="health-primary" type="submit">{tx('Save record', 'ذخیره سابقه')}</button>
+          <button className="health-primary" type="submit">
+  {editingProtocolId
+    ? tx('Save changes', 'ذخیره تغییرات')
+    : tx('Save record', 'ذخیره سابقه')}
+          </button>
         </form>
       )}
 
@@ -1245,6 +1249,13 @@ const timelineStartDate = new Date(timelineStartTime)
               {tx('Delete', 'حذف')}
             </button>
           </div>
+          <button
+  type="button"
+  className="health-secondary"
+  onClick={() => editProtocol(item)}
+>
+  {tx('Edit', 'ویرایش')}
+          </button>
         </article>
       )
     })}
