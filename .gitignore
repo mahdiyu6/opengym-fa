@@ -4,9 +4,7 @@ api/node_modules/
 frontend/dist/
 data/*
 !data/.gitkeep
-media/img/*
 !media/img/.gitkeep
-media/gif/*
 !media/gif/.gitkeep
 .env
 .DS_Store
