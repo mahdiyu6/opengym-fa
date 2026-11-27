@@ -23,4 +23,104 @@ export const EXDB=[{"id":"0001","n":"3/4 sit-up","bp":"waist","eq":"body weight"
   ],
   "img": "5202-cable-archer-row.jpg",
   "gif": "5202-cable-archer-row.gif"
-}];
+},
+{
+  "id": "5203",
+  "n": "assisted lat-pulldown crunch",
+  "bp": "waist",
+  "eq": "cable",
+  "tg": "abs",
+  "mg": "obliques",
+  "sm": ["hip flexors", "lower back"],
+  "st": [
+    "Set up at a lat pulldown machine with the seat pad adjusted to support your knees or hips.",
+    "Face away from the machine and hold the cable attachment near the sides of your head.",
+    "Position yourself so the cable provides assistance during the crunch movement.",
+    "Brace your core and curl your torso downward, bringing your ribs toward your pelvis.",
+    "Slowly return to the stretched starting position while maintaining control.",
+    "Repeat for the desired number of repetitions."
+  ],
+  "img": "5203-assisted-lat-pulldown-crunch.jpg",
+  "gif": "5203-assisted-lat-pulldown-crunch.gif"
+},
+{
+  "id": "5204",
+  "n": "unassisted lat-pulldown crunch",
+  "bp": "waist",
+  "eq": "cable",
+  "tg": "abs",
+  "mg": "obliques",
+  "sm": ["hip flexors", "lower back"],
+  "st": [
+    "Set up at a lat pulldown machine with the seat pad adjusted to support your knees or hips.",
+    "Face away from the machine and hold the cable attachment near the sides of your head.",
+    "Keep your hips stable and your torso in a fully stretched starting position.",
+    "Brace your abs and curl your torso downward, bringing your ribs toward your pelvis.",
+    "Pause briefly at the bottom and squeeze your abdominal muscles.",
+    "Slowly extend your torso back to the starting position without using momentum.",
+    "Repeat for the desired number of repetitions."
+  ],
+  "img": "5204-unassisted-lat-pulldown-crunch.jpg",
+  "gif": "5204-unassisted-lat-pulldown-crunch.gif"
+},
+{
+  "id": "5205",
+  "n": "garhammer raises",
+  "bp": "waist",
+  "eq": "body weight",
+  "tg": "abs",
+  "mg": "hip flexors",
+  "sm": ["obliques", "lower back"],
+  "st": [
+    "Hang from a pull-up bar with your arms fully extended and your shoulders actively engaged.",
+    "Bend your knees and bring your thighs slightly forward, keeping your feet together.",
+    "Engage your abs and curl your pelvis upward toward your ribcage.",
+    "Continue raising your knees toward your elbows while rounding your lower back.",
+    "Pause briefly at the top and squeeze your abdominal muscles.",
+    "Slowly lower your legs back to the starting position without swinging.",
+    "Repeat for the desired number of repetitions."
+  ],
+  "img": "5205-garhammer-raises.jpg",
+  "gif": "5205-garhammer-raises.gif"
+},
+{
+  "id": "5206",
+  "n": "reverse crunch with ab mat",
+  "bp": "waist",
+  "eq": "body weight",
+  "tg": "abs",
+  "mg": "hip flexors",
+  "sm": ["obliques"],
+  "st": [
+    "Lie on your back with an ab mat positioned under your lower back.",
+    "Bend your knees and lift your feet off the floor, bringing your thighs toward your torso.",
+    "Allow your lower back to extend gently over the ab mat while keeping your core engaged.",
+    "Contract your abs and curl your pelvis upward, bringing your knees toward your chest.",
+    "Pause briefly at the top and squeeze your abdominal muscles.",
+    "Slowly lower your hips and return to the stretched starting position.",
+    "Repeat for the desired number of repetitions."
+  ],
+  "img": "5206-reverse-crunch-with-ab-mat.jpg",
+  "gif": "5206-reverse-crunch-with-ab-mat.gif"
+},
+{
+  "id": "5207",
+  "n": "dragon flag",
+  "bp": "waist",
+  "eq": "body weight",
+  "tg": "abs",
+  "mg": "obliques",
+  "sm": ["lats", "hip flexors", "lower back"],
+  "st": [
+    "Lie on a flat bench and firmly grip its sides behind your head.",
+    "Lift your legs and hips until your body is nearly vertical, supported by your upper back and shoulders.",
+    "Brace your abs and glutes to keep your entire body straight from shoulders to feet.",
+    "Slowly lower your rigid body toward the bench without bending at the hips or allowing your lower back to arch.",
+    "Stop just before your hips reach the bench.",
+    "Raise your entire body back to the starting position while maintaining a straight body line.",
+    "Repeat for the desired number of repetitions."
+  ],
+  "img": "5207-dragon-flag.jpg",
+  "gif": "5207-dragon-flag.gif"
+}
+                 ];
