@@ -5,6 +5,5 @@ frontend/node_modules
 frontend/dist
 api/node_modules
 data
-media
 npm-debug.log*
 .DS_Store
